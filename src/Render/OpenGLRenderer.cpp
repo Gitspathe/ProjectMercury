@@ -4,28 +4,29 @@
 #include <GL/gl.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengles2.h>
+#include "Screen.h"
+#include "../Common/Color.h";
 
 namespace Render
 {
-    // Vertex Shader source code
-    const char* vertexShaderSource = R"(
-#version 330 core
-layout (location = 0) in vec2 aPos;
-out vec2 TexCoord;
+    const char* vertexShaderSource = R"(precision mediump float;
+
+attribute vec2 aPos;  // "attribute" is used instead of "in"
+varying vec2 TexCoord;  // "varying" is used instead of "out"
+
 void main() {
     gl_Position = vec4(aPos.xy, 0.0, 1.0);
     TexCoord = (aPos.xy + 1.0) * 0.5;  // Convert [-1,1] range to [0,1] for texture coordinates
 }
 )";
 
-    // Fragment Shader source code
-    const char* fragmentShaderSource = R"(
-#version 330 core
-out vec4 FragColor;
-in vec2 TexCoord;
+    const char* fragmentShaderSource = R"(precision mediump float;
+
+varying vec2 TexCoord;  // "varying" is used to receive interpolated data
 uniform sampler2D texture1;
+
 void main() {
-    FragColor = texture(texture1, TexCoord);  // Output the texture color
+    gl_FragColor = texture2D(texture1, TexCoord);  // Use gl_FragColor instead of user-defined outputs
 }
 )";
 
@@ -43,6 +44,19 @@ void main() {
                     data[i + 1] = 0;   // G
                     data[i + 2] = 0;   // B
                 }
+            }
+        }
+    }
+
+    void assignData(std::vector<unsigned char>& data, Screen* screen)
+    {
+        for (int y = 0; y < screen->getHeight(); ++y) {
+            for (int x = 0; x < screen->getWidth(); ++x) {
+                const Common::Color col = screen->get(x, y);
+                const int i = (y * screen->getWidth() + x) * 3;
+                data[i] = col.r;     // R
+                data[i + 1] = col.g; // G
+                data[i + 2] = col.b; // B
             }
         }
     }
@@ -71,6 +85,8 @@ void main() {
     GLuint VAO, VBO, EBO;
     std::vector<unsigned char> textureData;
     GLuint texture;
+    int textureWidth = 1024;
+    int textureHeight = 512;
 
     // Full-screen quad vertices
     float quadVertices[] = {
@@ -144,8 +160,6 @@ void main() {
         glEnableVertexAttribArray(0);
 
         // Generate a procedural texture (e.g., checkerboard pattern)
-        int textureWidth = 256;
-        int textureHeight = 256;
         textureData = std::vector<unsigned char>(textureWidth * textureHeight * 3); // RGB format
         generateCheckerboardTexture(textureData, textureWidth, textureHeight);
 
@@ -161,11 +175,16 @@ void main() {
 
         // Upload the texture data to OpenGL
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData.data());
-        glGenerateMipmap(GL_TEXTURE_2D);
     }
 
+    int x = 0;
     void OpenGLRenderer::on_update()
     {
+        screen->set(rand() % 1025, rand() % 516, Common::Color::getBlue());
+        assignData(textureData, screen);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData.data());
+        x++;
+
         // Clear the screen
         glClear(GL_COLOR_BUFFER_BIT);
 

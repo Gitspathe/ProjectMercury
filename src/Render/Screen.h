@@ -17,6 +17,9 @@ namespace Render
         Common::Color get(int x, int y) const;
         void set(int x, int y, Common::Color color);
         void clear(Common::Color color);
+
+        int getWidth() const;
+        int getHeight() const;
     private:
         std::vector<std::vector<Common::Color>> buffer;
         int width, height;

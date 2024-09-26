@@ -38,4 +38,14 @@ namespace Render
         return buffer[y][x];
     }
 
+    int Screen::getHeight() const
+    {
+        return height;
+    }
+
+    int Screen::getWidth() const
+    {
+        return width;
+    }
+
 }

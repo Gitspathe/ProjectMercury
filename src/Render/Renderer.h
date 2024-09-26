@@ -18,7 +18,7 @@ namespace Render
         void init(World::GameWorld* world, Screen* screen);
         void update();
         void destroy();
-    private:
+    protected:
         World::GameWorld* world;
         Screen* screen;
 
