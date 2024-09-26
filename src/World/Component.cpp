@@ -2,7 +2,7 @@
 
 namespace World
 {
-    GameObject *Component::getParent()
+    GameObject* Component::getParent()
     {
         return parent;
     }

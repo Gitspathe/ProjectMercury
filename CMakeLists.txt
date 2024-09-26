@@ -18,18 +18,24 @@ endif()
 
 include_directories(${OPENGL_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS})
 
-add_executable(test main.cpp
-        Render/Renderer.h
-        World/GameObject.h
-        World/GameWorld.h
-        World/Component.h
-        World/GameObject.cpp
-        World/GameWorld.cpp
-        World/Component.cpp
-        Common/Vector2.h
-        Common/Vector2.cpp
-        Common/Color.h
-        Common/Color.cpp)
+add_executable(test src/main.cpp
+        src/Render/Renderer.h
+        src/World/GameObject.h
+        src/World/GameWorld.h
+        src/World/Component.h
+        src/World/GameObject.cpp
+        src/World/GameWorld.cpp
+        src/World/Component.cpp
+        src/Common/Vector2.h
+        src/Common/Vector2.cpp
+        src/Common/Color.h
+        src/Common/Color.cpp
+        src/Render/Screen.h
+        src/Render/Screen.cpp
+        src/Render/Renderer.cpp
+        src/Render/OpenGLRenderer.h
+        src/Render/OpenGLRenderer.cpp
+)
 
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES})

@@ -8,6 +8,8 @@ namespace World
 
     class GameWorld {
     public:
+        GameWorld() = default;
+
         void init();
         void update(float deltaTime);
         void destroy();

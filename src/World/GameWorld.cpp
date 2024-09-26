@@ -2,7 +2,8 @@
 #include "GameObject.h"
 #include "GameWorld.h"
 
-namespace World {
+namespace World
+{
     void GameWorld::init()
     {
         on_init();

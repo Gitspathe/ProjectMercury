@@ -1,6 +1,9 @@
 #include <iostream>
+#include <functional>
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_opengles2.h>
+#include "Render/OpenGLRenderer.h"
+#include "Render/Screen.h"
+#include "World/GameWorld.h"
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -8,31 +11,38 @@
 
 std::function<void()> loop;
 bool running = true;
+Render::OpenGLRenderer* renderer;
 
+#ifdef __EMSCRIPTEN__
+EMSCRIPTEN_KEEPALIVE
+#endif
 void main_loop()
 {
     loop();
 }
 
+bool isInit = false;
+
+void init()
+{
+    renderer = new Render::OpenGLRenderer();
+    renderer->init(new World::GameWorld(), new Render::Screen(1024, 512));
+
+    isInit = true;
+}
+
+void run()
+{
+    renderer->update();
+}
+
 int main()
 {
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-    SDL_GL_SetSwapInterval(0);
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-
-    auto* window = SDL_CreateWindow(
-        "Project Mercury",
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        640,
-        480,
-        SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN
-    );
-    SDL_GL_CreateContext(window);
-
     loop = [&] {
+        if(!isInit) {
+            init();
+        }
+
         SDL_Event e;
         while(SDL_PollEvent(&e)) {
             switch(e.type){
@@ -49,18 +59,19 @@ int main()
                     break;
             }
         }
-        glClearColor(0.f, 0x33 / 255.f, 0x66 / 255.f, 1.f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        SDL_GL_SwapWindow(window);
+        run();
     };
 
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(main_loop, 0, true);
-#else
+#endif
+
+    init();
+
+#ifndef __EMSCRIPTEN__
     while(running) main_loop();
 #endif
 
-    SDL_DestroyWindow(window);
     SDL_Quit();
     return 0;
 }
