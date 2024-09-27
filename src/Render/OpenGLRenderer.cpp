@@ -1,11 +1,10 @@
-#include "OpenGLRenderer.h"
 #include <iostream>
 #include <vector>
 #include <GL/gl.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengles2.h>
+#include "OpenGLRenderer.h"
 #include "Screen.h"
-#include "../Common/Color.h";
 
 namespace Render
 {
@@ -30,6 +29,29 @@ void main() {
 }
 )";
 
+    GLuint vertexShader;
+    GLuint fragmentShader;
+    GLuint shaderProgram;
+    GLuint VAO, VBO, EBO;
+    std::vector<Common::Color3> textureData;
+    GLuint texture;
+    int textureWidth, textureHeight;
+
+    // Full-screen quad vertices
+    float quadVertices[] = {
+        // positions
+        -1.0f,  1.0f,
+        -1.0f, -1.0f,
+         1.0f, -1.0f,
+         1.0f,  1.0f,
+    };
+    unsigned int quadIndices[] = {
+        0, 1, 2,
+        2, 3, 0
+    };
+
+    SDL_Window* window;
+
     void OpenGLRenderer::setRenderScale(float val)
     {
         if(val < 0.001f || val > 10.0f)
@@ -38,7 +60,7 @@ void main() {
         renderScale = val;
     }
 
-    void assignData(std::vector<Common::Color>& data, Screen* screen)
+    void OpenGLRenderer::assignData(std::vector<Common::Color3>& data, Screen* screen)
     {
         data = screen->getBuffer();
     }
@@ -60,29 +82,6 @@ void main() {
             }
         }
     }
-
-    GLuint vertexShader;
-    GLuint fragmentShader;
-    GLuint shaderProgram;
-    GLuint VAO, VBO, EBO;
-    std::vector<Common::Color> textureData;
-    GLuint texture;
-    int textureWidth, textureHeight;
-
-    // Full-screen quad vertices
-    float quadVertices[] = {
-        // positions
-        -1.0f,  1.0f,
-        -1.0f, -1.0f,
-         1.0f, -1.0f,
-         1.0f,  1.0f,
-    };
-    unsigned int quadIndices[] = {
-        0, 1, 2,
-        2, 3, 0
-    };
-
-    SDL_Window* window;
 
     void OpenGLRenderer::on_init()
     {
@@ -144,7 +143,7 @@ void main() {
         glEnableVertexAttribArray(0);
 
         // Generate a procedural texture.
-        textureData = std::vector<Common::Color>(screen->getWidth() * screen->getHeight() * 3); // RGB format
+        textureData = std::vector<Common::Color3>(screen->getWidth() * screen->getHeight() * 3); // RGB format
 
         // Create a texture in OpenGL
         glGenTextures(1, &texture);
@@ -157,13 +156,20 @@ void main() {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
         // Upload the texture data to OpenGL
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screen->getWidth(), screen->getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData.data());
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screen->getWidth(), screen->getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, textureData.data());
     }
 
     void OpenGLRenderer::on_update()
     {
+        for(int i = 0; i < 1024; i++) {
+            screen->drawRect(
+                Common::RectF(rand() % 512, rand() % 256, rand() % 512, rand() % 256),
+                Common::Color3(rand() % 255, rand() % 255, rand() % 255)
+            );
+        }
+
         assignData(textureData, screen);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screen->getWidth(), screen->getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData.data());
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screen->getWidth(), screen->getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, textureData.data());
 
         // Clear the screen
         glClear(GL_COLOR_BUFFER_BIT);

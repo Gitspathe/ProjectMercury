@@ -28,8 +28,8 @@ add_executable(test src/main.cpp
         src/World/Component.cpp
         src/Common/Vector2.h
         src/Common/Vector2.cpp
-        src/Common/Color.h
-        src/Common/Color.cpp
+        src/Common/Color4.h
+        src/Common/Color4.cpp
         src/Render/Screen.h
         src/Render/Screen.cpp
         src/Render/Renderer.cpp
@@ -37,6 +37,10 @@ add_executable(test src/main.cpp
         src/Render/OpenGLRenderer.cpp
         src/Input/InputManager.h
         src/Input/InputManager.cpp
+        src/Common/Color3.h
+        src/Common/Color3.cpp
+        src/Common/RectF.h
+        src/Common/RectF.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})

@@ -45,40 +45,40 @@ namespace Input
         keyboardEvents.clear();
     }
 
-    void InputManager::onKeyboardEvent(SDL_KeyboardEvent ev)
+    void InputManager::onKeyboardEvent(const SDL_KeyboardEvent &ev)
     {
         keyboardEvents.push_back(ev);
     }
 
-    bool InputManager::isKeyDown(SDL_Scancode key) const
+    bool InputManager::isKeyDown(const SDL_Scancode key) const
     {
         return std::find(keysDownThisFrame.begin(), keysDownThisFrame.end(), key) != keysDownThisFrame.end();
     }
 
-    bool InputManager::isKeyUp(SDL_Scancode key) const
+    bool InputManager::isKeyUp(const SDL_Scancode key) const
     {
         return !isKeyDown(key);
     }
 
-    bool InputManager::wasKeyPressedThisFrame(SDL_Scancode key) const
+    bool InputManager::wasKeyPressedThisFrame(const SDL_Scancode key) const
     {
         bool pressedLastFrame = std::find(keysDownLastFrame.begin(), keysDownLastFrame.end(), key) != keysDownLastFrame.end();
         bool pressedThisFrame = isKeyDown(key);
         return !pressedLastFrame && pressedThisFrame;
     }
 
-    bool InputManager::wasKeyReleasedThisFrame(SDL_Scancode key) const
+    bool InputManager::wasKeyReleasedThisFrame(const SDL_Scancode key) const
     {
         bool pressedLastFrame = std::find(keysDownLastFrame.begin(), keysDownLastFrame.end(), key) != keysDownLastFrame.end();
         bool pressedThisFrame = isKeyDown(key);
         return pressedLastFrame && !pressedThisFrame;
     }
 
-    void InputManager::handleKeyboardEvent(SDL_KeyboardEvent ev)
+    void InputManager::handleKeyboardEvent(const SDL_KeyboardEvent& ev)
     {
         switch(ev.type) {
             case SDL_KEYDOWN: {
-                bool found = std::find(
+                const bool found = std::find(
                     keysDownThisFrame.begin(),
                     keysDownThisFrame.end(),
                     ev.keysym.scancode

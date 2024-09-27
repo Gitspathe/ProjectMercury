@@ -1,0 +1,34 @@
+# ninja log v6
+1	8	1727414311953594668	CMakeFiles/test.dir/src/Common/Vector2.cpp.o.ddi	8145f3711412e574
+1	9	1727414311953594668	CMakeFiles/test.dir/src/World/Component.cpp.o.ddi	7f5e4d7cdfac2237
+2	9	1727414311956927987	CMakeFiles/test.dir/src/Render/Renderer.cpp.o.ddi	cdc95309997e1379
+2	11	1727414311956927987	CMakeFiles/test.dir/src/Common/Color.cpp.o.ddi	fc29747cdea0b50b
+1	29	1727414311953594668	CMakeFiles/test.dir/src/World/GameObject.cpp.o.ddi	47e81f409d4a904b
+1	33	1727414311953594668	CMakeFiles/test.dir/src/World/GameWorld.cpp.o.ddi	b15b56132fba992
+2	49	1727414311956927987	CMakeFiles/test.dir/src/Render/Screen.cpp.o.ddi	bcdd52985e854278
+2	76	1727414311956927987	CMakeFiles/test.dir/src/Input/InputManager.cpp.o.ddi	cfb48fd03f69168c
+2	148	1727414311956927987	CMakeFiles/test.dir/src/Render/OpenGLRenderer.cpp.o.ddi	c437318d6e63747f
+1	172	1727414311953594668	CMakeFiles/test.dir/src/main.cpp.o.ddi	8b865c23b343c2af
+172	174	1727414312126927290	CMakeFiles/test.dir/CXX.dd	b5e7dc185e2c0ed3
+172	174	1727414312126927290	/mnt/ssd/Game Dev/C/ProjectMercury/cmake-build-minsizerel/CMakeFiles/test.dir/CXXModules.json	b5e7dc185e2c0ed3
+172	174	1727414312126927290	CMakeFiles/test.dir/src/main.cpp.o.modmap	b5e7dc185e2c0ed3
+172	174	1727414312126927290	CMakeFiles/test.dir/src/World/GameObject.cpp.o.modmap	b5e7dc185e2c0ed3
+172	174	1727414312126927290	CMakeFiles/test.dir/src/World/GameWorld.cpp.o.modmap	b5e7dc185e2c0ed3
+172	174	1727414312126927290	CMakeFiles/test.dir/src/World/Component.cpp.o.modmap	b5e7dc185e2c0ed3
+172	174	1727414312126927290	CMakeFiles/test.dir/src/Common/Vector2.cpp.o.modmap	b5e7dc185e2c0ed3
+172	174	1727414312126927290	CMakeFiles/test.dir/src/Common/Color.cpp.o.modmap	b5e7dc185e2c0ed3
+172	174	1727414312126927290	CMakeFiles/test.dir/src/Render/Screen.cpp.o.modmap	b5e7dc185e2c0ed3
+172	174	1727414312126927290	CMakeFiles/test.dir/src/Render/Renderer.cpp.o.modmap	b5e7dc185e2c0ed3
+172	174	1727414312126927290	CMakeFiles/test.dir/src/Render/OpenGLRenderer.cpp.o.modmap	b5e7dc185e2c0ed3
+172	174	1727414312126927290	CMakeFiles/test.dir/src/Input/InputManager.cpp.o.modmap	b5e7dc185e2c0ed3
+175	190	1727414312126927290	CMakeFiles/test.dir/src/Render/Renderer.cpp.o	f520ab51a7a3c676
+174	191	1727414312126927290	CMakeFiles/test.dir/src/Common/Color.cpp.o	174ca9a427391700
+174	192	1727414312126927290	CMakeFiles/test.dir/src/World/Component.cpp.o	91ef4d896b4ec0a4
+174	195	1727414312126927290	CMakeFiles/test.dir/src/Common/Vector2.cpp.o	70c7e4fdc081bc5e
+174	309	1727414312126927290	CMakeFiles/test.dir/src/World/GameObject.cpp.o	193704dcfb5a2f92
+174	316	1727414312126927290	CMakeFiles/test.dir/src/World/GameWorld.cpp.o	3b0e65235e62a810
+174	421	1727414312126927290	CMakeFiles/test.dir/src/Render/Screen.cpp.o	3de07c9fdc5ccfd0
+175	617	1727414312126927290	CMakeFiles/test.dir/src/Input/InputManager.cpp.o	4f650903f1d14b2
+175	963	1727414312126927290	CMakeFiles/test.dir/src/Render/OpenGLRenderer.cpp.o	652a6b2a4c307dfd
+174	1423	1727414312126927290	CMakeFiles/test.dir/src/main.cpp.o	237b7c1c3e78b7b6
+1423	1469	1727414313376922162	test	e66a19cffd43f3b8

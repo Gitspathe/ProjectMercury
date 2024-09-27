@@ -15,14 +15,14 @@ namespace Input
 
         void init();
         void update(float deltaTime);
-        void onKeyboardEvent(SDL_KeyboardEvent ev);
+        void onKeyboardEvent(const SDL_KeyboardEvent &ev);
         bool isKeyDown(SDL_Scancode key) const;
         bool isKeyUp(SDL_Scancode key) const;
         bool wasKeyPressedThisFrame(SDL_Scancode key) const;
         bool wasKeyReleasedThisFrame(SDL_Scancode key) const;
     private:
         static InputManager* instance;
-        void handleKeyboardEvent(SDL_KeyboardEvent ev);
+        void handleKeyboardEvent(const SDL_KeyboardEvent &ev);
     };
 }
 
