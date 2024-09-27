@@ -5,7 +5,12 @@
 namespace Render {
     class OpenGLRenderer : public Renderer
     {
-    private:
+    public:
+        void setRenderScale(float val);
+
+    protected:
+        float renderScale = 1.0f;
+
         virtual void on_init() override;
         virtual void on_update() override;
         virtual void on_destroy() override;

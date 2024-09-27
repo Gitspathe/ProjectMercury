@@ -30,35 +30,17 @@ void main() {
 }
 )";
 
-    // Generates a procedural bitmap (checkerboard pattern in this case)
-    void generateCheckerboardTexture(std::vector<unsigned char>& data, int width, int height) {
-        for (int y = 0; y < height; ++y) {
-            for (int x = 0; x < width; ++x) {
-                int i = (y * width + x) * 3;
-                if ((x / 16 % 2 == 0 && y / 16 % 2 == 0) || (x / 16 % 2 == 1 && y / 16 % 2 == 1)) {
-                    data[i] = 255;  // R
-                    data[i + 1] = 255; // G
-                    data[i + 2] = 255; // B
-                } else {
-                    data[i] = 0;   // R
-                    data[i + 1] = 0;   // G
-                    data[i + 2] = 0;   // B
-                }
-            }
-        }
+    void OpenGLRenderer::setRenderScale(float val)
+    {
+        if(val < 0.001f || val > 10.0f)
+            return;
+
+        renderScale = val;
     }
 
-    void assignData(std::vector<unsigned char>& data, Screen* screen)
+    void assignData(std::vector<Common::Color>& data, Screen* screen)
     {
-        for (int y = 0; y < screen->getHeight(); ++y) {
-            for (int x = 0; x < screen->getWidth(); ++x) {
-                const Common::Color col = screen->get(x, y);
-                const int i = (y * screen->getWidth() + x) * 3;
-                data[i] = col.r;     // R
-                data[i + 1] = col.g; // G
-                data[i + 2] = col.b; // B
-            }
-        }
+        data = screen->getBuffer();
     }
 
     void checkCompileErrors(GLuint shader, std::string type) {
@@ -83,10 +65,9 @@ void main() {
     GLuint fragmentShader;
     GLuint shaderProgram;
     GLuint VAO, VBO, EBO;
-    std::vector<unsigned char> textureData;
+    std::vector<Common::Color> textureData;
     GLuint texture;
-    int textureWidth = 1024;
-    int textureHeight = 512;
+    int textureWidth, textureHeight;
 
     // Full-screen quad vertices
     float quadVertices[] = {
@@ -105,6 +86,9 @@ void main() {
 
     void OpenGLRenderer::on_init()
     {
+        textureWidth = screen->getWidth() * renderScale;
+        textureHeight = screen->getHeight() * renderScale;
+
         // Set GL attributes.
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
@@ -117,8 +101,8 @@ void main() {
             "Project Mercury",
             SDL_WINDOWPOS_CENTERED,
             SDL_WINDOWPOS_CENTERED,
-            1024,
-            512,
+            textureWidth,
+            textureHeight,
             SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN
         );
         SDL_GL_CreateContext(window);
@@ -159,31 +143,27 @@ void main() {
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
 
-        // Generate a procedural texture (e.g., checkerboard pattern)
-        textureData = std::vector<unsigned char>(textureWidth * textureHeight * 3); // RGB format
-        generateCheckerboardTexture(textureData, textureWidth, textureHeight);
+        // Generate a procedural texture.
+        textureData = std::vector<Common::Color>(screen->getWidth() * screen->getHeight() * 3); // RGB format
 
         // Create a texture in OpenGL
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
 
         // Set texture parameters
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
         // Upload the texture data to OpenGL
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData.data());
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screen->getWidth(), screen->getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData.data());
     }
 
-    int x = 0;
     void OpenGLRenderer::on_update()
     {
-        screen->set(rand() % 1025, rand() % 516, Common::Color::getBlue());
         assignData(textureData, screen);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData.data());
-        x++;
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screen->getWidth(), screen->getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData.data());
 
         // Clear the screen
         glClear(GL_COLOR_BUFFER_BIT);
