@@ -35,6 +35,8 @@ add_executable(test src/main.cpp
         src/Render/Renderer.cpp
         src/Render/OpenGLRenderer.h
         src/Render/OpenGLRenderer.cpp
+        src/Input/InputManager.h
+        src/Input/InputManager.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
