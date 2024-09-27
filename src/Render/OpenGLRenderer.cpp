@@ -5,6 +5,8 @@
 #include <SDL2/SDL_opengles2.h>
 #include "OpenGLRenderer.h"
 #include "Screen.h"
+#include "../Common/Color3.h"
+#include "../Common/RectF.h"
 using namespace Common;
 
 namespace Render

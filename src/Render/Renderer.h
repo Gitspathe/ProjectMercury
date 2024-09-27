@@ -1,6 +1,9 @@
 #ifndef RENDERER_H
 #define RENDERER_H
-#include "../World/GameWorld.h"
+
+namespace World {
+    class GameWorld;
+}
 
 namespace Render
 {

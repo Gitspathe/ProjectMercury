@@ -1,11 +1,11 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 #include <list>
-#include "GameWorld.h"
 
 namespace World
 {
     class Component;
+    class GameWorld;
 
     class GameObject
     {

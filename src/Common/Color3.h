@@ -10,30 +10,11 @@ namespace Common
 
         explicit Color3(uint8_t r = 0, uint8_t g = 0, uint8_t b = 0);
 
-        static Color3 getBlack()
-        {
-            return Color3(0, 0, 0);
-        }
-
-        static Color3 getWhite()
-        {
-            return Color3(255, 255, 255);
-        }
-
-        static Color3 getRed()
-        {
-            return Color3(255, 0, 0);
-        }
-
-        static Color3 getGreen()
-        {
-            return Color3(0, 255, 0);
-        }
-
-        static Color3 getBlue()
-        {
-            return Color3(0, 0, 255);
-        }
+        static const Color3 Black;
+        static const Color3 White;
+        static const Color3 Red;
+        static const Color3 Green;
+        static const Color3 Blue;
     };
 }
 

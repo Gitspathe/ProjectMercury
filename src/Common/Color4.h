@@ -10,35 +10,12 @@ namespace Common
 
         explicit Color4(uint8_t r = 0, uint8_t g = 0, uint8_t b = 0, uint8_t a = 255);
 
-        static Color4 getClear()
-        {
-            return Color4(0, 0, 0, 0);
-        }
-
-        static Color4 getBlack()
-        {
-            return Color4(0, 0, 0, 255);
-        }
-
-        static Color4 getWhite()
-        {
-            return Color4(255, 255, 255, 255);
-        }
-
-        static Color4 getRed()
-        {
-            return Color4(255, 0, 0, 255);
-        }
-
-        static Color4 getGreen()
-        {
-            return Color4(0, 255, 0, 255);
-        }
-
-        static Color4 getBlue()
-        {
-            return Color4(0, 0, 255, 255);
-        }
+        static const Color4 Clear;
+        static const Color4 Black;
+        static const Color4 White;
+        static const Color4 Red;
+        static const Color4 Green;
+        static const Color4 Blue;
     };
 }
 

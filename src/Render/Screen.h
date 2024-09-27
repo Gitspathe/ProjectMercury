@@ -1,8 +1,11 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 #include <vector>
-#include "../Common/RectF.h"
-#include "../Common/Color3.h"
+
+namespace Common {
+    class RectF;
+    struct Color3;
+}
 
 namespace Render
 {

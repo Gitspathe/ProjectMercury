@@ -2,8 +2,7 @@
 #include <functional>
 #include <chrono>
 #include <SDL2/SDL.h>
-
-#include "Common/Color4.h"
+#include "Common/Color3.h"
 #include "Input/InputManager.h"
 #include "Render/OpenGLRenderer.h"
 #include "Render/Screen.h"
@@ -43,7 +42,7 @@ void run()
 {
     auto started = std::chrono::high_resolution_clock::now();
     inputManager->update(1.0f);
-    screen->clear(Common::Color3::getBlack());
+    screen->clear(Common::Color3::Black);
     renderer->update();
     auto done = std::chrono::high_resolution_clock::now();
     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(done-started).count() << std::endl;

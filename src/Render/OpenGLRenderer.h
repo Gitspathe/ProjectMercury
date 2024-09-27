@@ -2,9 +2,14 @@
 #define OPENGLRENDERER_H
 #include <vector>
 #include "Renderer.h"
-#include "../Common/Color3.h"
+
+namespace Common {
+    struct Color3;
+}
 
 namespace Render {
+    class Screen;
+
     class OpenGLRenderer : public Renderer
     {
     public:

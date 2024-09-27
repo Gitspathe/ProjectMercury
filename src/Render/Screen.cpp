@@ -11,7 +11,7 @@ namespace Render
         this->width = width;
         this->height = height;
         buffer = std::vector<Color3>(height * width);
-        clear(Color3::getBlack());
+        clear(Color3::Black);
     }
 
     void Screen::clear(const Color3 color)
@@ -183,7 +183,7 @@ namespace Render
     Color3 Screen::getSafe(const int x, const int y) const
     {
         if(x < 0 || x >= width || y < 0 || y >= height)
-            return Color3::getBlack();
+            return Color3::Black;
 
         return buffer[y * width + x];
     }
