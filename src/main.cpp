@@ -85,13 +85,10 @@ void drawRays3D()
     int r, mx, my, mp, dof;
     float rx, ry, ra, xo, yo;
 
-    for(r = 0; r < 60; r++) {
-        // Normalize the player's angle (pa) to be within [0, 2 * PI]
-        ra = -(pa * (M_PI / 180.0)) - (30 * DR); // Convert degrees to radians
-        ra += r * DR;
-        if (ra < 0) ra += 2 * M_PI;
-        if (ra > 2 * M_PI) ra -= 2 * M_PI;
-
+    ra = -(pa * (M_PI / 180.0)) - (DR * 360);
+    if (ra < 0) ra += 2 * M_PI;
+    if (ra > 2 * M_PI) ra -= 2 * M_PI;
+    for(r = 0; r < 360; r++) {
         // Cast one ray for now
         dof = 0;
 
