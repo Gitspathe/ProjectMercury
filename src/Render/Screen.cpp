@@ -3,6 +3,7 @@
 #include "../Common/RectF.h"
 #include <cmath>
 
+using namespace Common;
 namespace Render
 {
     Screen::Screen(const int width, const int height)

@@ -1,27 +1,21 @@
 #ifndef RENDERER_H
 #define RENDERER_H
-
-namespace World
-{
-    class GameWorld;
-}
+#include "../World/GameWorld.h"
 
 namespace Render
 {
     class Screen;
-
-    using namespace World;
 
     class Renderer
     {
     public:
         virtual ~Renderer() = default;
 
-        void init(GameWorld* world, Screen* screen);
+        void init(World::GameWorld* world, Screen* screen);
         void update();
         void destroy();
     protected:
-        GameWorld* world;
+        World::GameWorld* world;
         Screen* screen;
 
         virtual void on_init() = 0;

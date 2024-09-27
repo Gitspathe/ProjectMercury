@@ -1,5 +1,6 @@
 #include "Renderer.h"
 
+using namespace World;
 namespace Render
 {
     void Renderer::init(GameWorld* world, Screen* screen)
