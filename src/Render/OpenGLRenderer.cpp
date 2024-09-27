@@ -33,7 +33,7 @@ void main() {
     GLuint fragmentShader;
     GLuint shaderProgram;
     GLuint VAO, VBO, EBO;
-    std::vector<Common::Color3> textureData;
+    std::vector<Color3> textureData;
     GLuint texture;
     int textureWidth, textureHeight;
 
@@ -60,7 +60,7 @@ void main() {
         renderScale = val;
     }
 
-    void OpenGLRenderer::assignData(std::vector<Common::Color3>& data, Screen* screen)
+    void OpenGLRenderer::assignData(std::vector<Color3>& data, Screen* screen)
     {
         data = screen->getBuffer();
     }
@@ -143,7 +143,7 @@ void main() {
         glEnableVertexAttribArray(0);
 
         // Generate a procedural texture.
-        textureData = std::vector<Common::Color3>(screen->getWidth() * screen->getHeight() * 3); // RGB format
+        textureData = std::vector<Color3>(screen->getWidth() * screen->getHeight() * 3); // RGB format
 
         // Create a texture in OpenGL
         glGenTextures(1, &texture);
@@ -159,17 +159,16 @@ void main() {
     void OpenGLRenderer::on_update()
     {
         for(int i = 0; i < 4096; i++) {
+            int w = screen->getWidth();
+            int h = screen->getHeight();
             screen->drawRect(
-                Common::RectF(rand() % 512, rand() % 256, rand() % 512, rand() % 256),
-                Common::Color3(rand() % 255, rand() % 255, rand() % 255)
+                RectF(rand() % w, rand() % h, rand() % w, rand() % h),
+                Color3(rand() % 255, rand() % 255, rand() % 255)
             );
         }
 
         assignData(textureData, screen);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screen->getWidth(), screen->getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, textureData.data());
-
-        // Clear the screen
-        glClear(GL_COLOR_BUFFER_BIT);
 
         // Use shader and bind texture
         glUseProgram(shaderProgram);
@@ -179,7 +178,7 @@ void main() {
         glBindBuffer(GL_VERTEX_ARRAY, VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-        // Swap buffers and poll events
+        // Swap buffers.
         SDL_GL_SwapWindow(window);
     }
 

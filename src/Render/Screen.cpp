@@ -9,18 +9,17 @@ namespace Render
     {
         this->width = width;
         this->height = height;
-        buffer = std::vector<Common::Color3>(height * width);
-        clear(Common::Color3::getBlack());
+        buffer = std::vector<Color3>(height * width);
+        clear(Color3::getBlack());
     }
 
-    void Screen::clear(const Common::Color3 color)
+    void Screen::clear(const Color3 color)
     {
-        for(size_t i = 0; i < height * width; i++) {
-            buffer[i] = color;
-        }
+        // Reset the entire buffer with a fast memory copy.
+        std::fill(buffer.begin(), buffer.end(), color);
     }
 
-    void Screen::drawPoint(const int size, const int x, const int y, const Common::Color3 color, const bool centered)
+    void Screen::drawPoint(const int size, const int x, const int y, const Color3 color, const bool centered)
     {
         if(size == 1) {
             setSafe(x, y, color);
@@ -45,7 +44,7 @@ namespace Render
         }
     }
 
-    void Screen::drawLine(int x0, int y0, int x1, int y1, Common::Color3 color)
+    void Screen::drawLine(int x0, int y0, int x1, int y1, Color3 color)
     {
         // Calculate deltas
         int deltaX = abs(x1 - x0);
@@ -81,7 +80,7 @@ namespace Render
         }
     }
 
-    void Screen::drawRect(const Common::RectF rect, const Common::Color3 color, const bool centered)
+    void Screen::drawRect(const RectF rect, const Color3 color, const bool centered)
     {
         int startX, startY, endX, endY;
         int x1 = static_cast<int>(rect.getX1());
@@ -114,11 +113,12 @@ namespace Render
         if(startY < 0) startY = 0;
         if(endX > width) endX = width;
         if(endY > height) endY = height;
-        for(size_t y = startY; y < endY; ++y) {
-            const size_t rowOffset = y * width;
-            for(size_t x = startX; x < endX; ++x) {
-                buffer[rowOffset + x] = color;
-            }
+
+        // Fill each row with a fast memory copy.
+        const auto data = buffer.data();
+        for (int y = startY; y < endY; ++y) {
+            const int rowOffset = y * width + startX;
+            std::fill(data + rowOffset, data + rowOffset + (endX - startX), color);
         }
     }
 
@@ -130,7 +130,7 @@ namespace Render
      * @param y y coords
      * @param color color
      */
-    void Screen::set(const int x, const int y, const Common::Color3 color)
+    void Screen::set(const int x, const int y, const Color3 color)
     {
 #ifndef NDEBUG
         if(x < 0 || x >= width || y < 0 || y >= height)
@@ -147,7 +147,7 @@ namespace Render
      * @param y y coords
      * @param color color
      */
-    void Screen::setSafe(const int x, const int y, const Common::Color3 color)
+    void Screen::setSafe(const int x, const int y, const Color3 color)
     {
         if(x < 0 || x >= width || y < 0 || y >= height)
             return;
@@ -163,7 +163,7 @@ namespace Render
      * @param y y coords
      * @returns color at x,y coords.
      */
-    Common::Color3 Screen::get(const int x, const int y) const {
+    Color3 Screen::get(const int x, const int y) const {
 #ifndef NDEBUG
         if(x < 0 || x >= width || y < 0 || y >= height)
             return Common::Color3::getBlack();
@@ -179,10 +179,10 @@ namespace Render
      * @param y y coords
      * @returns color at x,y coords, or black if out of bounds.
      */
-    Common::Color3 Screen::getSafe(const int x, const int y) const
+    Color3 Screen::getSafe(const int x, const int y) const
     {
         if(x < 0 || x >= width || y < 0 || y >= height)
-            return Common::Color3::getBlack();
+            return Color3::getBlack();
 
         return buffer[y * width + x];
     }
@@ -197,7 +197,7 @@ namespace Render
         return width;
     }
 
-    std::vector<Common::Color3> Screen::getBuffer()
+    std::vector<Color3> Screen::getBuffer()
     {
         return buffer;
     }

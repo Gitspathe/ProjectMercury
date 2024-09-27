@@ -2,7 +2,7 @@
 
 namespace Render
 {
-    void Renderer::init(World::GameWorld* world, Screen* screen)
+    void Renderer::init(GameWorld* world, Screen* screen)
     {
         this->world = world;
         this->screen = screen;

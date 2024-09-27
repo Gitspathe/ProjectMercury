@@ -10,25 +10,27 @@ namespace Common {
 
 namespace Render
 {
+    using namespace Common;
+
     class Screen
     {
     public:
         Screen(int width, int height);
 
-        Common::Color3 get(int x, int y) const;
-        Common::Color3 getSafe(int x, int y) const;
-        void set(int x, int y, Common::Color3 color);
-        void setSafe(int x, int y, Common::Color3 color);
-        void clear(Common::Color3 color);
-        void drawPoint(int size, int x, int y, Common::Color3 color, bool centered = false);
-        void drawLine(int x0, int y0, int x1, int y1, Common::Color3 color);
-        void drawRect(Common::RectF rect, Common::Color3 color, bool centered = false);
+        Color3 get(int x, int y) const;
+        Color3 getSafe(int x, int y) const;
+        void set(int x, int y, Color3 color);
+        void setSafe(int x, int y, Color3 color);
+        void clear(Color3 color);
+        void drawPoint(int size, int x, int y, Color3 color, bool centered = false);
+        void drawLine(int x0, int y0, int x1, int y1, Color3 color);
+        void drawRect(RectF rect, Color3 color, bool centered = false);
 
         int getWidth() const;
         int getHeight() const;
-        std::vector<Common::Color3> getBuffer();
+        std::vector<Color3> getBuffer();
     private:
-        std::vector<Common::Color3> buffer;
+        std::vector<Color3> buffer;
         int width, height;
     };
 }

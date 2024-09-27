@@ -5,6 +5,8 @@
 #include "../Common/Color3.h"
 
 namespace Render {
+    using namespace Common;
+
     class OpenGLRenderer : public Renderer
     {
     public:
@@ -13,7 +15,7 @@ namespace Render {
     protected:
         float renderScale = 1.0f;
 
-        void assignData(std::vector<Common::Color3>& data, Screen* screen);
+        void assignData(std::vector<Color3>& data, Screen* screen);
         virtual void on_init() override;
         virtual void on_update() override;
         virtual void on_destroy() override;

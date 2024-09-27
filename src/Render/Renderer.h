@@ -10,16 +10,18 @@ namespace Render
 {
     class Screen;
 
+    using namespace World;
+
     class Renderer
     {
     public:
         virtual ~Renderer() = default;
 
-        void init(World::GameWorld* world, Screen* screen);
+        void init(GameWorld* world, Screen* screen);
         void update();
         void destroy();
     protected:
-        World::GameWorld* world;
+        GameWorld* world;
         Screen* screen;
 
         virtual void on_init() = 0;
