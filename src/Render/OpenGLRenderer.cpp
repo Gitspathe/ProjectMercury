@@ -154,14 +154,11 @@ void main() {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-        // Upload the texture data to OpenGL
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screen->getWidth(), screen->getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, textureData.data());
     }
 
     void OpenGLRenderer::on_update()
     {
-        for(int i = 0; i < 1024; i++) {
+        for(int i = 0; i < 4096; i++) {
             screen->drawRect(
                 Common::RectF(rand() % 512, rand() % 256, rand() % 512, rand() % 256),
                 Common::Color3(rand() % 255, rand() % 255, rand() % 255)

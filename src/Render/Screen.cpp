@@ -15,7 +15,7 @@ namespace Render
 
     void Screen::clear(const Common::Color3 color)
     {
-        for(int i = 0; i < height * width; i++) {
+        for(size_t i = 0; i < height * width; i++) {
             buffer[i] = color;
         }
     }
@@ -38,8 +38,8 @@ namespace Render
             endX = x + size;
             endY = y + size;
         }
-        for(int x = startX; x < endX; ++x) {
-            for(int y = startY; y < endY; ++y) {
+        for(size_t x = startX; x < endX; ++x) {
+            for(size_t y = startY; y < endY; ++y) {
                 setSafe(x, y, color);
             }
         }
@@ -84,10 +84,10 @@ namespace Render
     void Screen::drawRect(const Common::RectF rect, const Common::Color3 color, const bool centered)
     {
         int startX, startY, endX, endY;
-        int x1 = rect.getX1();
-        int y1 = rect.getY1();
-        int x2 = rect.getX2();
-        int y2 = rect.getY2();
+        int x1 = static_cast<int>(rect.getX1());
+        int y1 = static_cast<int>(rect.getY1());
+        int x2 = static_cast<int>(rect.getX2());
+        int y2 = static_cast<int>(rect.getY2());
 
         // Ensure x1, x2 and y1, y2 are ordered correctly (x1, y1 is top-left, x2, y2 is bottom-right)
         if(x1 > x2) std::swap(x1, x2);
@@ -107,10 +107,17 @@ namespace Render
             endX = x2;
             endY = y2;
         }
+        if(endX <= 0 || endY <= 0 || startX >= width || startY >= height)
+            return;
 
-        for (int x = startX; x < endX; ++x) {
-            for (int y = startY; y < endY; ++y) {
-                setSafe(x, y, color);
+        if(startX < 0) startX = 0;
+        if(startY < 0) startY = 0;
+        if(endX > width) endX = width;
+        if(endY > height) endY = height;
+        for(size_t y = startY; y < endY; ++y) {
+            const size_t rowOffset = y * width;
+            for(size_t x = startX; x < endX; ++x) {
+                buffer[rowOffset + x] = color;
             }
         }
     }
