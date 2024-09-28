@@ -10,16 +10,19 @@ namespace World
         setup();
         world->register_gameObject(shared_from_this());
         for(const auto& component : components) {
-            component.second->init();
+            component->init();
         }
         on_init();
     }
 
     void GameObject::update(const float deltaTime)
     {
+        if(isDestroyed)
+            return;
+
         on_update(deltaTime);
-        for(const auto& component : components) {
-            component.second->update(deltaTime);
+        for(const auto& component : dynamicComponents) {
+            component->update(deltaTime);
         }
     }
 
@@ -29,7 +32,7 @@ namespace World
         on_destroy();
         world->unregister_gameObject(shared_from_this());
         for(const auto& component : components) {
-            component.second->destroy();
+            component->destroy();
         }
         components.clear();
     }

@@ -9,18 +9,29 @@ namespace World
         on_init();
     }
 
-    void GameWorld::update(float deltaTime)
+    void GameWorld::update(const float deltaTime)
     {
+        isLocked = true;
         on_update(deltaTime);
-        for(auto go : gameObjects) {
+        for(const auto go : gameObjects) {
             go->update(deltaTime);
         }
+        isLocked = false;
+
+        for(const auto go : pendingToAdd) {
+            gameObjects.insert(go);
+        }
+        for(const auto go : pendingToRemove) {
+            gameObjects.erase(go);
+        }
+        pendingToAdd.clear();
+        pendingToRemove.clear();
     }
 
     void GameWorld::destroy()
     {
         on_destroy();
-        for(auto go : gameObjects) {
+        for(const auto go : gameObjects) {
             go->destroy();
         }
         gameObjects.clear();
@@ -28,11 +39,22 @@ namespace World
 
     void GameWorld::register_gameObject(const std::shared_ptr<GameObject> &gameObject)
     {
+        if(isLocked) {
+            pendingToAdd.insert(gameObject);
+            pendingToRemove.erase(gameObject);
+            return;
+        }
+
         gameObjects.insert(gameObject);
     }
 
     void GameWorld::unregister_gameObject(const std::shared_ptr<GameObject> &gameObject)
     {
+        if(isLocked) {
+            pendingToAdd.erase(gameObject);
+            pendingToRemove.insert(gameObject);
+        }
+
         gameObjects.erase(gameObject);
     }
 }

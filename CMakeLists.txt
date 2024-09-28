@@ -43,9 +43,11 @@ add_executable(test lib/json.hpp
         src/Common/Color3.cpp
         src/Common/Color4.cpp
         lib/json.hpp
-        src/World/Transform.h
+        src/World/TransformComponent.h
         src/World/TestGameObject.h
         src/World/GameObject.cpp
+        src/Common/Transform.h
+        src/Common/Vector2.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})

@@ -19,19 +19,25 @@ namespace World
         std::weak_ptr<GameObject> gameObject = std::weak_ptr<GameObject>();
         bool isInit = false;
 
-        virtual void on_init() = 0;
-        virtual void on_update(float deltaTime) = 0;
-        virtual void on_destroy() = 0;
+        virtual void on_init() {}
+        virtual void on_update(float deltaTime) {}
+        virtual void on_destroy() {}
 
     public:
+        Component() = default;
         virtual ~Component() = default;
+
+        virtual uint16_t getType() const = 0;
+
+        virtual bool isDynamic() const
+        {
+            return true;
+        }
 
         std::shared_ptr<GameObject> getGameObject() const
         {
             return gameObject.expired() ? nullptr : gameObject.lock();
         }
-
-        virtual uint16_t getType() const = 0;
 
         void setGameObject(const std::shared_ptr<GameObject>& gameObject)
         {

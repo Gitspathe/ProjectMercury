@@ -8,7 +8,7 @@
 #include "Render/Screen.h"
 #include "World/GameObject.h"
 #include "World/GameWorld.h"
-#include "World/Transform.h"
+#include "World/TransformComponent.h"
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -45,7 +45,13 @@ void init()
 
     world = World::GameWorld::create<World::GameWorld>();
     go = World::GameObject::create<World::GameObject>();
-    std::shared_ptr<World::Transform> transform = go->addComponent<World::Transform>();
+    std::shared_ptr<World::TransformComponent> transform = go->addComponent<World::TransformComponent>();
+
+    std::shared_ptr<Common::Transform> testTrans = *transform;
+    testTrans->setPosition(Common::Vector2(1,5));
+
+    std::cout << "SIZE OF: " << sizeof(World::GameObject) << std::endl;
+
     go->init(world);
 }
 
@@ -53,12 +59,20 @@ void run()
 {
     world->update(0.1f);
 
-    auto started = std::chrono::high_resolution_clock::now();
+    if(rand() % 100 < 50) {
+        std::shared_ptr<World::TransformComponent> trans = go->getComponent<World::TransformComponent>();
+        if(trans != nullptr) {
+            go->removeComponent(trans);
+        }
+        std::cout << "AAA" << std::endl;
+    }
+
+    //auto started = std::chrono::high_resolution_clock::now();
     inputManager->update(1.0f);
     screen->clear(Common::Color3::Black);
     renderer->update();
-    auto done = std::chrono::high_resolution_clock::now();
-    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(done-started).count() << std::endl;
+    //auto done = std::chrono::high_resolution_clock::now();
+    //std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(done-started).count() << std::endl;
 }
 
 int main()

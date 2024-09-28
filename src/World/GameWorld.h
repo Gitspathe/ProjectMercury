@@ -8,6 +8,9 @@ namespace World
     class GameWorld {
     protected:
         std::unordered_set<std::shared_ptr<GameObject>> gameObjects;
+        std::unordered_set<std::shared_ptr<GameObject>> pendingToAdd;
+        std::unordered_set<std::shared_ptr<GameObject>> pendingToRemove;
+        bool isLocked = false;
 
         virtual void on_init() {}
         virtual void on_update(float deltaTime) {}
@@ -23,6 +26,8 @@ namespace World
             static_assert(std::is_base_of_v<GameWorld, T>, "T must derive from GameWorld");
             auto ptr = std::make_shared<GameWorld>();
             ptr->gameObjects = std::unordered_set<std::shared_ptr<GameObject>>();
+            ptr->pendingToAdd = std::unordered_set<std::shared_ptr<GameObject>>();
+            ptr->pendingToRemove = std::unordered_set<std::shared_ptr<GameObject>>();
             return ptr;
         }
 

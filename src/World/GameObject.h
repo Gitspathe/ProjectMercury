@@ -1,9 +1,11 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 #include <cstdint>
-#include <map>
 #include <memory>
 #include <typeindex>
+#include <vector>
+
+#include "Component.h"
 
 namespace World
 {
@@ -20,9 +22,10 @@ namespace World
     {
     protected:
         std::shared_ptr<GameWorld> world = nullptr;
+        std::vector<std::shared_ptr<Component>> components;
+        std::vector<std::shared_ptr<Component>> dynamicComponents;
         bool isInit = false;
         bool isDestroyed = false;
-        std::multimap<std::type_index, std::shared_ptr<Component>> components;
 
         virtual void on_init() {}
         virtual void setup() {}
@@ -30,16 +33,17 @@ namespace World
         virtual void on_destroy() {}
 
     public:
-        GameObject() = default;
-        virtual ~GameObject() = default;
+        GameObject()
+        {
+            components = std::vector<std::shared_ptr<Component>>();
+            dynamicComponents = std::vector<std::shared_ptr<Component>>();
+        }
 
         template<typename T>
         static std::shared_ptr<T> create()
         {
             static_assert(std::is_base_of_v<GameObject, T>, "T must derive from GameObject");
-            auto ptr = std::make_shared<GameObject>();
-            ptr->components = std::multimap<std::type_index, std::shared_ptr<Component>>();
-            return ptr;
+            return std::make_shared<GameObject>();
         }
 
         std::shared_ptr<GameWorld> getWorld() const
@@ -47,7 +51,10 @@ namespace World
             return world;
         }
 
-        virtual uint16_t GetType() const { return GameObjectTypes::NONE; }
+        virtual uint16_t GetType() const
+        {
+            return GameObjectTypes::NONE;
+        }
 
         template<typename T>
         std::shared_ptr<T> addComponent()
@@ -55,38 +62,49 @@ namespace World
             if(isDestroyed)
                 throw std::runtime_error("GameObject::addComponent called on destroyed GameObject");
 
-            std::type_index key(typeid(T));
             auto component = std::make_shared<T>();
             component->setGameObject(shared_from_this());
-            components.emplace(key, component);
+            components.push_back(component);
+            if(component->isDynamic()) {
+                dynamicComponents.push_back(component);
+            }
             return component;
         }
 
         template<typename T>
-        void removeComponent(T& component)
+        void removeComponent(const std::shared_ptr<T>& component)
         {
             if(isDestroyed)
                 throw std::runtime_error("GameObject::removeComponent called on destroyed GameObject");
 
-            const std::type_index key(typeid(T));
-            auto [fst, snd] = components.equal_range(key);
-            for(auto it = fst; it != snd; ++it) {
-                if (it->second.get() == &component) {
-                    components.erase(it);
+            static_assert(std::is_base_of_v<World::Component, T>, "T must derive from World::Component");
+            if(component->isDynamic()) {
+                for(int i = 0; i < dynamicComponents.size(); i++) {
+                    if(dynamicComponents[i] == component) {
+                        dynamicComponents.erase(dynamicComponents.begin() + i);
+                    }
+                }
+            }
+            for(int i = 0; i < components.size(); i++) {
+                if(components[i] == component) {
+                    components.erase(components.begin() + i);
                     return;
                 }
             }
         }
 
         template<typename T>
-        std::shared_ptr<T>& getComponent()
+        std::shared_ptr<T> getComponent()
         {
             if(isDestroyed)
                 return nullptr;
 
-            const std::type_index key(typeid(T));
-            const auto it = components.find(key);
-            return it != components.end() ? it->second.get() : nullptr;
+            for(auto c : components) {
+                if(std::shared_ptr<T> cast = std::dynamic_pointer_cast<T>(c)) {
+                    return cast;
+                }
+            }
+            return nullptr;
         }
 
         void init(const std::shared_ptr<GameWorld> &world);

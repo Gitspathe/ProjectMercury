@@ -28,6 +28,9 @@ namespace Common
         {
             return Vector2(this->x / rhs.x, this->y / rhs.y);
         }
+
+        static const Vector2 Zero;
+        static const Vector2 One;
     };
 }
 
