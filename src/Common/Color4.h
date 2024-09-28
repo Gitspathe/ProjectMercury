@@ -8,7 +8,8 @@ namespace Common
     {
         uint8_t r, g, b, a;
 
-        explicit Color4(uint8_t r = 0, uint8_t g = 0, uint8_t b = 0, uint8_t a = 255);
+        explicit Color4(const uint8_t r = 0, const uint8_t g = 0, const uint8_t b = 0, const uint8_t a = 255)
+            : r(r), g(g), b(b), a(a) {}
 
         static const Color4 Clear;
         static const Color4 Black;

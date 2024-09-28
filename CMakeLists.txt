@@ -16,31 +16,36 @@ else()
     find_package(OpenGL REQUIRED)
 endif()
 
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -fopenmp")
+
 include_directories(${OPENGL_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS})
 
-add_executable(test src/main.cpp
+add_executable(test lib/json.hpp
+        src/main.cpp
         src/Render/Renderer.h
         src/World/GameObject.h
         src/World/GameWorld.h
         src/World/Component.h
-        src/World/GameObject.cpp
         src/World/GameWorld.cpp
-        src/World/Component.cpp
         src/Common/Vector2.h
-        src/Common/Vector2.cpp
         src/Common/Color4.h
-        src/Common/Color4.cpp
         src/Render/Screen.h
-        src/Render/Screen.cpp
         src/Render/Renderer.cpp
         src/Render/OpenGLRenderer.h
         src/Render/OpenGLRenderer.cpp
         src/Input/InputManager.h
         src/Input/InputManager.cpp
         src/Common/Color3.h
-        src/Common/Color3.cpp
         src/Common/RectF.h
-        src/Common/RectF.cpp
+        src/Render/Surface.h
+        src/Render/Primitives/RectGraphic.h
+        src/Render/Primitives/RectGraphic.cpp
+        src/Common/Color3.cpp
+        src/Common/Color4.cpp
+        lib/json.hpp
+        src/World/Transform.h
+        src/World/TestGameObject.h
+        src/World/GameObject.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})

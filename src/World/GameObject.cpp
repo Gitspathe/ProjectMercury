@@ -1,52 +1,36 @@
-#include <cstdlib>
+#include "GameObject.h"
 #include "Component.h"
 #include "GameWorld.h"
-#include "GameObject.h"
 
-namespace World {
-    GameObject::GameObject()  { }
-    GameObject::~GameObject() { }
-
-    GameWorld* world;
-
-    GameWorld* GameObject::getWorld()
+namespace World
+{
+    void GameObject::init(const std::shared_ptr<GameWorld> &world)
     {
-        return world;
-    }
-
-    void GameObject::init(GameWorld* world)
-    {
-        components = std::list<Component*>();
         this->world = world;
         setup();
-        world->register_gameObject(this);
-        for(auto const component : components) {
-            component->init(this);
+        world->register_gameObject(shared_from_this());
+        for(const auto& component : components) {
+            component.second->init();
         }
         on_init();
     }
 
-    void GameObject::update(float deltaTime)
+    void GameObject::update(const float deltaTime)
     {
         on_update(deltaTime);
-        for(auto const component : components) {
-            component->update(deltaTime);
+        for(const auto& component : components) {
+            component.second->update(deltaTime);
         }
     }
 
     void GameObject::destroy()
     {
+        isDestroyed = true;
         on_destroy();
-        world->unregister_gameObject(this);
-        for(auto const component : components) {
-            component->destroy();
-            free(component);
+        world->unregister_gameObject(shared_from_this());
+        for(const auto& component : components) {
+            component.second->destroy();
         }
+        components.clear();
     }
-
-    void GameObject::setup() { }
-    void GameObject::on_init() { }
-    void GameObject::on_update(const float deltaTime) { }
-    void GameObject::on_destroy() { }
-
 }

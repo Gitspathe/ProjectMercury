@@ -1,28 +1,36 @@
 #ifndef GAMEWORLD_H
 #define GAMEWORLD_H
-#include <list>
+#include <unordered_set>
+#include "GameWorld.h"
 
 namespace World
 {
-    class GameObject;
-
     class GameWorld {
+    protected:
+        std::unordered_set<std::shared_ptr<GameObject>> gameObjects;
+
+        virtual void on_init() {}
+        virtual void on_update(float deltaTime) {}
+        virtual void on_destroy() {}
+
     public:
         GameWorld() = default;
+        virtual ~GameWorld() = default;
+
+        template<typename T>
+        static std::shared_ptr<T> create()
+        {
+            static_assert(std::is_base_of_v<GameWorld, T>, "T must derive from GameWorld");
+            auto ptr = std::make_shared<GameWorld>();
+            ptr->gameObjects = std::unordered_set<std::shared_ptr<GameObject>>();
+            return ptr;
+        }
 
         void init();
         void update(float deltaTime);
         void destroy();
-        void register_gameObject(GameObject* gameObject);
-        void unregister_gameObject(GameObject* gameObject);
-
-        static GameWorld* getInstance();
-    private:
-        std::list<GameObject*> gameObjects;
-
-        void on_init();
-        void on_update(float deltaTime);
-        void on_destroy();
+        void register_gameObject(const std::shared_ptr<GameObject> &gameObject);
+        void unregister_gameObject(const std::shared_ptr<GameObject> &gameObject);
     };
 }
 #endif //GAMEWORLD_H

@@ -6,7 +6,9 @@
 #include "Input/InputManager.h"
 #include "Render/OpenGLRenderer.h"
 #include "Render/Screen.h"
+#include "World/GameObject.h"
 #include "World/GameWorld.h"
+#include "World/Transform.h"
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -27,19 +29,30 @@ void main_loop()
     loop();
 }
 
+std::shared_ptr<World::GameObject> go;
+std::shared_ptr<World::GameWorld> world;
 void init()
 {
     inputManager->init();
+    world = World::GameWorld::create<World::GameWorld>();
+    world->init();
     screen = new Render::Screen(512, 256);
     renderer = new Render::OpenGLRenderer();
     inputManager = new Input::InputManager();
     renderer->setRenderScale(2.0f);
-    renderer->init(new World::GameWorld(), screen);
+    renderer->init(world, screen);
     isInit = true;
+
+    world = World::GameWorld::create<World::GameWorld>();
+    go = World::GameObject::create<World::GameObject>();
+    std::shared_ptr<World::Transform> transform = go->addComponent<World::Transform>();
+    go->init(world);
 }
 
 void run()
 {
+    world->update(0.1f);
+
     auto started = std::chrono::high_resolution_clock::now();
     inputManager->update(1.0f);
     screen->clear(Common::Color3::Black);

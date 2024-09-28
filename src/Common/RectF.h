@@ -1,22 +1,68 @@
 #ifndef RECT_H
 #define RECT_H
+#include "Vector2.h"
 
 namespace Common
 {
     class RectF
     {
-    public:
-        RectF(float x1 = 0.0f, float y1 = 0.0f, float x2 = 1.0f, float y2 = 1.0f);
-        const float getX1() const;
-        const float getY1() const;
-        const float getX2() const;
-        const float getY2() const;
-        void setX1(float x);
-        void setY1(float y);
-        void setX2(float x2);
-        void setY2(float y2);
     private:
-        float x1, y1, x2, y2;
+        float x, y, w, h;
+
+    public:
+        explicit RectF(const float x = 0.0f, const float y = 0.0f, const float w = 1.0f, const float h = 1.0f)
+            : x(x), y(y)
+        {
+            this-> w = w <= 0.0f ? 0.0f : w;
+            this-> h = h <= 0.0f ? 0.0f : h;
+        }
+
+        float getX() const
+        {
+            return x;
+        }
+
+        float getY() const
+        {
+            return y;
+        }
+
+        float getWidth() const
+        {
+            return w;
+        }
+
+        float getHeight() const
+        {
+            return h;
+        }
+
+        Vector2	getCenter() const
+        {
+            return Vector2(x + w / 2.0f, y + h / 2.0f);
+        }
+
+        Vector2 getPosition() const
+        {
+            return Vector2(x, y);
+        }
+
+        Vector2 getSize() const
+        {
+            return Vector2(w, h);
+        }
+
+        void setPosition(const Vector2 position)
+        {
+            x = position.x;
+            y = position.y;
+        }
+
+        void setSize(const Vector2 size)
+        {
+            w = size.x <= 0.0f ? 0.0f : size.x;
+            h = size.y <= 0.0f ? 0.0f : size.y;
+        }
     };
 }
 

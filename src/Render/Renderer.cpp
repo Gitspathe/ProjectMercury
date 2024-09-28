@@ -1,9 +1,11 @@
 #include "Renderer.h"
 
+#include <memory>
+
 using namespace World;
 namespace Render
 {
-    void Renderer::init(GameWorld* world, Screen* screen)
+    void Renderer::init(std::shared_ptr<GameWorld> world, Screen* screen)
     {
         this->world = world;
         this->screen = screen;

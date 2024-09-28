@@ -35,7 +35,7 @@ void main() {
     GLuint vertexShader;
     GLuint fragmentShader;
     GLuint shaderProgram;
-    GLuint VAO, VBO, EBO;
+    GLuint /*VAO,*/ VBO, EBO;
     std::vector<Color3> textureData;
     GLuint texture;
     int textureWidth, textureHeight;
@@ -130,11 +130,11 @@ void main() {
         glDeleteShader(fragmentShader);
 
         // Set up VAO, VBO, and EBO for the quad
-        glGenBuffers(1, &VAO);
+        //glGenBuffers(1, &VAO);
         glGenBuffers(1, &VBO);
         glGenBuffers(1, &EBO);
 
-        glBindBuffer(GL_VERTEX_ARRAY, VAO);
+        //glBindBuffer(GL_VERTEX_ARRAY, VAO);
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices, GL_STATIC_DRAW);
@@ -161,11 +161,12 @@ void main() {
 
     void OpenGLRenderer::on_update()
     {
-        for(int i = 0; i < 4096; i++) {
+        int size = 32;
+        for(size_t i = 0; i < 4096*24; i++) {
             int w = screen->getWidth();
             int h = screen->getHeight();
             screen->drawRect(
-                RectF(rand() % w, rand() % h, rand() % w, rand() % h),
+                RectF((rand() % w) - size / 2, (rand() % h) - size / 2, size, size),
                 Color3(rand() % 255, rand() % 255, rand() % 255)
             );
         }
@@ -175,10 +176,10 @@ void main() {
 
         // Use shader and bind texture
         glUseProgram(shaderProgram);
-        glBindTexture(GL_TEXTURE_2D, texture);
+        //glBindTexture(GL_TEXTURE_2D, texture);
 
         // Draw the full-screen quad
-        glBindBuffer(GL_VERTEX_ARRAY, VAO);
+        //glBindBuffer(GL_VERTEX_ARRAY, VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         // Swap buffers.
