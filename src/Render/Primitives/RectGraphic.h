@@ -15,7 +15,7 @@ namespace Render::Primitives
         const int endX,
         const int endY,
         const int bufferW,
-        TCol color)
+        const TCol color)
     {
         const auto col = Common::ColorConversion::convertColor<TCol>(color);
         for (int y = startY; y < endY; ++y) {

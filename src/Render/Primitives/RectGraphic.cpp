@@ -3,7 +3,7 @@
 namespace Render::Primitives
 {
     template<>
-    inline void drawInternal<Common::ColorRGB, Common::ColorRGB>(
+    void drawInternal<Common::ColorRGB, Common::ColorRGB>(
         std::vector<Common::ColorRGB>& buffer,
         const int startX,
         const int startY,

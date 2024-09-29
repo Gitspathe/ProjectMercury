@@ -74,7 +74,7 @@ void run()
     for(size_t i = 0; i < 100000; i++) {
         auto rectG = Render::Primitives::RectGraphic(
             Common::RectF((rand() % w) - size / 2, (rand() % h) - size / 2, size, size),
-            Common::ColorRGB(rand() % 255, rand() % 255, rand() % 255)
+            Common::ColorRGBA(rand() % 255, rand() % 255, rand() % 255)
         );
         rectG.draw(*surface);
     }
