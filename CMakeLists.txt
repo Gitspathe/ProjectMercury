@@ -46,7 +46,8 @@ add_executable(test lib/json.hpp
         src/Common/Vector2.cpp
         src/World/Component.cpp
         src/Common/ColorConversion.h
-        src/Common/ColorOperators.h
+        src/Common/Colors.h
+        src/Render/Primitives/RectGraphic.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})

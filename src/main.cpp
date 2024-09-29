@@ -68,7 +68,7 @@ void run()
     Input::InputManager::update(1.0f);
     surface->clear(Common::ColorRGB::Black);
 
-    const int size = 8;
+    const int size = 32;
     const int w = screen->getWidth();
     const int h = screen->getHeight();
     for(size_t i = 0; i < 100000; i++) {

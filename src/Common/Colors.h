@@ -1,6 +1,7 @@
 #ifndef COLOROPERATORS_H
 #define COLOROPERATORS_H
 
+#include <algorithm>
 #include "ColorRGB.h"
 #include "ColorRGBA.h"
 
@@ -41,9 +42,9 @@ namespace Common
 
     inline ColorRGB ColorRGB::operator+(const ColorRGBA& rhs) const {
         return ColorRGB(
-            std::clamp(static_cast<int>(r) / 255 + static_cast<int>(rhs.r) * rhs.a / 255, 0, 255),
-            std::clamp(static_cast<int>(g) / 255 + static_cast<int>(rhs.g) * rhs.a / 255, 0, 255),
-            std::clamp(static_cast<int>(b) / 255 + static_cast<int>(rhs.b) * rhs.a / 255, 0, 255)
+            std::clamp(static_cast<int>(r) + static_cast<int>(rhs.r) * rhs.a / 255, 0, 255),
+            std::clamp(static_cast<int>(g) + static_cast<int>(rhs.g) * rhs.a / 255, 0, 255),
+            std::clamp(static_cast<int>(b) + static_cast<int>(rhs.b) * rhs.a / 255, 0, 255)
         );
     }
 
