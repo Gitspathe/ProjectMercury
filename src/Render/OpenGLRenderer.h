@@ -1,7 +1,6 @@
 #ifndef OPENGLRENDERER_H
 #define OPENGLRENDERER_H
 #include <iostream>
-#include <vector>
 #include <GL/gl.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengles2.h>
@@ -41,18 +40,18 @@ void main() {
 }
 )";
 
-        SDL_Window* window;
-        GLuint vertexShader;
-        GLuint fragmentShader;
-        GLuint shaderProgram;
-        GLuint /*VAO,*/ VBO, EBO;
-        std::vector<T> textureData;
-        GLuint texture;
-        int textureWidth, textureHeight;
+        SDL_Window* window = nullptr;
+        GLuint vertexShader = 0;
+        GLuint fragmentShader = 0;
+        GLuint shaderProgram = 0;
+        GLuint VBO = 0;
+        GLuint EBO = 0;
+        GLuint texture = 0;
+        int textureWidth = 0;
+        int textureHeight = 0;
 
         // Full-screen quad vertices
         const float quadVertices[8] = {
-            // positions
             -1.0f,  1.0f,
             -1.0f, -1.0f,
              1.0f, -1.0f,
@@ -128,11 +127,8 @@ void main() {
             glDeleteShader(fragmentShader);
 
             // Set up VBO and EBO for the quad
-            //glGenBuffers(1, &VAO);
             glGenBuffers(1, &VBO);
             glGenBuffers(1, &EBO);
-
-            //glBindBuffer(GL_VERTEX_ARRAY, VAO);
 
             glBindBuffer(GL_ARRAY_BUFFER, VBO);
             glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices, GL_STATIC_DRAW);
@@ -142,9 +138,6 @@ void main() {
 
             glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
             glEnableVertexAttribArray(0);
-
-            // Generate a procedural texture.
-            textureData = std::vector<T>(this->backBuffer->getWidth() * this->backBuffer->getHeight() * 3); // RGB format
 
             // Create a texture in OpenGL
             glGenTextures(1, &texture);
@@ -159,16 +152,12 @@ void main() {
 
         void onUpdate() override
         {
-            textureData = this->backBuffer->getBuffer();
-
             updateTexture();
 
             // Use shader and bind texture
             glUseProgram(shaderProgram);
-            //glBindTexture(GL_TEXTURE_2D, texture);
 
             // Draw the full-screen quad
-            //glBindBuffer(GL_VERTEX_ARRAY, VAO);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
             // Swap buffers.

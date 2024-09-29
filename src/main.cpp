@@ -18,7 +18,7 @@
 
 std::function<void()> loop;
 bool running = true;
-Render::OpenGLRenderer<Common::ColorRGBA>* renderer;
+Render::OpenGLRenderer<Common::ColorRGB>* renderer;
 Render::Screen* screen;
 Input::InputManager* inputManager;
 bool isInit = false;
@@ -33,15 +33,15 @@ void main_loop()
 
 std::shared_ptr<World::GameObject> go;
 std::shared_ptr<World::GameWorld> world;
-std::shared_ptr<Render::Surface<Common::ColorRGBA>> surface;
+std::shared_ptr<Render::Surface<Common::ColorRGB>> surface;
 void init()
 {
     world = World::GameWorld::create<World::GameWorld>();
     world->init();
     screen = new Render::Screen(512, 256);
-    renderer = new Render::OpenGLRenderer<Common::ColorRGBA>();
+    renderer = new Render::OpenGLRenderer<Common::ColorRGB>();
     inputManager = new Input::InputManager();
-    surface = Render::Surface<Common::ColorRGBA>::create(screen->getWidth(), screen->getHeight());
+    surface = Render::Surface<Common::ColorRGB>::create(screen->getWidth(), screen->getHeight());
     renderer->setRenderScale(2.0f);
     renderer->init(surface);
     isInit = true;
@@ -58,20 +58,20 @@ void run()
     world->update(0.1f);
 
     if(rand() % 100 < 50) {
-        std::shared_ptr<World::TransformComponent> trans = go->getComponent<World::TransformComponent>();
+        const std::shared_ptr<World::TransformComponent> trans = go->getComponent<World::TransformComponent>();
         if(trans != nullptr) {
             go->removeComponent(trans);
         }
     }
 
     auto started = std::chrono::high_resolution_clock::now();
-    inputManager->update(1.0f);
-    surface->clear(Common::ColorRGBA::Black);
+    Input::InputManager::update(1.0f);
+    surface->clear(Common::ColorRGB::Black);
 
-    int size = 32;
+    const int size = 8;
+    const int w = screen->getWidth();
+    const int h = screen->getHeight();
     for(size_t i = 0; i < 100000; i++) {
-        int w = screen->getWidth();
-        int h = screen->getHeight();
         auto rectG = Render::Primitives::RectGraphic(
             Common::RectF((rand() % w) - size / 2, (rand() % h) - size / 2, size, size),
             Common::ColorRGB(rand() % 255, rand() % 255, rand() % 255)
@@ -104,7 +104,7 @@ int main()
                 }
                 case SDL_KEYUP:
                 case SDL_KEYDOWN: {
-                    inputManager->onKeyboardEvent(e.key);
+                    Input::InputManager::onKeyboardEvent(e.key);
                 }
                 default:
                     break;

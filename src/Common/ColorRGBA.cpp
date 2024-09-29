@@ -1,4 +1,5 @@
 #include "ColorRGBA.h"
+#include "ColorRGB.h"
 
 namespace Common
 {

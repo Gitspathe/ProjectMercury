@@ -1,10 +1,11 @@
 #ifndef RECTGRAPHIC_H
 #define RECTGRAPHIC_H
 #include "../../Common/RectF.h"
-#include "../../Common/ColorRGBA.h"
-#include "../../Common/ColorRGB.h"
+//#include "../../Common/ColorRGBA.h"
+//#include "../../Common/ColorRGB.h"
 #include "../Surface.h"
 #include "../../Common/ColorConversion.h"
+#include "../../Common/ColorOperators.h"
 
 namespace Render::Primitives
 {
@@ -14,6 +15,24 @@ namespace Render::Primitives
     private:
         Common::RectF rect;
         T color;
+
+        template<typename TSurface>
+        void drawInternal(std::vector<TSurface>& buffer, const int startX, const int startY, const int endX, const int endY, const int bufferW)
+        {
+            const auto data = buffer.data();
+            const auto col = Common::ColorConversion::convertColor<TSurface>(color);
+            for (int y = startY; y < endY; ++y) {
+                for(int x = startX; x < endX; ++x) {
+                    TSurface colSurface = buffer[y * bufferW + x];
+                    TSurface newColor = colSurface + color;
+                    buffer[y * bufferW + x] = newColor;
+                }
+
+
+                // const int rowOffset = y * bufferW + startX;
+                // std::fill(data + rowOffset, data + rowOffset + (endX - startX), col);
+            }
+        }
 
     public:
         RectGraphic(const Common::RectF rect, const T color)
@@ -51,7 +70,7 @@ namespace Render::Primitives
         }
 
         template<typename TSurface>
-        void draw(Surface<TSurface>& surface, bool centered = false)
+        void draw(Surface<TSurface>& surface, const bool centered = false)
         {
             int startX, startY, endX, endY;
             const int sW = surface.getWidth();
@@ -84,13 +103,7 @@ namespace Render::Primitives
             if(endX > sW) endX = sW;
             if(endY > sH) endY = sH;
 
-            // Fill each row with a fast memory copy.
-            const auto data = buffer.data();
-            const auto col = Common::ColorConversion::convertColor<TSurface>(color);
-            for (int y = startY; y < endY; ++y) {
-                const int rowOffset = y * sW + startX;
-                std::fill(data + rowOffset, data + rowOffset + (endX - startX), col);
-            }
+            drawInternal(buffer, startX, startY, endX, endY, sW);
         }
     };
 }

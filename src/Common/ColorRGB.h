@@ -1,9 +1,11 @@
-#ifndef COLOR3_H
-#define COLOR3_H
+#ifndef COLORRGB_H
+#define COLORRGB_H
 #include <cstdint>
 
 namespace Common
 {
+    struct ColorRGBA;
+
     struct ColorRGB
     {
         uint8_t r, g, b;
@@ -16,7 +18,16 @@ namespace Common
         static const ColorRGB Red;
         static const ColorRGB Green;
         static const ColorRGB Blue;
+
+        ColorRGB operator+(const ColorRGB& rhs) const;
+        ColorRGB operator-(const ColorRGB& rhs) const;
+        ColorRGB operator*(const ColorRGB& rhs) const;
+        ColorRGB operator/(const ColorRGB& rhs) const;
+
+        ColorRGB operator+(const ColorRGBA& rhs) const;
+        ColorRGB operator-(const ColorRGBA& rhs) const;
+        ColorRGB operator*(const ColorRGBA& rhs) const;
+        ColorRGB operator/(const ColorRGBA& rhs) const;
     };
 }
-
 #endif //COLOR3_H
