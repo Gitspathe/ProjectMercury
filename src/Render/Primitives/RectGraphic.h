@@ -1,8 +1,8 @@
 #ifndef RECTGRAPHIC_H
 #define RECTGRAPHIC_H
 #include "../../Common/RectF.h"
-#include "../../Common/Color4.h"
-#include "../../Common/Color3.h"
+#include "../../Common/ColorRGBA.h"
+#include "../../Common/ColorRGB.h"
 
 namespace Render {
     class Surface;
@@ -14,13 +14,13 @@ namespace Render::Primitives
     {
     private:
         Common::RectF rect;
-        Common::Color4 color;
+        Common::ColorRGBA color;
 
     public:
-        RectGraphic(const Common::RectF &rect, const Common::Color4 &color)
+        RectGraphic(const Common::RectF &rect, const Common::ColorRGBA &color)
             : rect(rect), color(color) {}
 
-        RectGraphic(const float x, const float y, const float w, const float h, Common::Color4 color)
+        RectGraphic(const float x, const float y, const float w, const float h, const Common::ColorRGBA color)
         {
             rect = Common::RectF(x, y, w, h);
             this->color = color;
@@ -31,29 +31,29 @@ namespace Render::Primitives
             return rect;
         }
 
-        Common::Color4 getColor4() const
+        Common::ColorRGBA getColorRGBA() const
         {
             return color;
         }
 
-        Common::Color3 getColor3() const
+        Common::ColorRGB getColorRGB() const
         {
-            return Common::Color3(color.r, color.g, color.b);
+            return Common::ColorRGB(color.r, color.g, color.b);
         }
 
-        void setShape(Common::RectF shape)
+        void setShape(const Common::RectF shape)
         {
             rect = shape;
         }
 
-        void setColor4(Common::Color4 color)
+        void setColorRGBA(const Common::ColorRGBA color)
         {
             this->color = color;
         }
 
-        void setColor3(Common::Color3 color)
+        void setColorRGB(const Common::ColorRGB color)
         {
-            this->color = Common::Color4(color.r, color.g, color.b);
+            this->color = Common::ColorRGBA(color.r, color.g, color.b);
         }
 
         void draw(Surface& surface, bool centered = false) const;

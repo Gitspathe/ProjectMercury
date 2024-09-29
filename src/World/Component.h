@@ -1,33 +1,51 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 #include <cstdint>
+#include <memory>
 
 namespace World
 {
     class GameObject;
-
-    namespace ComponentTypes
-    {
-        constexpr uint16_t NONE = 0;
-        constexpr uint16_t TRANSFORM = 1;
-        constexpr uint16_t ENTITY = 2;
-    }
 
     class Component
     {
     protected:
         std::weak_ptr<GameObject> gameObject = std::weak_ptr<GameObject>();
         bool isInit = false;
+        bool isEnabled = true;
+        bool isRegistered = false;
 
-        virtual void on_init() {}
-        virtual void on_update(float deltaTime) {}
-        virtual void on_destroy() {}
+        virtual void onInit() {}
+        virtual void onUpdate(float deltaTime) {}
+        virtual void onEnabled() {}
+        virtual void onDisabled() {}
+        virtual void onDestroy() {}
+
+        void enableInternal();
+        void disableInternal();
 
     public:
         Component() = default;
         virtual ~Component() = default;
 
-        virtual uint16_t getType() const = 0;
+        bool getEnabled() const
+        {
+            return isEnabled;
+        }
+
+        void setEnabled(const bool val)
+        {
+            const bool oldState = this->isEnabled;
+            this->isEnabled = val;
+            if(!isInit)
+                return;
+
+            if(val && !oldState) {
+                enableInternal();
+            } else if(!val && oldState) {
+                disableInternal();
+            }
+        }
 
         virtual bool isDynamic() const
         {
@@ -49,8 +67,11 @@ namespace World
 
         void init()
         {
-            on_init();
+            onInit();
             isInit = true;
+            if(isEnabled) {
+                enableInternal();
+            }
         }
 
         void update(const float deltaTime)
@@ -58,7 +79,7 @@ namespace World
             if(!isInit)
                 return;
 
-            on_update(deltaTime);
+            onUpdate(deltaTime);
         }
 
         void destroy()
@@ -66,7 +87,10 @@ namespace World
             if(!isInit)
                 return;
 
-            on_destroy();
+            if(isEnabled) {
+                setEnabled(false);
+            }
+            onDestroy();
         }
     };
 }

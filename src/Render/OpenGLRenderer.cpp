@@ -5,7 +5,8 @@
 #include <SDL2/SDL_opengles2.h>
 #include "OpenGLRenderer.h"
 #include "Screen.h"
-#include "../Common/Color3.h"
+#include "Surface.h"
+#include "../Common/ColorRGB.h"
 #include "../Common/RectF.h"
 using namespace Common;
 
@@ -36,7 +37,7 @@ void main() {
     GLuint fragmentShader;
     GLuint shaderProgram;
     GLuint /*VAO,*/ VBO, EBO;
-    std::vector<Color3> textureData;
+    std::vector<ColorRGB> textureData;
     GLuint texture;
     int textureWidth, textureHeight;
 
@@ -63,11 +64,6 @@ void main() {
         renderScale = val;
     }
 
-    void OpenGLRenderer::assignData(std::vector<Color3>& data, Screen* screen)
-    {
-        data = screen->getBuffer();
-    }
-
     void checkCompileErrors(GLuint shader, std::string type) {
         GLint success;
         GLchar infoLog[1024];
@@ -88,8 +84,8 @@ void main() {
 
     void OpenGLRenderer::on_init()
     {
-        textureWidth = screen->getWidth() * renderScale;
-        textureHeight = screen->getHeight() * renderScale;
+        textureWidth = backBuffer->getWidth() * renderScale;
+        textureHeight = backBuffer->getHeight() * renderScale;
 
         // Set GL attributes.
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
@@ -129,7 +125,7 @@ void main() {
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
 
-        // Set up VAO, VBO, and EBO for the quad
+        // Set up VBO and EBO for the quad
         //glGenBuffers(1, &VAO);
         glGenBuffers(1, &VBO);
         glGenBuffers(1, &EBO);
@@ -142,11 +138,11 @@ void main() {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(quadIndices), quadIndices, GL_STATIC_DRAW);
 
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
         glEnableVertexAttribArray(0);
 
         // Generate a procedural texture.
-        textureData = std::vector<Color3>(screen->getWidth() * screen->getHeight() * 3); // RGB format
+        textureData = std::vector<ColorRGB>(backBuffer->getWidth() * backBuffer->getHeight() * 3); // RGB format
 
         // Create a texture in OpenGL
         glGenTextures(1, &texture);
@@ -161,18 +157,8 @@ void main() {
 
     void OpenGLRenderer::on_update()
     {
-        int size = 32;
-        for(size_t i = 0; i < 4096*24; i++) {
-            int w = screen->getWidth();
-            int h = screen->getHeight();
-            screen->drawRect(
-                RectF((rand() % w) - size / 2, (rand() % h) - size / 2, size, size),
-                Color3(rand() % 255, rand() % 255, rand() % 255)
-            );
-        }
-
-        assignData(textureData, screen);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screen->getWidth(), screen->getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, textureData.data());
+        textureData = backBuffer->getBuffer();
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, backBuffer->getWidth(), backBuffer->getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, textureData.data());
 
         // Use shader and bind texture
         glUseProgram(shaderProgram);

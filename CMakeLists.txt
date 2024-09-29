@@ -26,26 +26,27 @@ add_executable(test lib/json.hpp
         src/World/Component.h
         src/World/GameWorld.cpp
         src/Common/Vector2.h
-        src/Common/Color4.h
+        src/Common/ColorRGBA.h
         src/Render/Screen.h
         src/Render/Renderer.cpp
         src/Render/OpenGLRenderer.h
         src/Render/OpenGLRenderer.cpp
         src/Input/InputManager.h
         src/Input/InputManager.cpp
-        src/Common/Color3.h
+        src/Common/ColorRGB.h
         src/Common/RectF.h
         src/Render/Surface.h
         src/Render/Primitives/RectGraphic.h
         src/Render/Primitives/RectGraphic.cpp
-        src/Common/Color3.cpp
-        src/Common/Color4.cpp
+        src/Common/ColorRGB.cpp
+        src/Common/ColorRGBA.cpp
         lib/json.hpp
         src/World/TransformComponent.h
         src/World/TestGameObject.h
         src/World/GameObject.cpp
         src/Common/Transform.h
         src/Common/Vector2.cpp
+        src/World/Component.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})

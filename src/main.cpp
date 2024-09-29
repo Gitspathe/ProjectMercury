@@ -2,10 +2,12 @@
 #include <functional>
 #include <chrono>
 #include <SDL2/SDL.h>
-#include "Common/Color3.h"
+#include "Common/ColorRGB.h"
 #include "Input/InputManager.h"
 #include "Render/OpenGLRenderer.h"
 #include "Render/Screen.h"
+#include "Render/Surface.h"
+#include "Render/Primitives/RectGraphic.h"
 #include "World/GameObject.h"
 #include "World/GameWorld.h"
 #include "World/TransformComponent.h"
@@ -31,28 +33,24 @@ void main_loop()
 
 std::shared_ptr<World::GameObject> go;
 std::shared_ptr<World::GameWorld> world;
+std::shared_ptr<Render::Surface> surface;
 void init()
 {
-    inputManager->init();
     world = World::GameWorld::create<World::GameWorld>();
     world->init();
     screen = new Render::Screen(512, 256);
     renderer = new Render::OpenGLRenderer();
     inputManager = new Input::InputManager();
+    surface = Render::Surface::create(screen->getWidth(), screen->getHeight());
     renderer->setRenderScale(2.0f);
-    renderer->init(world, screen);
+    renderer->init(surface);
     isInit = true;
 
     world = World::GameWorld::create<World::GameWorld>();
-    go = World::GameObject::create<World::GameObject>();
-    std::shared_ptr<World::TransformComponent> transform = go->addComponent<World::TransformComponent>();
-
-    std::shared_ptr<Common::Transform> testTrans = *transform;
-    testTrans->setPosition(Common::Vector2(1,5));
+    go = World::GameObject::createWithTransform<World::GameObject>();
+    go->init(world);
 
     std::cout << "SIZE OF: " << sizeof(World::GameObject) << std::endl;
-
-    go->init(world);
 }
 
 void run()
@@ -68,7 +66,19 @@ void run()
 
     auto started = std::chrono::high_resolution_clock::now();
     inputManager->update(1.0f);
-    screen->clear(Common::Color3::Black);
+    surface->clear(Common::ColorRGB::Black);
+
+    int size = 32;
+    for(size_t i = 0; i < 50000; i++) {
+        int w = screen->getWidth();
+        int h = screen->getHeight();
+        auto rectG = Render::Primitives::RectGraphic(
+            Common::RectF((rand() % w) - size / 2, (rand() % h) - size / 2, size, size),
+            Common::ColorRGBA(rand() % 255, rand() % 255, rand() % 255)
+        );
+        rectG.draw(*surface);
+    }
+
     renderer->update();
     auto done = std::chrono::high_resolution_clock::now();
     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(done-started).count() << std::endl;

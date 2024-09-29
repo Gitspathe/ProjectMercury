@@ -1,7 +1,7 @@
 #include "RectGraphic.h"
 #include "../Surface.h"
-#include "../../Common/Color3.h"
-#include "../../Common/Color4.h"
+#include "../../Common/ColorRGB.h"
+#include "../../Common/ColorRGBA.h"
 #include "../../Common/RectF.h"
 using namespace Common;
 
@@ -17,16 +17,15 @@ namespace Render::Primitives
         const int x2 = static_cast<int>(x1 + rect.getWidth());
         const int y2 = static_cast<int>(y1 + rect.getHeight());
         const int w = static_cast<int>(rect.getWidth());
-        std::vector<Color3> buffer = surface.getBuffer();
+        const int h = static_cast<int>(rect.getHeight());
+        std::vector<ColorRGB>& buffer = surface.getBuffer();
 
         // Calculate coordinates based on whether the rectangle should be centered
         if(centered) {
-            const int width = x2 - x1;
-            const int height = y2 - y1;
-            startX = x1 - width / 2;
-            startY = y1 - height / 2;
-            endX = x1 + width / 2;
-            endY = y1 + height / 2;
+            startX = x1 - w / 2;
+            startY = y1 - h / 2;
+            endX = x1 + w / 2;
+            endY = y1 + h / 2;
         } else {
             startX = x1;
             startY = y1;
@@ -43,9 +42,9 @@ namespace Render::Primitives
 
         // Fill each row with a fast memory copy.
         const auto data = buffer.data();
-        const auto col = Color3(color.r, color.g, color.b);
+        const auto col = ColorRGB(color.r, color.g, color.b);
         for (int y = startY; y < endY; ++y) {
-            const int rowOffset = y * w + startX;
+            const int rowOffset = y * sW + startX;
             std::fill(data + rowOffset, data + rowOffset + (endX - startX), col);
         }
     }

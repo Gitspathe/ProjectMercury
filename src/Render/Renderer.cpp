@@ -1,14 +1,12 @@
 #include "Renderer.h"
-
+#include "Surface.h"
 #include <memory>
 
-using namespace World;
 namespace Render
 {
-    void Renderer::init(std::shared_ptr<GameWorld> world, Screen* screen)
+    void Renderer::init(const std::shared_ptr<Surface>& backBuffer)
     {
-        this->world = world;
-        this->screen = screen;
+        this->backBuffer = backBuffer;
         on_init();
     }
 

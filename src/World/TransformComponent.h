@@ -12,18 +12,18 @@ namespace World
     protected:
         std::shared_ptr<Common::Transform> transform = nullptr;
 
-        void on_init() override
+        void onInit() override
         {
             std::cout << "Transform::on_init" << std::endl;
         }
 
-        void on_update(float deltaTime) override
+        void onUpdate(float deltaTime) override
         {
             transform->setPosition(transform->getPosition() + Common::Vector2(10,10));
             std::cout << "Transform::on_update - X: " << transform->getPosition().x << ", Y: " << transform->getPosition().y << std::endl;
         }
 
-        void on_destroy() override
+        void onDestroy() override
         {
             std::cout << "Transform::on_destroy" << std::endl;
         }
@@ -37,11 +37,6 @@ namespace World
         ~TransformComponent() override
         {
             transform = nullptr;
-        }
-
-        uint16_t getType() const override
-        {
-            return ComponentTypes::TRANSFORM;
         }
 
         bool isDynamic() const override

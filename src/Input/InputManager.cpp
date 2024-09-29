@@ -9,86 +9,105 @@ namespace Input
 {
     InputManager* InputManager::instance = nullptr;
 
-    std::list<SDL_Scancode> keysDownThisFrame;
-    std::list<SDL_Scancode> keysDownLastFrame;
-    std::list<SDL_KeyboardEvent> keyboardEvents;
-
-    InputManager::InputManager() { }
-
-    void InputManager::init()
+    InputManager::InputManager()
     {
         if(instance != nullptr) {
             throw std::runtime_error("InputManager already initialized");
         }
 
         instance = this;
-        keyboardEvents = std::list<SDL_KeyboardEvent>();
-        keysDownThisFrame = std::list<SDL_Scancode>();
-        keysDownLastFrame = std::list<SDL_Scancode>();
     }
 
     void InputManager::update(float deltaTime)
     {
-        keysDownLastFrame.clear();
+        InputManager* inst = getInstance();
+        if(inst == nullptr)
+            throw std::runtime_error("InputManager is not initialized");
+
+        inst->keysDownLastFrame.clear();
         std::copy(
-            keysDownThisFrame.begin(),
-            keysDownThisFrame.end(),
-            std::back_inserter(keysDownLastFrame)
+            inst->keysDownThisFrame.begin(),
+            inst->keysDownThisFrame.end(),
+            std::back_inserter(inst->keysDownLastFrame)
         );
 
         // Handle keyboard events.
-        for(const auto ev : keyboardEvents) {
+        for(const auto ev : inst->keyboardEvents) {
             handleKeyboardEvent(ev);
         }
 
         // Clean-up for next frame.
-        keyboardEvents.clear();
+        inst->keyboardEvents.clear();
     }
 
-    void InputManager::onKeyboardEvent(const SDL_KeyboardEvent &ev)
+    void InputManager::onKeyboardEvent(const SDL_KeyboardEvent& ev)
     {
-        keyboardEvents.push_back(ev);
+        InputManager* inst = getInstance();
+        if(inst == nullptr)
+            throw std::runtime_error("InputManager is not initialized");
+
+        inst->keyboardEvents.push_back(ev);
     }
 
-    bool InputManager::isKeyDown(const SDL_Scancode key) const
+    bool InputManager::isKeyDown(const SDL_Scancode key)
     {
-        return std::find(keysDownThisFrame.begin(), keysDownThisFrame.end(), key) != keysDownThisFrame.end();
+        InputManager* inst = getInstance();
+        if(inst == nullptr)
+            throw std::runtime_error("InputManager is not initialized");
+
+        return std::find(inst->keysDownThisFrame.begin(), inst->keysDownThisFrame.end(), key) != inst->keysDownThisFrame.end();
     }
 
-    bool InputManager::isKeyUp(const SDL_Scancode key) const
+    bool InputManager::isKeyUp(const SDL_Scancode key)
     {
+        InputManager* inst = getInstance();
+        if(inst == nullptr)
+            throw std::runtime_error("InputManager is not initialized");
+
         return !isKeyDown(key);
     }
 
-    bool InputManager::wasKeyPressedThisFrame(const SDL_Scancode key) const
+    bool InputManager::wasKeyPressedThisFrame(const SDL_Scancode key)
     {
-        bool pressedLastFrame = std::find(keysDownLastFrame.begin(), keysDownLastFrame.end(), key) != keysDownLastFrame.end();
+        InputManager* inst = getInstance();
+        if(inst == nullptr)
+            throw std::runtime_error("InputManager is not initialized");
+
+        bool pressedLastFrame = std::find(inst->keysDownLastFrame.begin(), inst->keysDownLastFrame.end(), key) != inst->keysDownLastFrame.end();
         bool pressedThisFrame = isKeyDown(key);
         return !pressedLastFrame && pressedThisFrame;
     }
 
-    bool InputManager::wasKeyReleasedThisFrame(const SDL_Scancode key) const
+    bool InputManager::wasKeyReleasedThisFrame(const SDL_Scancode key)
     {
-        bool pressedLastFrame = std::find(keysDownLastFrame.begin(), keysDownLastFrame.end(), key) != keysDownLastFrame.end();
+        InputManager* inst = getInstance();
+        if(inst == nullptr)
+            throw std::runtime_error("InputManager is not initialized");
+
+        bool pressedLastFrame = std::find(inst->keysDownLastFrame.begin(), inst->keysDownLastFrame.end(), key) != inst->keysDownLastFrame.end();
         bool pressedThisFrame = isKeyDown(key);
         return pressedLastFrame && !pressedThisFrame;
     }
 
     void InputManager::handleKeyboardEvent(const SDL_KeyboardEvent& ev)
     {
+        InputManager* inst = getInstance();
+        if(inst == nullptr)
+            throw std::runtime_error("InputManager is not initialized");
+
         switch(ev.type) {
             case SDL_KEYDOWN: {
                 const bool found = std::find(
-                    keysDownThisFrame.begin(),
-                    keysDownThisFrame.end(),
+                    inst->keysDownThisFrame.begin(),
+                    inst->keysDownThisFrame.end(),
                     ev.keysym.scancode
-                ) != keysDownThisFrame.end();
+                ) != inst->keysDownThisFrame.end();
                 if(!found) {
-                    keysDownThisFrame.push_back(ev.keysym.scancode);
+                    inst->keysDownThisFrame.push_back(ev.keysym.scancode);
                 }
             } break;
             case SDL_KEYUP: {
-                keysDownThisFrame.remove(ev.keysym.scancode);
+                inst->keysDownThisFrame.remove(ev.keysym.scancode);
             } break;
         }
     }

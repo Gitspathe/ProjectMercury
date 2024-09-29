@@ -2,19 +2,14 @@
 #define RENDERER_H
 #include <memory>
 
-namespace World {
-    class GameWorld;
-}
-
 namespace Render
 {
-    class Screen;
+    class Surface;
 
     class Renderer
     {
     protected:
-        std::shared_ptr<World::GameWorld> world = nullptr;
-        Screen* screen = nullptr;
+        std::shared_ptr<Surface> backBuffer = nullptr;
 
         virtual void on_init() = 0;
         virtual void on_update() = 0;
@@ -23,7 +18,7 @@ namespace Render
     public:
         virtual ~Renderer() = default;
 
-        void init(std::shared_ptr<World::GameWorld> world, Screen* screen);
+        void init(const std::shared_ptr<Surface> &backBuffer);
         void update();
         void destroy();
     };

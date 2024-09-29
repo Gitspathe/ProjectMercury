@@ -12,7 +12,11 @@ namespace World
         for(const auto& component : components) {
             component->init();
         }
+        if(isEnabled) {
+            enableInternal();
+        }
         on_init();
+        isInit = true;
     }
 
     void GameObject::update(const float deltaTime)
@@ -31,9 +35,27 @@ namespace World
         isDestroyed = true;
         on_destroy();
         world->unregister_gameObject(shared_from_this());
+        if(isEnabled) {
+            setEnabled(false);
+        }
         for(const auto& component : components) {
             component->destroy();
         }
         components.clear();
     }
+
+    void GameObject::enableInternal() const
+    {
+        for(const auto c : components) {
+            c->setEnabled(true);
+        }
+    }
+
+    void GameObject::disabledInternal() const
+    {
+        for(const auto c : components) {
+            c->setEnabled(false);
+        }
+    }
+
 }
