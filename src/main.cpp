@@ -64,15 +64,14 @@ void run()
         if(trans != nullptr) {
             go->removeComponent(trans);
         }
-        std::cout << "AAA" << std::endl;
     }
 
-    //auto started = std::chrono::high_resolution_clock::now();
+    auto started = std::chrono::high_resolution_clock::now();
     inputManager->update(1.0f);
     screen->clear(Common::Color3::Black);
     renderer->update();
-    //auto done = std::chrono::high_resolution_clock::now();
-    //std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(done-started).count() << std::endl;
+    auto done = std::chrono::high_resolution_clock::now();
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(done-started).count() << std::endl;
 }
 
 int main()

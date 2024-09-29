@@ -77,15 +77,15 @@ namespace World
             if(isDestroyed)
                 throw std::runtime_error("GameObject::removeComponent called on destroyed GameObject");
 
-            static_assert(std::is_base_of_v<World::Component, T>, "T must derive from World::Component");
+            static_assert(std::is_base_of_v<Component, T>, "T must derive from World::Component");
             if(component->isDynamic()) {
-                for(int i = 0; i < dynamicComponents.size(); i++) {
+                for(size_t i = 0; i < dynamicComponents.size(); i++) {
                     if(dynamicComponents[i] == component) {
                         dynamicComponents.erase(dynamicComponents.begin() + i);
                     }
                 }
             }
-            for(int i = 0; i < components.size(); i++) {
+            for(size_t i = 0; i < components.size(); i++) {
                 if(components[i] == component) {
                     components.erase(components.begin() + i);
                     return;
@@ -100,7 +100,8 @@ namespace World
                 return nullptr;
 
             for(auto c : components) {
-                if(std::shared_ptr<T> cast = std::dynamic_pointer_cast<T>(c)) {
+                std::shared_ptr<T> cast = std::dynamic_pointer_cast<T>(c);
+                if(typeid(std::shared_ptr<T>) == typeid(cast)) {
                     return cast;
                 }
             }
