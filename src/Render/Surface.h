@@ -2,15 +2,16 @@
 #define SURFACE_H
 #include <memory>
 #include <vector>
-#include "../Common/ColorRGB.h"
+#include "../Common/ColorConversion.h"
 
 namespace Render
 {
 
-    class Surface : public std::enable_shared_from_this<Surface>
+    template<typename T>
+    class Surface
     {
     private:
-        std::vector<Common::ColorRGB> buffer;
+        std::vector<T> buffer;
         int w, h;
 
     public:
@@ -18,8 +19,8 @@ namespace Render
         {
             this->w = w;
             this->h = h;
-            buffer = std::vector<Common::ColorRGB>(h * w);
-            clear(Common::ColorRGB::Black);
+            buffer = std::vector<T>(h * w);
+            clear(T());
         }
 
         static std::shared_ptr<Surface> create(const int w, const int h)
@@ -27,25 +28,25 @@ namespace Render
             return std::make_shared<Surface>(w, h);
         }
 
-        std::vector<Common::ColorRGB>& getBuffer()
+        std::vector<T>& getBuffer()
         {
             return buffer;
         }
 
-        Common::ColorRGB getPixel(const int x, const int y) const
+        T getPixel(const int x, const int y) const
         {
 #ifndef NDEBUG
             if(x < 0 || x >= w || y < 0 || y >= h)
-                return Common::ColorRGB::Black;
+                return T();
 #endif
 
             return buffer[y * w + x];
         }
 
-        Common::ColorRGB getPixelSafe(const int x, const int y) const
+        T getPixelSafe(const int x, const int y) const
         {
             if(x < 0 || x >= w || y < 0 || y >= h)
-                return Common::ColorRGB::Black;
+                return T();
 
             return buffer[y * w + x];
         }
@@ -60,25 +61,27 @@ namespace Render
             return h;
         }
 
-        void setPixel(const int x, const int y, const Common::ColorRGB color)
+        template<typename TCol>
+        void setPixel(const int x, const int y, const TCol& color)
         {
 #ifndef NDEBUG
             if(x < 0 || x >= w || y < 0 || y >= h)
                 return;
 #endif
 
-            buffer[y * w + x] = color;
+            buffer[y * w + x] = convertColor(color);
         }
 
-        void setPixelSafe(const int x, const int y, const Common::ColorRGB color)
+        template<typename TCol>
+        void setPixelSafe(const int x, const int y, const TCol& color)
         {
             if(x < 0 || x >= w || y < 0 || y >= h)
                 return;
 
-            buffer[y * w + x] = color;
+            buffer[y * w + x] = convertColor(color);
         }
 
-        void clear(const Common::ColorRGB color)
+        void clear(const T color)
         {
             // Reset the entire buffer with a fast memory copy.
             std::fill(buffer.begin(), buffer.end(), color);
@@ -89,7 +92,7 @@ namespace Render
             this->w = w <= 0 ? 1 : w;
             this->h = h <= 0 ? 1 : h;
             buffer.resize(this->h * this->w);
-            clear(Common::ColorRGB::Black);
+            clear(T());
         }
     };
 

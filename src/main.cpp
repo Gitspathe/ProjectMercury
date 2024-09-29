@@ -18,7 +18,7 @@
 
 std::function<void()> loop;
 bool running = true;
-Render::OpenGLRenderer* renderer;
+Render::OpenGLRenderer<Common::ColorRGBA>* renderer;
 Render::Screen* screen;
 Input::InputManager* inputManager;
 bool isInit = false;
@@ -33,15 +33,15 @@ void main_loop()
 
 std::shared_ptr<World::GameObject> go;
 std::shared_ptr<World::GameWorld> world;
-std::shared_ptr<Render::Surface> surface;
+std::shared_ptr<Render::Surface<Common::ColorRGBA>> surface;
 void init()
 {
     world = World::GameWorld::create<World::GameWorld>();
     world->init();
     screen = new Render::Screen(512, 256);
-    renderer = new Render::OpenGLRenderer();
+    renderer = new Render::OpenGLRenderer<Common::ColorRGBA>();
     inputManager = new Input::InputManager();
-    surface = Render::Surface::create(screen->getWidth(), screen->getHeight());
+    surface = Render::Surface<Common::ColorRGBA>::create(screen->getWidth(), screen->getHeight());
     renderer->setRenderScale(2.0f);
     renderer->init(surface);
     isInit = true;
@@ -66,15 +66,15 @@ void run()
 
     auto started = std::chrono::high_resolution_clock::now();
     inputManager->update(1.0f);
-    surface->clear(Common::ColorRGB::Black);
+    surface->clear(Common::ColorRGBA::Black);
 
     int size = 32;
-    for(size_t i = 0; i < 50000; i++) {
+    for(size_t i = 0; i < 100000; i++) {
         int w = screen->getWidth();
         int h = screen->getHeight();
         auto rectG = Render::Primitives::RectGraphic(
             Common::RectF((rand() % w) - size / 2, (rand() % h) - size / 2, size, size),
-            Common::ColorRGBA(rand() % 255, rand() % 255, rand() % 255)
+            Common::ColorRGB(rand() % 255, rand() % 255, rand() % 255)
         );
         rectG.draw(*surface);
     }

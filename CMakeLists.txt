@@ -28,7 +28,6 @@ add_executable(test lib/json.hpp
         src/Common/Vector2.h
         src/Common/ColorRGBA.h
         src/Render/Screen.h
-        src/Render/Renderer.cpp
         src/Render/OpenGLRenderer.h
         src/Render/OpenGLRenderer.cpp
         src/Input/InputManager.h
@@ -37,7 +36,6 @@ add_executable(test lib/json.hpp
         src/Common/RectF.h
         src/Render/Surface.h
         src/Render/Primitives/RectGraphic.h
-        src/Render/Primitives/RectGraphic.cpp
         src/Common/ColorRGB.cpp
         src/Common/ColorRGBA.cpp
         lib/json.hpp
@@ -47,6 +45,7 @@ add_executable(test lib/json.hpp
         src/Common/Transform.h
         src/Common/Vector2.cpp
         src/World/Component.cpp
+        src/Common/ColorConversion.h
 )
 
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})

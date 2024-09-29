@@ -1,26 +1,38 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 #include <memory>
+#include "Surface.h"
 
 namespace Render
 {
-    class Surface;
-
+    template<typename T>
     class Renderer
     {
     protected:
-        std::shared_ptr<Surface> backBuffer = nullptr;
+        std::shared_ptr<Surface<T>> backBuffer = nullptr;
 
-        virtual void on_init() = 0;
-        virtual void on_update() = 0;
-        virtual void on_destroy() = 0;
+        virtual void onInit() = 0;
+        virtual void onUpdate() = 0;
+        virtual void onDestroy() = 0;
 
     public:
         virtual ~Renderer() = default;
 
-        void init(const std::shared_ptr<Surface> &backBuffer);
-        void update();
-        void destroy();
+        void init(const std::shared_ptr<Surface<T>> &backBuffer)
+        {
+            this->backBuffer = backBuffer;
+            onInit();
+        }
+
+        void update()
+        {
+            onUpdate();
+        }
+
+        void destroy()
+        {
+            onDestroy();
+        }
     };
 }
 
