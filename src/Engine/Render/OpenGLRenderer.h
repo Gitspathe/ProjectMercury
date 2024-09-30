@@ -97,8 +97,9 @@ void main() {
             textureHeight = backBuffer->getHeight() * renderScale;
 
             // Set GL attributes.
-            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
             SDL_GL_SetSwapInterval(0);
             SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
             SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
@@ -165,10 +166,9 @@ void main() {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-            auto glsl_version = "#version 150";
-
+            
             // IMGUI
+            auto glsl_version = "#version 100";
             IMGUI_CHECKVERSION();
             ImGui::CreateContext();
             ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -185,7 +185,6 @@ void main() {
 
             // Draw the full-screen quad
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
 
             // start the Dear ImGui frame
             ImGui_ImplOpenGL3_NewFrame();
