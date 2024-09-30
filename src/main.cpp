@@ -11,7 +11,7 @@ bool running = true;
 bool isInit = false;
 std::function<void()> loop;
 Engine::Input::InputManager* inputManager;
-TestGame* game;
+std::shared_ptr<TestGame> game;
 
 #ifdef __EMSCRIPTEN__
 EMSCRIPTEN_KEEPALIVE
@@ -25,7 +25,7 @@ void init()
 {
     inputManager = new Engine::Input::InputManager();
 
-    game = new TestGame();
+    game = std::make_shared<TestGame>();
     game->init();
 
     isInit = true;

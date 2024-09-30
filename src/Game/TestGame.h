@@ -1,6 +1,7 @@
 #ifndef TESTGAME_H
 #define TESTGAME_H
 #include "../Engine/Core/Game.h"
+#include "../Engine/GUI/ImGUIManager.h"
 #include "../Engine/Render/OpenGLRenderer.h"
 #include "../Engine/Render/Primitives/RectGraphic.h"
 
@@ -16,6 +17,8 @@ protected:
         screen = Engine::Render::Screen::create(512,256);
         renderer->setRenderScale(2.0f);
         renderer->init(*screen);
+
+        addSubSystem<Engine::GUI::ImGUIManager>(std::make_shared<Engine::GUI::ImGUIManager>());
     }
 
     void onInit() override
@@ -28,7 +31,7 @@ protected:
         std::cout << "Update from TestGame" << std::endl;
     }
 
-    void onRender() override
+    void onRenderGame() override
     {
         renderer->getBackBuffer().clear(Engine::Common::ColorRGB::Black);
 
@@ -43,6 +46,11 @@ protected:
             rectG.draw(renderer->getBackBuffer());
         }
 
+        renderer->prepare();
+    }
+
+    void onPostRenderGame() override
+    {
         renderer->update();
     }
 

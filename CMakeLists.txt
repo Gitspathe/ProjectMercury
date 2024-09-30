@@ -2,6 +2,28 @@ cmake_minimum_required(VERSION 3.29)
 project(test)
 set(CMAKE_CXX_STANDARD 20)
 
+option(BUILD_SERVER "Build server code" ON)
+option(BUILD_CLIENT "Build client code" ON)
+option(DEV_MODE "Include developer tools" ON)
+
+if(BUILD_SERVER)
+    add_definitions(-DSERVER=1)
+else()
+    add_definitions(-DSERVER=0)
+endif()
+
+if(BUILD_CLIENT)
+    add_definitions(-DCLIENT=1)
+else()
+    add_definitions(-DCLIENT=0)
+endif()
+
+if(DEV_MODE)
+    add_definitions(-DDEV_MODE=1)
+else()
+    add_definitions(-DDEV_MODE=0)
+endif()
+
 option(JS_ONLY "Compiles to native JS (No WASM)" OFF)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
@@ -13,7 +35,9 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
     set(CMAKE_CXX_SCAN_FOR_MODULES 0)
 endif()
 
-add_library(glad STATIC src/glad.c)
+add_library(glad STATIC src/glad.c
+        src/Engine/Core/Subsystem.h
+        src/Engine/GUI/ImGUIManager.h)
 
 find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
