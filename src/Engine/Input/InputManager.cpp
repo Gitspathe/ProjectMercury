@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <ostream>
 
-namespace Input
+namespace Engine::Input
 {
     InputManager* InputManager::instance = nullptr;
 

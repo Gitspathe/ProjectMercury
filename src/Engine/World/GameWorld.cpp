@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "GameWorld.h"
 
-namespace World
+namespace Engine::World
 {
     void GameWorld::init() {}
 

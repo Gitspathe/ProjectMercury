@@ -3,7 +3,7 @@
 #include "ColorRGB.h"
 #include "ColorRGBA.h"
 
-namespace Common
+namespace Engine::Common
 {
     inline std::uint8_t clamp(const int val)
     {

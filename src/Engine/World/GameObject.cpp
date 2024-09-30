@@ -2,7 +2,7 @@
 #include "Component.h"
 #include "GameWorld.h"
 
-namespace World
+namespace Engine::World
 {
     void GameObject::init(const std::shared_ptr<GameWorld> &world)
     {

@@ -4,7 +4,7 @@
 #include "Surface.h"
 #include "Screen.h"
 
-namespace Render
+namespace Engine::Render
 {
     template<typename T>
     class Renderer

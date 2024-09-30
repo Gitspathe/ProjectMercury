@@ -2,7 +2,7 @@
 
 #include "ColorRGBA.h"
 
-namespace Common
+namespace Engine::Common
 {
     const ColorRGB ColorRGB::Black = ColorRGB(0, 0, 0);
     const ColorRGB ColorRGB::White = ColorRGB(255, 255, 255);

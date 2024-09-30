@@ -10,7 +10,7 @@
 bool running = true;
 bool isInit = false;
 std::function<void()> loop;
-Input::InputManager* inputManager;
+Engine::Input::InputManager* inputManager;
 TestGame* game;
 
 #ifdef __EMSCRIPTEN__
@@ -23,7 +23,7 @@ void main_loop()
 
 void init()
 {
-    inputManager = new Input::InputManager();
+    inputManager = new Engine::Input::InputManager();
 
     game = new TestGame();
     game->init();
@@ -33,7 +33,7 @@ void init()
 
 void run()
 {
-    Input::InputManager::update(1.0f);
+    Engine::Input::InputManager::update(1.0f);
     game->update(0.1f);
     game->render();
 }
@@ -58,7 +58,7 @@ int main()
                 }
                 case SDL_KEYUP:
                 case SDL_KEYDOWN: {
-                    Input::InputManager::onKeyboardEvent(e.key);
+                    Engine::Input::InputManager::onKeyboardEvent(e.key);
                 }
                 default:
                     break;

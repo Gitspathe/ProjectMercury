@@ -13,10 +13,12 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
     set(CMAKE_CXX_SCAN_FOR_MODULES 0)
 endif()
 
+add_library(glad STATIC src/glad.c)
+
 find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
 
-include_directories(${OPENGL_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS})
+include_directories(${OPENGL_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/include)
 
 add_executable(test lib/json.hpp
         src/main.cpp
@@ -48,12 +50,10 @@ add_executable(test lib/json.hpp
         src/Engine/Common/Colors.h
         src/Engine/Core/Game.h
         src/Game/TestGame.h
-        src/Engine/Common/BaseColor.h
         src/Engine/Common/ColorConstants.h
 )
 
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${GLAD_LIBRARY} "glad")
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
     if(JS_ONLY)

@@ -8,7 +8,7 @@
 #include "../Common/Transform.h"
 #include "../World/TransformComponent.h"
 
-namespace World
+namespace Engine::World
 {
     class Component;
     class GameWorld;

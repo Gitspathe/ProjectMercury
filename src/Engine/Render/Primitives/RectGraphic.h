@@ -5,7 +5,7 @@
 #include "../../Common/ColorConversion.h"
 #include "../../Common/Colors.h"
 
-namespace Render::Primitives
+namespace Engine::Render::Primitives
 {
     template<typename TSurface>
     void drawInternal(

@@ -1,7 +1,7 @@
 #include "ColorRGBA.h"
 #include "ColorRGB.h"
 
-namespace Common
+namespace Engine::Common
 {
     const ColorRGBA ColorRGBA::Clear = ColorRGBA(0, 0, 0, 0);
     const ColorRGBA ColorRGBA::Black = ColorRGBA(0, 0, 0);

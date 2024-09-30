@@ -3,7 +3,7 @@
 #include <unordered_set>
 #include "GameWorld.h"
 
-namespace World
+namespace Engine::World
 {
     class GameObject;
 

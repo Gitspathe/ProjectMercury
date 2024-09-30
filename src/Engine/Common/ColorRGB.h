@@ -3,7 +3,7 @@
 #include <cstdint>
 #include "ColorConstants.h"
 
-namespace Common
+namespace Engine::Common
 {
     struct ColorRGBA;
 

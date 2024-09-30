@@ -1,6 +1,6 @@
 #ifndef VECTOR2_H
 
-namespace Common
+namespace Engine::Common
 {
     struct Vector2
     {

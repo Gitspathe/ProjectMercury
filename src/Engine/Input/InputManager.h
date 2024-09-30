@@ -3,7 +3,7 @@
 #include <list>
 #include <SDL_events.h>
 
-namespace Input
+namespace Engine::Input
 {
     class InputManager
     {

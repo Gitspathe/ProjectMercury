@@ -2,7 +2,7 @@
 #define TESTGAMEOBJECT_H
 #include "GameObject.h"
 
-namespace World
+namespace Engine::World
 {
     class TestGameObject : public GameObject
     {

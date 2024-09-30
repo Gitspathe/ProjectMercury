@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <memory>
 
-namespace World
+namespace Engine::World
 {
     class GameObject;
 

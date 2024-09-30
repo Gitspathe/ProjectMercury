@@ -5,7 +5,7 @@
 #include "../Common/ColorRGB.h"
 #include "../Common/RectF.h"
 
-namespace Render
+namespace Engine::Render
 {
     class Screen
     {

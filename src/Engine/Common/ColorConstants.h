@@ -1,7 +1,7 @@
 #ifndef COLORCONSTANTS_H
 #define COLORCONSTANTS_H
 
-namespace Common
+namespace Engine::Common
 {
     namespace BlendMode
     {

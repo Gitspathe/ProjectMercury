@@ -1,12 +1,11 @@
 #ifndef OPENGLRENDERER_H
 #define OPENGLRENDERER_H
 #include <iostream>
-#include <GL/gl.h>
+#include <glad/glad.h>
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_opengles2.h>
 #include "Renderer.h"
 
-namespace Render {
+namespace Engine::Render {
 
     class OpenGLRenderer final : public Renderer<Common::ColorRGB>
     {
@@ -111,7 +110,16 @@ void main() {
                 textureHeight,
                 SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN
             );
-            SDL_GL_CreateContext(window);
+            const SDL_GLContext context = SDL_GL_CreateContext(window);
+
+            // Load OpenGL function pointers using Glad
+            if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
+                // Handle error
+                SDL_GL_DeleteContext(context);
+                SDL_DestroyWindow(window);
+                SDL_Quit();
+                return;
+            }
 
             // Build and compile shaders
             vertexShader = glCreateShader(GL_VERTEX_SHADER);

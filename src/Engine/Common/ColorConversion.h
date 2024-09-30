@@ -3,7 +3,7 @@
 #include "ColorRGB.h"
 #include "ColorRGBA.h"
 
-namespace Common::ColorConversion
+namespace Engine::Common::ColorConversion
 {
     inline ColorRGB toRGB(const ColorRGBA& color)
     {

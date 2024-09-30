@@ -3,7 +3,7 @@
 #include <vector>
 #include "../Common/ColorConversion.h"
 
-namespace Render
+namespace Engine::Render
 {
 
     template<typename T>

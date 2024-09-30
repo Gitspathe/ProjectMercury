@@ -5,7 +5,7 @@
 #include "Component.h"
 #include "../Common/Transform.h"
 
-namespace World
+namespace Engine::World
 {
     class TransformComponent final : public Component
     {

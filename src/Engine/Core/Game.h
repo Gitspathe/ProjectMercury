@@ -3,15 +3,15 @@
 #include <memory>
 #include "../World/GameWorld.h"
 
-namespace Render {
+namespace Engine::Render {
     class Screen;
 }
 
-namespace World {
+namespace Engine::World {
     class GameWorld;
 }
 
-namespace Core
+namespace Engine::Core
 {
     class Game
     {

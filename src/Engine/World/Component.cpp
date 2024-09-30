@@ -2,7 +2,7 @@
 
 #include "GameObject.h"
 
-namespace World
+namespace Engine::World
 {
     void Component::enableInternal()
     {

@@ -2,7 +2,7 @@
 #define COLORRGBA_H
 #include <cstdint>
 
-namespace Common
+namespace Engine::Common
 {
     struct ColorRGB;
 

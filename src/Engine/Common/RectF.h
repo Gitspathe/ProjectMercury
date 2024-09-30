@@ -2,7 +2,7 @@
 #define RECT_H
 #include "Vector2.h"
 
-namespace Common
+namespace Engine::Common
 {
     class RectF
     {
