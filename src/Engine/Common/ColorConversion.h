@@ -18,14 +18,12 @@ namespace Common::ColorConversion
     template<typename TTarget, typename TSource>
     TTarget convertColor(const TSource& color)
     {
-        if constexpr (std::is_same_v<TTarget, TSource>) {
-            return color;
-        } else if constexpr (std::is_same_v<TSource, ColorRGB> && std::is_same_v<TTarget, ColorRGBA>) {
+        if constexpr (std::is_same_v<TSource, ColorRGB> && std::is_same_v<TTarget, ColorRGBA>) {
             return ColorConversion::toRGBA(color);
         } else if constexpr (std::is_same_v<TSource, ColorRGBA> && std::is_same_v<TTarget, ColorRGB>) {
             return ColorConversion::toRGB(color);
         } else {
-            return TSource();
+            return color;
         }
     }
 

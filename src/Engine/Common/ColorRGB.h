@@ -1,12 +1,13 @@
 #ifndef COLORRGB_H
 #define COLORRGB_H
 #include <cstdint>
+#include "ColorConstants.h"
 
 namespace Common
 {
     struct ColorRGBA;
 
-    struct ColorRGB
+    struct ColorRGB //: BaseColor
     {
         uint8_t r, g, b;
 

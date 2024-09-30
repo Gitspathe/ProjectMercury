@@ -20,33 +20,36 @@ include_directories(${OPENGL_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS})
 
 add_executable(test lib/json.hpp
         src/main.cpp
-        src/Render/Renderer.h
-        src/World/GameObject.h
-        src/World/GameWorld.h
-        src/World/Component.h
-        src/World/GameWorld.cpp
-        src/Common/Vector2.h
-        src/Common/ColorRGBA.h
-        src/Render/Screen.h
-        src/Render/OpenGLRenderer.h
-        src/Render/OpenGLRenderer.cpp
-        src/Input/InputManager.h
-        src/Input/InputManager.cpp
-        src/Common/ColorRGB.h
-        src/Common/RectF.h
-        src/Render/Surface.h
-        src/Render/Primitives/RectGraphic.h
-        src/Common/ColorRGB.cpp
-        src/Common/ColorRGBA.cpp
+        src/Engine/Render/Renderer.h
+        src/Engine/World/GameObject.h
+        src/Engine/World/GameWorld.h
+        src/Engine/World/Component.h
+        src/Engine/World/GameWorld.cpp
+        src/Engine/Common/Vector2.h
+        src/Engine/Common/ColorRGBA.h
+        src/Engine/Render/Screen.h
+        src/Engine/Render/OpenGLRenderer.h
+        src/Engine/Input/InputManager.h
+        src/Engine/Input/InputManager.cpp
+        src/Engine/Common/ColorRGB.h
+        src/Engine/Common/RectF.h
+        src/Engine/Render/Surface.h
+        src/Engine/Render/Primitives/RectGraphic.h
+        src/Engine/Common/ColorRGB.cpp
+        src/Engine/Common/ColorRGBA.cpp
         lib/json.hpp
-        src/World/TransformComponent.h
-        src/World/TestGameObject.h
-        src/World/GameObject.cpp
-        src/Common/Transform.h
-        src/Common/Vector2.cpp
-        src/World/Component.cpp
-        src/Common/ColorConversion.h
-        src/Common/Colors.h
+        src/Engine/World/TransformComponent.h
+        src/Engine/World/TestGameObject.h
+        src/Engine/World/GameObject.cpp
+        src/Engine/Common/Transform.h
+        src/Engine/Common/Vector2.cpp
+        src/Engine/World/Component.cpp
+        src/Engine/Common/ColorConversion.h
+        src/Engine/Common/Colors.h
+        src/Engine/Core/Game.h
+        src/Game/TestGame.h
+        src/Engine/Common/BaseColor.h
+        src/Engine/Common/ColorConstants.h
 )
 
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})

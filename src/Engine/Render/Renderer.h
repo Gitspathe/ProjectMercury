@@ -1,0 +1,55 @@
+#ifndef RENDERER_H
+#define RENDERER_H
+#include <memory>
+#include "Surface.h"
+#include "Screen.h"
+
+namespace Render
+{
+    template<typename T>
+    class Renderer
+    {
+    protected:
+        std::unique_ptr<Surface<T>> backBuffer = nullptr;
+
+        virtual void onInit() = 0;
+        virtual void onUpdate() = 0;
+        virtual void onDestroy() = 0;
+
+    public:
+        virtual ~Renderer() = default;
+
+        template<typename TRenderer>
+        static std::shared_ptr<TRenderer> create()
+        {
+            static_assert(std::is_base_of_v<Renderer, TRenderer>, "T must derive from Renderer");
+            return std::make_unique<TRenderer>();
+        }
+
+        void init(const Screen& screen)
+        {
+            backBuffer = std::make_unique<Surface<T>>(screen.getWidth(), screen.getHeight());
+            onInit();
+        }
+
+        void update()
+        {
+            onUpdate();
+        }
+
+        void destroy()
+        {
+            onDestroy();
+        }
+
+        Surface<T>& getBackBuffer()
+        {
+            if (!backBuffer)
+                throw std::runtime_error("backBuffer is not initialized");
+
+            return *backBuffer;
+        }
+    };
+}
+
+#endif //RENDERER_H

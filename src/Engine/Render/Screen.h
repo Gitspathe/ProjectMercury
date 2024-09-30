@@ -19,6 +19,11 @@ namespace Render
             this->height = height;
         }
 
+        static std::unique_ptr<Screen> create(const int width, const int height)
+        {
+            return std::make_unique<Screen>(width, height);
+        }
+
         int getWidth() const
         {
             return width;

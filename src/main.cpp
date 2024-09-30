@@ -1,27 +1,17 @@
-#include <iostream>
 #include <functional>
-#include <chrono>
 #include <SDL2/SDL.h>
-#include "Input/InputManager.h"
-#include "Render/OpenGLRenderer.h"
-#include "Render/Screen.h"
-#include "Render/Surface.h"
-#include "Render/Primitives/RectGraphic.h"
-#include "World/GameObject.h"
-#include "World/GameWorld.h"
-#include "World/TransformComponent.h"
-#include "Common/Colors.h"
+#include "Engine/Input/InputManager.h"
+#include "Game/TestGame.h"
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
 
-std::function<void()> loop;
 bool running = true;
-Render::OpenGLRenderer<Common::ColorRGB>* renderer;
-Render::Screen* screen;
-Input::InputManager* inputManager;
 bool isInit = false;
+std::function<void()> loop;
+Input::InputManager* inputManager;
+TestGame* game;
 
 #ifdef __EMSCRIPTEN__
 EMSCRIPTEN_KEEPALIVE
@@ -31,57 +21,21 @@ void main_loop()
     loop();
 }
 
-std::shared_ptr<World::GameObject> go;
-std::shared_ptr<World::GameWorld> world;
-std::shared_ptr<Render::Surface<Common::ColorRGB>> surface;
 void init()
 {
-    world = World::GameWorld::create<World::GameWorld>();
-    world->init();
-    screen = new Render::Screen(512, 256);
-    renderer = new Render::OpenGLRenderer<Common::ColorRGB>();
     inputManager = new Input::InputManager();
-    surface = Render::Surface<Common::ColorRGB>::create(screen->getWidth(), screen->getHeight());
-    renderer->setRenderScale(2.0f);
-    renderer->init(surface);
+
+    game = new TestGame();
+    game->init();
+
     isInit = true;
-
-    world = World::GameWorld::create<World::GameWorld>();
-    go = World::GameObject::createWithTransform<World::GameObject>();
-    go->init(world);
-
-    std::cout << "SIZE OF: " << sizeof(World::GameObject) << std::endl;
 }
 
 void run()
 {
-    world->update(0.1f);
-
-    if(rand() % 100 < 50) {
-        const std::shared_ptr<World::TransformComponent> trans = go->getComponent<World::TransformComponent>();
-        if(trans != nullptr) {
-            go->removeComponent(trans);
-        }
-    }
-
-    auto started = std::chrono::high_resolution_clock::now();
     Input::InputManager::update(1.0f);
-    surface->clear(Common::ColorRGB::Black);
-
-    const int size = 8;
-    const int w = screen->getWidth();
-    const int h = screen->getHeight();
-    for(size_t i = 0; i < 100000; i++) {
-        auto rectG = Render::Primitives::RectGraphic(
-            Common::RectF((rand() % w) - size / 2, (rand() % h) - size / 2, size, size),
-            Common::ColorRGB(rand() % 255, rand() % 255, rand() % 255), rand() % 5
-        );
-        rectG.draw(*surface);
-    }
-
-    renderer->update();
-    auto done = std::chrono::high_resolution_clock::now();
-    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(done-started).count() << std::endl;
+    game->update(0.1f);
+    game->render();
 }
 
 int main()

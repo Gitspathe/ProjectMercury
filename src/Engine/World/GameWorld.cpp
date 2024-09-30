@@ -4,15 +4,11 @@
 
 namespace World
 {
-    void GameWorld::init()
-    {
-        on_init();
-    }
+    void GameWorld::init() {}
 
     void GameWorld::update(const float deltaTime)
     {
         isLocked = true;
-        on_update(deltaTime);
         for(const auto go : gameObjects) {
             go->update(deltaTime);
         }
@@ -28,9 +24,13 @@ namespace World
         pendingToRemove.clear();
     }
 
+    void GameWorld::render()
+    {
+        // TODO: Cameras.
+    }
+
     void GameWorld::destroy()
     {
-        on_destroy();
         for(const auto go : gameObjects) {
             go->destroy();
         }
@@ -44,7 +44,6 @@ namespace World
             pendingToRemove.erase(gameObject);
             return;
         }
-
         gameObjects.insert(gameObject);
     }
 
@@ -53,8 +52,8 @@ namespace World
         if(isLocked) {
             pendingToAdd.erase(gameObject);
             pendingToRemove.insert(gameObject);
+            return;
         }
-
         gameObjects.erase(gameObject);
     }
 }

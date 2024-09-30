@@ -1,21 +1,10 @@
 #ifndef COLOROPERATORS_H
 #define COLOROPERATORS_H
-
 #include "ColorRGB.h"
 #include "ColorRGBA.h"
 
 namespace Common
 {
-    namespace BlendMode
-    {
-        constexpr uint8_t CLEAR    = 0;
-        constexpr uint8_t COLOR    = 1;
-        constexpr uint8_t ADD      = 2;
-        constexpr uint8_t SUBTRACT = 3;
-        constexpr uint8_t MULTIPLY = 4;
-        constexpr uint8_t DIVIDE   = 5;
-    }
-
     inline std::uint8_t clamp(const int val)
     {
         const int t = val < 0 ? 0 : val;

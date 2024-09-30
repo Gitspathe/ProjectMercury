@@ -6,37 +6,31 @@
 #include <SDL2/SDL_opengles2.h>
 #include "Renderer.h"
 
-namespace Common {
-    struct ColorRGB;
-}
-
 namespace Render {
-    class Screen;
 
-    template<typename T>
-    class OpenGLRenderer : public Renderer<T>
+    class OpenGLRenderer final : public Renderer<Common::ColorRGB>
     {
     protected:
         float renderScale = 1.0f;
 
         const char* vertexShaderSource = R"(precision mediump float;
 
-attribute vec2 aPos;  // "attribute" is used instead of "in"
-varying vec2 TexCoord;  // "varying" is used instead of "out"
+attribute vec2 aPos;
+varying vec2 TexCoord;
 
 void main() {
     gl_Position = vec4(aPos.xy, 0.0, 1.0);
-    TexCoord = (aPos.xy + 1.0) * 0.5;  // Convert [-1,1] range to [0,1] for texture coordinates
+    TexCoord = (aPos.xy + 1.0) * 0.5;
 }
 )";
 
         const char* fragmentShaderSource = R"(precision mediump float;
 
-varying vec2 TexCoord;  // "varying" is used to receive interpolated data
+varying vec2 TexCoord;
 uniform sampler2D texture1;
 
 void main() {
-    gl_FragColor = texture2D(texture1, TexCoord);  // Use gl_FragColor instead of user-defined outputs
+    gl_FragColor = texture2D(texture1, TexCoord);
 }
 )";
 
@@ -62,9 +56,22 @@ void main() {
             2, 3, 0
         };
 
-        void updateTexture();
+        void updateTexture() const
+        {
+            glTexImage2D(
+                GL_TEXTURE_2D,
+                0,
+                GL_RGB,
+                backBuffer->getWidth(),
+                backBuffer->getHeight(),
+                0,
+                GL_RGB,
+                GL_UNSIGNED_BYTE,
+                backBuffer->getBuffer().data()
+            );
+        }
 
-        void checkCompileErrors(GLuint shader, std::string type)
+        void checkCompileErrors(const GLuint shader, const std::string &type)
         {
             GLint success;
             GLchar infoLog[1024];
@@ -85,8 +92,8 @@ void main() {
 
         void onInit() override
         {
-            textureWidth = this->backBuffer->getWidth() * renderScale;
-            textureHeight = this->backBuffer->getHeight() * renderScale;
+            textureWidth = backBuffer->getWidth() * renderScale;
+            textureHeight = backBuffer->getHeight() * renderScale;
 
             // Set GL attributes.
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
@@ -158,7 +165,7 @@ void main() {
             glUseProgram(shaderProgram);
 
             // Draw the full-screen quad
-            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
             // Swap buffers.
             SDL_GL_SwapWindow(window);
@@ -170,6 +177,11 @@ void main() {
         }
 
     public:
+        static std::unique_ptr<OpenGLRenderer> create()
+        {
+            return std::make_unique<OpenGLRenderer>();
+        }
+
         void setRenderScale(const float val)
         {
             if(val < 0.001f || val > 10.0f)

@@ -7,7 +7,7 @@
 
 namespace Render::Primitives
 {
-    template<typename TSurface, typename TCol>
+    template<typename TSurface>
     void drawInternal(
         std::vector<TSurface>& buffer,
         const int startX,
@@ -15,7 +15,7 @@ namespace Render::Primitives
         const int endX,
         const int endY,
         const int bufferW,
-        const TCol color,
+        const Common::ColorRGBA color,
         const uint8_t blendMode = Common::BlendMode::COLOR)
     {
         const auto data = buffer.data();
@@ -144,7 +144,8 @@ namespace Render::Primitives
             if(endX > sW) endX = sW;
             if(endY > sH) endY = sH;
 
-            drawInternal(buffer, startX, startY, endX, endY, sW, color, blendMode);
+            Common::ColorRGBA col = Common::ColorConversion::convertColor<Common::ColorRGBA>(color);
+            drawInternal(buffer, startX, startY, endX, endY, sW, col, blendMode);
         }
     };
 }
