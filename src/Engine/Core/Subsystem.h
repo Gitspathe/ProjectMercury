@@ -4,6 +4,15 @@
 
 namespace Engine::Core
 {
+    class ISubsystemSDLEventReceiver
+    {
+    protected:
+        ~ISubsystemSDLEventReceiver() = default;
+
+    public:
+        virtual void handleEvent(SDL_Event& ev) = 0;
+    };
+
     class Game;
     class Subsystem
     {

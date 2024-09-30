@@ -47,6 +47,7 @@ int main()
 
         SDL_Event e;
         while(SDL_PollEvent(&e)) {
+            game->handleSDLEvent(e);
             switch(e.type){
                 case SDL_QUIT: {
                     running = false;

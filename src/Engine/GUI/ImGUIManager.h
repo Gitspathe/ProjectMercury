@@ -1,5 +1,7 @@
 #ifndef IMGUIMANAGER_H
 #define IMGUIMANAGER_H
+
+#if DEV_MODE
 #include <iostream>
 #include <SDL_cpuinfo.h>
 #include <SDL_video.h>
@@ -11,7 +13,7 @@
 
 namespace Engine::GUI
 {
-    class ImGUIManager : public Core::Subsystem
+    class ImGUIManager : public Core::Subsystem, public Core::ISubsystemSDLEventReceiver
     {
     protected:
         void onInit() override
@@ -80,8 +82,13 @@ namespace Engine::GUI
         {
             return 5;
         }
+
+        void handleEvent(SDL_Event &ev) override
+        {
+            ImGui_ImplSDL2_ProcessEvent(&ev);
+        }
     };
 }
 
-
+#endif
 #endif //IMGUIMANAGER_H

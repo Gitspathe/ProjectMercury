@@ -22,6 +22,7 @@ namespace Engine::Core
     protected:
         std::unique_ptr<World::GameWorld> world = nullptr;
         std::unique_ptr<Render::Screen> screen = nullptr;
+        std::vector<std::shared_ptr<ISubsystemSDLEventReceiver>> sdlEventReceivers = std::vector<std::shared_ptr<ISubsystemSDLEventReceiver>>();
         std::vector<std::shared_ptr<Subsystem>> subsystems = std::vector<std::shared_ptr<Subsystem>>();
         std::map<std::type_index, std::shared_ptr<Subsystem>> subsystemLookup = std::map<std::type_index, std::shared_ptr<Subsystem>>();
         bool isInit = false;
@@ -75,6 +76,9 @@ namespace Engine::Core
                 return lhs->getOrder() < rhs->getOrder();
             });
             for(const auto& subsystem : subsystems) {
+                if(auto cast = std::dynamic_pointer_cast<ISubsystemSDLEventReceiver>(subsystem)) {
+                    sdlEventReceivers.push_back(cast);
+                }
                 subsystem->init(shared_from_this());
             }
             for(const auto& subsystem : subsystems) {
@@ -106,6 +110,13 @@ namespace Engine::Core
             onPostRenderGame();
             for(const auto& subsystem : subsystems) {
                 subsystem->postRender();
+            }
+        }
+
+        void handleSDLEvent(SDL_Event& ev)
+        {
+            for(const auto& handler : sdlEventReceivers) {
+                handler->handleEvent(ev);
             }
         }
 

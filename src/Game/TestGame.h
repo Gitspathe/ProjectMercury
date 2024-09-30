@@ -18,7 +18,9 @@ protected:
         renderer->setRenderScale(2.0f);
         renderer->init(*screen);
 
+#if DEV_MODE
         addSubSystem<Engine::GUI::ImGUIManager>(std::make_shared<Engine::GUI::ImGUIManager>());
+#endif
     }
 
     void onInit() override
