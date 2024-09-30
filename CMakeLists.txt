@@ -35,14 +35,20 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
     set(CMAKE_CXX_SCAN_FOR_MODULES 0)
 endif()
 
-add_library(glad STATIC src/glad.c
-        src/Engine/Core/Subsystem.h
-        src/Engine/GUI/ImGUIManager.h)
-
 find_package(SDL2 REQUIRED)
-find_package(OpenGL REQUIRED)
 
-include_directories(${OPENGL_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/imgui)
+if(BUILD_CLIENT)
+    find_package(OpenGL REQUIRED)
+    add_library(glad STATIC src/glad.c
+            src/Engine/Core/Subsystem.h
+            src/Engine/GUI/ImGUIManager.h)
+endif()
+
+if(BUILD_CLIENT)
+    include_directories(${OPENGL_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/imgui)
+else()
+    include_directories(${SDL2_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/include)
+endif()
 
 add_executable(test lib/json.hpp
         src/main.cpp
@@ -63,7 +69,6 @@ add_executable(test lib/json.hpp
         src/Engine/Render/Primitives/RectGraphic.h
         src/Engine/Common/ColorRGB.cpp
         src/Engine/Common/ColorRGBA.cpp
-        lib/json.hpp
         src/Engine/World/TransformComponent.h
         src/Engine/World/TestGameObject.h
         src/Engine/World/GameObject.cpp
@@ -75,25 +80,35 @@ add_executable(test lib/json.hpp
         src/Engine/Core/Game.h
         src/Game/TestGame.h
         src/Engine/Common/ColorConstants.h
-        imgui/imconfig.h
-        imgui/imgui.cpp
-        imgui/imgui.h
-        imgui/imgui_demo.cpp
-        imgui/imgui_draw.cpp
-        imgui/imgui_impl_opengl3.cpp
-        imgui/imgui_impl_opengl3.h
-        imgui/imgui_impl_opengl3_loader.h
-        imgui/imgui_impl_sdl2.cpp
-        imgui/imgui_impl_sdl2.h
-        imgui/imgui_internal.h
-        imgui/imgui_tables.cpp
-        imgui/imgui_widgets.cpp
-        imgui/imstb_rectpack.h
-        imgui/imstb_textedit.h
-        imgui/imstb_truetype.h
 )
 
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${GLAD_LIBRARY} "glad")
+if(BUILD_CLIENT)
+    target_sources(test PRIVATE
+            imgui/imconfig.h
+            imgui/imgui.cpp
+            imgui/imgui.h
+            imgui/imgui_demo.cpp
+            imgui/imgui_draw.cpp
+            imgui/imgui_impl_opengl3.cpp
+            imgui/imgui_impl_opengl3.h
+            imgui/imgui_impl_opengl3_loader.h
+            imgui/imgui_impl_sdl2.cpp
+            imgui/imgui_impl_sdl2.h
+            imgui/imgui_internal.h
+            imgui/imgui_tables.cpp
+            imgui/imgui_widgets.cpp
+            imgui/imstb_rectpack.h
+            imgui/imstb_textedit.h
+            imgui/imstb_truetype.h
+    )
+endif()
+
+# Link SDL2 and conditionally OpenGL and GLAD if BUILD_CLIENT is true
+if(BUILD_CLIENT)
+    target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${GLAD_LIBRARY} glad)
+else()
+    target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
+endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
     if(JS_ONLY)

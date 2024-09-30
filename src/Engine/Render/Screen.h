@@ -1,5 +1,6 @@
 #ifndef SCREEN_H
 #define SCREEN_H
+#if CLIENT
 #include <vector>
 #include <cmath>
 #include "../Common/ColorRGB.h"
@@ -36,4 +37,5 @@ namespace Engine::Render
     };
 }
 
+#endif
 #endif //SCREEN_H

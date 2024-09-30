@@ -1,9 +1,12 @@
 #ifndef OPENGLRENDERER_H
 #define OPENGLRENDERER_H
+
+#if CLIENT
 #include <iostream>
 #include <glad/glad.h>
 #include <SDL2/SDL.h>
 #include "Renderer.h"
+
 #if DEV_MODE
 #include "../../../imgui/imgui_impl_sdl2.h"
 #include "../../../imgui/imgui_impl_opengl3.h"
@@ -219,5 +222,5 @@ void main() {
     };
 }
 
-
+#endif
 #endif //OPENGLRENDERER_H

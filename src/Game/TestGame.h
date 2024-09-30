@@ -1,5 +1,6 @@
 #ifndef TESTGAME_H
 #define TESTGAME_H
+#include <iostream>
 #include "../Engine/Core/Game.h"
 #include "../Engine/GUI/ImGUIManager.h"
 #include "../Engine/Render/OpenGLRenderer.h"
@@ -8,17 +9,21 @@
 class TestGame final : public Engine::Core::Game
 {
 private:
+#if CLIENT
     std::unique_ptr<Engine::Render::OpenGLRenderer> renderer = nullptr;
+#endif
 
 protected:
     void setup() override
     {
+#if CLIENT
         renderer = Engine::Render::OpenGLRenderer::create();
-        screen = Engine::Render::Screen::create(512,256);
+        screen = Engine::Render::Screen::create(720,384);
         renderer->setRenderScale(2.0f);
         renderer->init(*screen);
+#endif
 
-#if DEV_MODE
+#if DEV_MODE && CLIENT
         addSubSystem<Engine::GUI::ImGUIManager>(std::make_shared<Engine::GUI::ImGUIManager>());
 #endif
     }
@@ -35,12 +40,13 @@ protected:
 
     void onRenderGame() override
     {
+#if CLIENT
         renderer->getBackBuffer().clear(Engine::Common::ColorRGB::Black);
 
         const int size = 8;
         const int w = screen->getWidth();
         const int h = screen->getHeight();
-        for(size_t i = 0; i < 100000; i++) {
+        for(size_t i = 0; i < 0; i++) {
             auto rectG = Engine::Render::Primitives::RectGraphic(
                 Engine::Common::RectF((rand() % w) - size / 2, (rand() % h) - size / 2, size, size),
                 Engine::Common::ColorRGB(rand() % 255, rand() % 255, rand() % 255), rand() % 5
@@ -49,11 +55,14 @@ protected:
         }
 
         renderer->prepare();
+#endif
     }
 
     void onPostRenderGame() override
     {
+#if CLIENT
         renderer->update();
+#endif
     }
 
     void onDestroy() override

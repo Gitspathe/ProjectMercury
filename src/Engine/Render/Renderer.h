@@ -1,5 +1,6 @@
 #ifndef RENDERER_H
 #define RENDERER_H
+#if CLIENT
 #include <memory>
 #include "Surface.h"
 #include "Screen.h"
@@ -58,4 +59,5 @@ namespace Engine::Render
     };
 }
 
+#endif
 #endif //RENDERER_H

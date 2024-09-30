@@ -20,8 +20,11 @@ namespace Engine::Core
     class Game : public std::enable_shared_from_this<Game>
     {
     protected:
-        std::unique_ptr<World::GameWorld> world = nullptr;
+#if CLIENT
         std::unique_ptr<Render::Screen> screen = nullptr;
+#endif
+
+        std::unique_ptr<World::GameWorld> world = nullptr;
         std::vector<std::shared_ptr<ISubsystemSDLEventReceiver>> sdlEventReceivers = std::vector<std::shared_ptr<ISubsystemSDLEventReceiver>>();
         std::vector<std::shared_ptr<Subsystem>> subsystems = std::vector<std::shared_ptr<Subsystem>>();
         std::map<std::type_index, std::shared_ptr<Subsystem>> subsystemLookup = std::map<std::type_index, std::shared_ptr<Subsystem>>();
@@ -38,7 +41,9 @@ namespace Engine::Core
         virtual ~Game()
         {
             world.reset();
+#if CLIENT
             screen.reset();
+#endif
         }
 
         Game()
@@ -129,10 +134,12 @@ namespace Engine::Core
             world->destroy();
         }
 
+#if CLIENT
         Render::Screen& getScreen() const
         {
             return *screen;
         }
+#endif
     };
 }
 
