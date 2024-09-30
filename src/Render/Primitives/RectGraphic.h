@@ -15,15 +15,53 @@ namespace Render::Primitives
         const int endX,
         const int endY,
         const int bufferW,
-        const TCol color)
+        const TCol color,
+        const uint8_t blendMode = Common::BlendMode::COLOR)
     {
-        const auto col = Common::ColorConversion::convertColor<TCol>(color);
-        for (int y = startY; y < endY; ++y) {
-            for(int x = startX; x < endX; ++x) {
-                TSurface colSurface = buffer[y * bufferW + x];
-                TSurface newColor = colSurface + color;
-                buffer[y * bufferW + x] = newColor;
-            }
+        const auto data = buffer.data();
+        switch(blendMode) {
+            case Common::BlendMode::CLEAR: {
+                const auto col = Common::ColorConversion::getClear<TSurface>();
+                for(int y = startY; y < endY; ++y) {
+                    const int rowOffset = y * bufferW + startX;
+                    std::fill(data + rowOffset, data + rowOffset + (endX - startX), col);
+                }
+            } break;
+            case Common::BlendMode::COLOR: {
+                const auto col = Common::ColorConversion::convertColor<TSurface>(color);
+                for(int y = startY; y < endY; ++y) {
+                    const int rowOffset = y * bufferW + startX;
+                    std::fill(data + rowOffset, data + rowOffset + (endX - startX), col);
+                }
+            } break;
+            case Common::BlendMode::ADD: {
+                for(int y = startY; y < endY; ++y) {
+                    for(int x = startX; x < endX; ++x) {
+                        buffer[y * bufferW + x] = buffer[y * bufferW + x] + color;
+                    }
+                }
+            } break;
+            case Common::BlendMode::SUBTRACT: {
+                for(int y = startY; y < endY; ++y) {
+                    for(int x = startX; x < endX; ++x) {
+                        buffer[y * bufferW + x] = buffer[y * bufferW + x] - color;
+                    }
+                }
+            } break;
+            case Common::BlendMode::MULTIPLY: {
+                for(int y = startY; y < endY; ++y) {
+                    for(int x = startX; x < endX; ++x) {
+                        buffer[y * bufferW + x] = buffer[y * bufferW + x] * color;
+                    }
+                }
+            } break;
+            case Common::BlendMode::DIVIDE: {
+                for(int y = startY; y < endY; ++y) {
+                    for(int x = startX; x < endX; ++x) {
+                        buffer[y * bufferW + x] = buffer[y * bufferW + x] / color;
+                    }
+                }
+            } break;
         }
     }
 
@@ -33,15 +71,23 @@ namespace Render::Primitives
     private:
         Common::RectF rect;
         T color;
+        uint8_t blendMode;
 
     public:
-        RectGraphic(const Common::RectF& rect, const T color)
-            : rect(rect), color(color) {}
+        RectGraphic(const Common::RectF& rect, const T color, const uint8_t blendMode = Common::BlendMode::COLOR)
+            : rect(rect), color(color), blendMode(blendMode) {}
 
-        RectGraphic(const float x, const float y, const float w, const float h, const T color)
+        RectGraphic(
+            const float x,
+            const float y,
+            const float w,
+            const float h,
+            const T color,
+            const uint8_t blendMode = Common::BlendMode::COLOR)
         {
             rect = Common::RectF(x, y, w, h);
             this->color = color;
+            this->blendMode = blendMode;
         }
 
         Common::RectF getShape() const
@@ -98,7 +144,7 @@ namespace Render::Primitives
             if(endX > sW) endX = sW;
             if(endY > sH) endY = sH;
 
-            drawInternal(buffer, startX, startY, endX, endY, sW, color);
+            drawInternal(buffer, startX, startY, endX, endY, sW, color, blendMode);
         }
     };
 }

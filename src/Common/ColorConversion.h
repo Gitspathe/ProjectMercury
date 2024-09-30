@@ -28,6 +28,18 @@ namespace Common::ColorConversion
             return TSource();
         }
     }
+
+    template<typename T>
+    T getClear()
+    {
+        if constexpr (std::is_same_v<T, ColorRGB>) {
+            return ColorRGB::Black;
+        } else if constexpr (std::is_same_v<T, ColorRGBA>) {
+            return ColorRGBA::Clear;
+        } else {
+            return T();
+        }
+    }
 }
 
 #endif //COLORCONVERSION_H

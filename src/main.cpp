@@ -2,7 +2,6 @@
 #include <functional>
 #include <chrono>
 #include <SDL2/SDL.h>
-#include "Common/ColorRGB.h"
 #include "Input/InputManager.h"
 #include "Render/OpenGLRenderer.h"
 #include "Render/Screen.h"
@@ -11,6 +10,7 @@
 #include "World/GameObject.h"
 #include "World/GameWorld.h"
 #include "World/TransformComponent.h"
+#include "Common/Colors.h"
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -68,13 +68,13 @@ void run()
     Input::InputManager::update(1.0f);
     surface->clear(Common::ColorRGB::Black);
 
-    const int size = 32;
+    const int size = 8;
     const int w = screen->getWidth();
     const int h = screen->getHeight();
     for(size_t i = 0; i < 100000; i++) {
         auto rectG = Render::Primitives::RectGraphic(
             Common::RectF((rand() % w) - size / 2, (rand() % h) - size / 2, size, size),
-            Common::ColorRGBA(rand() % 255, rand() % 255, rand() % 255)
+            Common::ColorRGB(rand() % 255, rand() % 255, rand() % 255), rand() % 5
         );
         rectG.draw(*surface);
     }
