@@ -10,7 +10,7 @@ namespace Engine::World
     class TransformComponent final : public Component
     {
     protected:
-        std::shared_ptr<Common::Transform> transform = nullptr;
+        std::shared_ptr<Common::Transform> transform;
 
         void onInit() override
         {

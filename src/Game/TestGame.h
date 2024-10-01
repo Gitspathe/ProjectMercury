@@ -35,10 +35,10 @@ protected:
 
     void onUpdate(float deltaTime) override
     {
-        std::cout << "Update from TestGame" << std::endl;
+
     }
 
-    void onRenderGame() override
+    void onRender() override
     {
 #if CLIENT
         renderer->getBackBuffer().clear(Engine::Common::ColorRGB::Black);
@@ -58,10 +58,10 @@ protected:
 #endif
     }
 
-    void onPostRenderGame() override
+    void onFinalizeRender() override
     {
 #if CLIENT
-        renderer->update();
+        renderer->finalizeRender();
 #endif
     }
 

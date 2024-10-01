@@ -16,9 +16,9 @@ namespace Engine::World
     class GameObject : public std::enable_shared_from_this<GameObject>
     {
     protected:
-        std::shared_ptr<GameWorld> world = nullptr;
-        std::vector<std::shared_ptr<Component>> components = std::vector<std::shared_ptr<Component>>();
-        std::vector<std::shared_ptr<Component>> dynamicComponents = std::vector<std::shared_ptr<Component>>();
+        std::shared_ptr<GameWorld> world;
+        std::vector<std::shared_ptr<Component>> components;
+        std::vector<std::shared_ptr<Component>> dynamicComponents;
         bool isInit = false;
         bool isDestroyed = false;
         bool isEnabled = true;

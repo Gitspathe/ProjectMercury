@@ -9,9 +9,9 @@ namespace Engine::World
 
     class GameWorld {
     protected:
-        std::unordered_set<std::shared_ptr<GameObject>> gameObjects = std::unordered_set<std::shared_ptr<GameObject>>();
-        std::unordered_set<std::shared_ptr<GameObject>> pendingToAdd = std::unordered_set<std::shared_ptr<GameObject>>();
-        std::unordered_set<std::shared_ptr<GameObject>> pendingToRemove = std::unordered_set<std::shared_ptr<GameObject>>();
+        std::unordered_set<std::shared_ptr<GameObject>> gameObjects;
+        std::unordered_set<std::shared_ptr<GameObject>> pendingToAdd;
+        std::unordered_set<std::shared_ptr<GameObject>> pendingToRemove;
         bool isLocked = false;
 
     public:

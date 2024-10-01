@@ -195,7 +195,7 @@ void main() {
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
         }
 
-        void onUpdate() override
+        void onFinalizeRender() override
         {
             // Swap buffers.
             SDL_GL_SwapWindow(window);

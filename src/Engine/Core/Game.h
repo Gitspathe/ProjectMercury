@@ -21,20 +21,20 @@ namespace Engine::Core
     {
     protected:
 #if CLIENT
-        std::unique_ptr<Render::Screen> screen = nullptr;
+        std::unique_ptr<Render::Screen> screen;
 #endif
 
-        std::unique_ptr<World::GameWorld> world = nullptr;
-        std::vector<std::shared_ptr<ISubsystemSDLEventReceiver>> sdlEventReceivers = std::vector<std::shared_ptr<ISubsystemSDLEventReceiver>>();
-        std::vector<std::shared_ptr<Subsystem>> subsystems = std::vector<std::shared_ptr<Subsystem>>();
-        std::map<std::type_index, std::shared_ptr<Subsystem>> subsystemLookup = std::map<std::type_index, std::shared_ptr<Subsystem>>();
+        std::unique_ptr<World::GameWorld> world;
+        std::vector<std::shared_ptr<ISubsystemSDLEventReceiver>> sdlEventReceivers;
+        std::vector<std::shared_ptr<Subsystem>> subsystems;
+        std::map<std::type_index, std::shared_ptr<Subsystem>> subsystemLookup;
         bool isInit = false;
 
         virtual void setup() {}
         virtual void onInit() {}
         virtual void onUpdate(float deltaTime) {}
-        virtual void onRenderGame() {}
-        virtual void onPostRenderGame() {}
+        virtual void onRender() {}
+        virtual void onFinalizeRender() {}
         virtual void onDestroy() {}
 
     public:
@@ -108,11 +108,11 @@ namespace Engine::Core
 
         void render()
         {
-            onRenderGame();
+            onRender();
             for(const auto& subsystem : subsystems) {
                 subsystem->render();
             }
-            onPostRenderGame();
+            onFinalizeRender();
             for(const auto& subsystem : subsystems) {
                 subsystem->postRender();
             }

@@ -21,9 +21,9 @@ namespace Engine::Input
         static bool wasKeyPressedThisFrame(SDL_Scancode key);
         static bool wasKeyReleasedThisFrame(SDL_Scancode key);
     private:
-        std::list<SDL_Scancode> keysDownThisFrame = std::list<SDL_Scancode>();
-        std::list<SDL_Scancode> keysDownLastFrame = std::list<SDL_Scancode>();
-        std::list<SDL_KeyboardEvent> keyboardEvents = std::list<SDL_KeyboardEvent>();
+        std::list<SDL_Scancode> keysDownThisFrame;
+        std::list<SDL_Scancode> keysDownLastFrame;
+        std::list<SDL_KeyboardEvent> keyboardEvents;
 
         static InputManager* instance;
 

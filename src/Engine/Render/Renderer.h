@@ -11,11 +11,11 @@ namespace Engine::Render
     class Renderer
     {
     protected:
-        std::unique_ptr<Surface<T>> backBuffer = nullptr;
+        std::unique_ptr<Surface<T>> backBuffer;
 
         virtual void onInit() = 0;
         virtual void onPrepare() = 0;
-        virtual void onUpdate() = 0;
+        virtual void onFinalizeRender() = 0;
         virtual void onDestroy() = 0;
 
     public:
@@ -39,9 +39,9 @@ namespace Engine::Render
             onPrepare();
         }
 
-        void update()
+        void finalizeRender()
         {
-            onUpdate();
+            onFinalizeRender();
         }
 
         void destroy()

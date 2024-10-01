@@ -10,7 +10,7 @@ namespace Engine::World
     class Component
     {
     protected:
-        std::weak_ptr<GameObject> gameObject = std::weak_ptr<GameObject>();
+        std::weak_ptr<GameObject> gameObject;
         bool isInit = false;
         bool isEnabled = true;
         bool isRegistered = false;

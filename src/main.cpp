@@ -48,13 +48,14 @@ int main()
         SDL_Event e;
         while(SDL_PollEvent(&e)) {
             game->handleSDLEvent(e);
-            switch(e.type){
+            switch(e.type) {
                 case SDL_QUIT: {
                     running = false;
                     break;
                 }
                 case SDL_MOUSEMOTION: {
-                    int x, y; SDL_GetMouseState(&x, &y);
+                    int x, y;
+                    SDL_GetMouseState(&x, &y);
                     break;
                 }
                 case SDL_KEYUP:
@@ -66,6 +67,7 @@ int main()
             }
         }
         run();
+        //std::this_thread::sleep_for(std::chrono::milliseconds(16));
     };
 
 #ifdef __EMSCRIPTEN__
