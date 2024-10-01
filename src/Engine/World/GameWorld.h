@@ -22,7 +22,7 @@ namespace Engine::World
             return std::make_unique<GameWorld>();
         }
 
-        void init();
+        bool init();
         void update(float deltaTime);
         void render();
         void destroy();

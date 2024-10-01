@@ -18,8 +18,8 @@ namespace Engine::Core
     {
     protected:
         std::weak_ptr<Game> game;
-        virtual void onInit() {}
-        virtual void onPostInit() {}
+        virtual bool onInit() { return true; }
+        virtual bool onPostInit() { return true; }
         virtual void onEarlyUpdate(float deltaTime) {}
         virtual void onUpdate(float deltaTime) {}
         virtual void onLateUpdate(float deltaTime) {}
@@ -39,16 +39,16 @@ namespace Engine::Core
             return typeid(*this);
         }
 
-        void postInit(const std::shared_ptr<Game>& game)
+        bool postInit(const std::shared_ptr<Game>& game)
         {
             this->game = game;
-            onPostInit();
+            return onPostInit();
         }
 
-        void init(const std::shared_ptr<Game>& game)
+        bool init(const std::shared_ptr<Game>& game)
         {
             this->game = game;
-            onInit();
+            return onInit();
         }
 
         void earlyUpdate(const float deltaTime)

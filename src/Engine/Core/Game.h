@@ -30,8 +30,8 @@ namespace Engine::Core
         std::map<std::type_index, std::shared_ptr<Subsystem>> subsystemLookup;
         bool isInit = false;
 
-        virtual void setup() {}
-        virtual void onInit() {}
+        virtual bool setup() { return true;}
+        virtual bool onInit() { return true;}
         virtual void onUpdate(float deltaTime) {}
         virtual void onRender() {}
         virtual void onFinalizeRender() {}
@@ -71,11 +71,11 @@ namespace Engine::Core
             return nullptr;
         }
 
-        void init()
+        bool init()
         {
-            setup();
-            onInit();
-            world->init();
+            if(!setup() || !onInit() || !world->init())
+                return false;
+
             isInit = true;
             std::sort(subsystems.begin(), subsystems.end(), [](const std::shared_ptr<Subsystem>& lhs, const std::shared_ptr<Subsystem>& rhs) {
                 return lhs->getOrder() < rhs->getOrder();
@@ -84,11 +84,14 @@ namespace Engine::Core
                 if(auto cast = std::dynamic_pointer_cast<ISubsystemSDLEventReceiver>(subsystem)) {
                     sdlEventReceivers.push_back(cast);
                 }
-                subsystem->init(shared_from_this());
+                if(!subsystem->init(shared_from_this()))
+                    return false;
             }
             for(const auto& subsystem : subsystems) {
-                subsystem->postInit(shared_from_this());
+                if(!subsystem->postInit(shared_from_this()))
+                    return false;
             }
+            return true;
         }
 
         void update(const float deltaTime)

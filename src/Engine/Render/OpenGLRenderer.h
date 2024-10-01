@@ -96,18 +96,17 @@ void main() {
             }
         }
 
-        void onInit() override
+        bool onInit() override
         {
-            textureWidth = backBuffer->getWidth() * renderScale;
-            textureHeight = backBuffer->getHeight() * renderScale;
-
             // Set GL attributes.
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-            SDL_GL_SetSwapInterval(0);
             SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
             SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+
+            textureWidth  = backBuffer->getWidth()  * renderScale;
+            textureHeight = backBuffer->getHeight() * renderScale;
 
             // Create window and OpenGL context.
             window = SDL_CreateWindow(
@@ -118,16 +117,23 @@ void main() {
                 textureHeight,
                 SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN
             );
-            const SDL_GLContext context = SDL_GL_CreateContext(window);
+            if (!window) {
+                std::cerr << "FATAL_ERR: Failed to create window: " << SDL_GetError() << std::endl;
+                SDL_Quit();
+                return false;
+            }
 
-            // Load OpenGL function pointers using Glad
+            const SDL_GLContext context = SDL_GL_CreateContext(window);
             if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
-                // Handle error
+                std::cerr << "FATAL_ERR: Failed to load glad wrapper" << std::endl;
                 SDL_GL_DeleteContext(context);
                 SDL_DestroyWindow(window);
                 SDL_Quit();
-                return;
+                return false;
             }
+
+            // DISABLE VSYNC
+            SDL_GL_SetSwapInterval(0);
 
             // Build and compile shaders
             vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -176,10 +182,13 @@ void main() {
             // DearImGUI setup.
             IMGUI_CHECKVERSION();
             ImGui::CreateContext();
-            ImGuiIO& io = ImGui::GetIO(); (void)io;
+            ImGuiIO& io = ImGui::GetIO();
+            (void)io;
             ImGui_ImplSDL2_InitForOpenGL(window, context);
             ImGui_ImplOpenGL3_Init("#version 100");
 #endif
+
+            return true;
         }
 
         void onPrepare() override

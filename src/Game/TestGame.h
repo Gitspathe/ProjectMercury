@@ -14,23 +14,38 @@ private:
 #endif
 
 protected:
-    void setup() override
+    bool setup() override
     {
 #if CLIENT
         renderer = Engine::Render::OpenGLRenderer::create();
         screen = Engine::Render::Screen::create(720,384);
         renderer->setRenderScale(2.0f);
-        renderer->init(*screen);
+        if(!renderer->init(*screen))
+            return false;
+
 #endif
 
 #if DEV_MODE && CLIENT
         addSubSystem<Engine::GUI::ImGUIManager>(std::make_shared<Engine::GUI::ImGUIManager>());
 #endif
+
+        return true;
     }
 
-    void onInit() override
+    std::vector<Engine::Render::Primitives::RectGraphic<Engine::Common::ColorRGBA>*> graphics;
+    bool onInit() override
     {
-
+        const int size = 64;
+        const int w = screen->getWidth();
+        const int h = screen->getHeight();
+        for(size_t i = 0; i < 1000; i++) {
+            auto rectG = new Engine::Render::Primitives::RectGraphic(
+                Engine::Common::RectF((rand() % w) - size / 2, (rand() % h) - size / 2, size, size),
+                Engine::Common::ColorRGBA(rand() % 255, rand() % 255, rand() % 255, 20), Engine::Common::BlendMode::ADD
+            );
+            graphics.push_back(rectG);
+        }
+        return true;
     }
 
     void onUpdate(float deltaTime) override
@@ -43,15 +58,8 @@ protected:
 #if CLIENT
         renderer->getBackBuffer().clear(Engine::Common::ColorRGB::Black);
 
-        const int size = 8;
-        const int w = screen->getWidth();
-        const int h = screen->getHeight();
-        for(size_t i = 0; i < 0; i++) {
-            auto rectG = Engine::Render::Primitives::RectGraphic(
-                Engine::Common::RectF((rand() % w) - size / 2, (rand() % h) - size / 2, size, size),
-                Engine::Common::ColorRGB(rand() % 255, rand() % 255, rand() % 255), rand() % 5
-            );
-            rectG.draw(renderer->getBackBuffer());
+        for(auto g : graphics) {
+            g->draw(renderer->getBackBuffer());
         }
 
         renderer->prepare();

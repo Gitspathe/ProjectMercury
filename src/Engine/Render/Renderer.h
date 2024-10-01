@@ -13,7 +13,7 @@ namespace Engine::Render
     protected:
         std::unique_ptr<Surface<T>> backBuffer;
 
-        virtual void onInit() = 0;
+        virtual bool onInit() = 0;
         virtual void onPrepare() = 0;
         virtual void onFinalizeRender() = 0;
         virtual void onDestroy() = 0;
@@ -28,10 +28,10 @@ namespace Engine::Render
             return std::make_unique<TRenderer>();
         }
 
-        void init(const Screen& screen)
+        bool init(const Screen &screen)
         {
             backBuffer = std::make_unique<Surface<T>>(screen.getWidth(), screen.getHeight());
-            onInit();
+            return onInit();
         }
 
         void prepare()

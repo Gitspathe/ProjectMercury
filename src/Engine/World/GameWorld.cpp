@@ -4,7 +4,7 @@
 
 namespace Engine::World
 {
-    void GameWorld::init() {}
+    bool GameWorld::init() { return true; }
 
     void GameWorld::update(const float deltaTime)
     {

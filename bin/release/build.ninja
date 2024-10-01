@@ -50,7 +50,7 @@ cmake_ninja_workdir = /mnt/ssd/Game$ Dev/C/ProjectMercury/bin/release/
 build cmake_object_order_depends_target_glad: phony || .
 
 build CMakeFiles/glad.dir/src/glad.c.o: C_COMPILER__glad_unscanned_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/src/glad.c || cmake_object_order_depends_target_glad
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/glad.dir/src/glad.c.o.d
   FLAGS = -O3 -DNDEBUG -fdiagnostics-color=always
   INCLUDES = -I/usr/include/SDL2 -I"/mnt/ssd/Game Dev/C/ProjectMercury/include" -I"/mnt/ssd/Game Dev/C/ProjectMercury/imgui"
@@ -86,7 +86,7 @@ build libglad.a: C_STATIC_LIBRARY_LINKER__glad_Release CMakeFiles/glad.dir/src/g
 build cmake_object_order_depends_target_test: phony || cmake_object_order_depends_target_glad
 
 build CMakeFiles/test.dir/src/main.cpp.o.ddi: CXX_SCAN__test_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/src/main.cpp || cmake_object_order_depends_target_test
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/src/main.cpp.o.ddi.d
   DYNDEP_INTERMEDIATE_FILE = CMakeFiles/test.dir/src/main.cpp.o.ddi
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -95,7 +95,7 @@ build CMakeFiles/test.dir/src/main.cpp.o.ddi: CXX_SCAN__test_Release /mnt/ssd/Ga
   PREPROCESSED_OUTPUT_FILE = CMakeFiles/test.dir/src/main.cpp.o.ddi.i
 
 build CMakeFiles/test.dir/src/main.cpp.o: CXX_COMPILER__test_scanned_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/src/main.cpp | CMakeFiles/test.dir/src/main.cpp.o.modmap || cmake_object_order_depends_target_test CMakeFiles/test.dir/CXX.dd
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/src/main.cpp.o.d
   DYNDEP_MODULE_MAP_FILE = CMakeFiles/test.dir/src/main.cpp.o.modmap
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -107,7 +107,7 @@ build CMakeFiles/test.dir/src/main.cpp.o: CXX_COMPILER__test_scanned_Release /mn
   dyndep = CMakeFiles/test.dir/CXX.dd
 
 build CMakeFiles/test.dir/src/Engine/World/GameWorld.cpp.o.ddi: CXX_SCAN__test_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/src/Engine/World/GameWorld.cpp || cmake_object_order_depends_target_test
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/src/Engine/World/GameWorld.cpp.o.ddi.d
   DYNDEP_INTERMEDIATE_FILE = CMakeFiles/test.dir/src/Engine/World/GameWorld.cpp.o.ddi
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -116,7 +116,7 @@ build CMakeFiles/test.dir/src/Engine/World/GameWorld.cpp.o.ddi: CXX_SCAN__test_R
   PREPROCESSED_OUTPUT_FILE = CMakeFiles/test.dir/src/Engine/World/GameWorld.cpp.o.ddi.i
 
 build CMakeFiles/test.dir/src/Engine/World/GameWorld.cpp.o: CXX_COMPILER__test_scanned_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/src/Engine/World/GameWorld.cpp | CMakeFiles/test.dir/src/Engine/World/GameWorld.cpp.o.modmap || cmake_object_order_depends_target_test CMakeFiles/test.dir/CXX.dd
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/src/Engine/World/GameWorld.cpp.o.d
   DYNDEP_MODULE_MAP_FILE = CMakeFiles/test.dir/src/Engine/World/GameWorld.cpp.o.modmap
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -128,7 +128,7 @@ build CMakeFiles/test.dir/src/Engine/World/GameWorld.cpp.o: CXX_COMPILER__test_s
   dyndep = CMakeFiles/test.dir/CXX.dd
 
 build CMakeFiles/test.dir/src/Engine/Input/InputManager.cpp.o.ddi: CXX_SCAN__test_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/src/Engine/Input/InputManager.cpp || cmake_object_order_depends_target_test
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/src/Engine/Input/InputManager.cpp.o.ddi.d
   DYNDEP_INTERMEDIATE_FILE = CMakeFiles/test.dir/src/Engine/Input/InputManager.cpp.o.ddi
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -137,7 +137,7 @@ build CMakeFiles/test.dir/src/Engine/Input/InputManager.cpp.o.ddi: CXX_SCAN__tes
   PREPROCESSED_OUTPUT_FILE = CMakeFiles/test.dir/src/Engine/Input/InputManager.cpp.o.ddi.i
 
 build CMakeFiles/test.dir/src/Engine/Input/InputManager.cpp.o: CXX_COMPILER__test_scanned_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/src/Engine/Input/InputManager.cpp | CMakeFiles/test.dir/src/Engine/Input/InputManager.cpp.o.modmap || cmake_object_order_depends_target_test CMakeFiles/test.dir/CXX.dd
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/src/Engine/Input/InputManager.cpp.o.d
   DYNDEP_MODULE_MAP_FILE = CMakeFiles/test.dir/src/Engine/Input/InputManager.cpp.o.modmap
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -149,7 +149,7 @@ build CMakeFiles/test.dir/src/Engine/Input/InputManager.cpp.o: CXX_COMPILER__tes
   dyndep = CMakeFiles/test.dir/CXX.dd
 
 build CMakeFiles/test.dir/src/Engine/Common/ColorRGB.cpp.o.ddi: CXX_SCAN__test_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/src/Engine/Common/ColorRGB.cpp || cmake_object_order_depends_target_test
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/src/Engine/Common/ColorRGB.cpp.o.ddi.d
   DYNDEP_INTERMEDIATE_FILE = CMakeFiles/test.dir/src/Engine/Common/ColorRGB.cpp.o.ddi
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -158,7 +158,7 @@ build CMakeFiles/test.dir/src/Engine/Common/ColorRGB.cpp.o.ddi: CXX_SCAN__test_R
   PREPROCESSED_OUTPUT_FILE = CMakeFiles/test.dir/src/Engine/Common/ColorRGB.cpp.o.ddi.i
 
 build CMakeFiles/test.dir/src/Engine/Common/ColorRGB.cpp.o: CXX_COMPILER__test_scanned_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/src/Engine/Common/ColorRGB.cpp | CMakeFiles/test.dir/src/Engine/Common/ColorRGB.cpp.o.modmap || cmake_object_order_depends_target_test CMakeFiles/test.dir/CXX.dd
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/src/Engine/Common/ColorRGB.cpp.o.d
   DYNDEP_MODULE_MAP_FILE = CMakeFiles/test.dir/src/Engine/Common/ColorRGB.cpp.o.modmap
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -170,7 +170,7 @@ build CMakeFiles/test.dir/src/Engine/Common/ColorRGB.cpp.o: CXX_COMPILER__test_s
   dyndep = CMakeFiles/test.dir/CXX.dd
 
 build CMakeFiles/test.dir/src/Engine/Common/ColorRGBA.cpp.o.ddi: CXX_SCAN__test_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/src/Engine/Common/ColorRGBA.cpp || cmake_object_order_depends_target_test
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/src/Engine/Common/ColorRGBA.cpp.o.ddi.d
   DYNDEP_INTERMEDIATE_FILE = CMakeFiles/test.dir/src/Engine/Common/ColorRGBA.cpp.o.ddi
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -179,7 +179,7 @@ build CMakeFiles/test.dir/src/Engine/Common/ColorRGBA.cpp.o.ddi: CXX_SCAN__test_
   PREPROCESSED_OUTPUT_FILE = CMakeFiles/test.dir/src/Engine/Common/ColorRGBA.cpp.o.ddi.i
 
 build CMakeFiles/test.dir/src/Engine/Common/ColorRGBA.cpp.o: CXX_COMPILER__test_scanned_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/src/Engine/Common/ColorRGBA.cpp | CMakeFiles/test.dir/src/Engine/Common/ColorRGBA.cpp.o.modmap || cmake_object_order_depends_target_test CMakeFiles/test.dir/CXX.dd
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/src/Engine/Common/ColorRGBA.cpp.o.d
   DYNDEP_MODULE_MAP_FILE = CMakeFiles/test.dir/src/Engine/Common/ColorRGBA.cpp.o.modmap
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -191,7 +191,7 @@ build CMakeFiles/test.dir/src/Engine/Common/ColorRGBA.cpp.o: CXX_COMPILER__test_
   dyndep = CMakeFiles/test.dir/CXX.dd
 
 build CMakeFiles/test.dir/src/Engine/World/GameObject.cpp.o.ddi: CXX_SCAN__test_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/src/Engine/World/GameObject.cpp || cmake_object_order_depends_target_test
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/src/Engine/World/GameObject.cpp.o.ddi.d
   DYNDEP_INTERMEDIATE_FILE = CMakeFiles/test.dir/src/Engine/World/GameObject.cpp.o.ddi
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -200,7 +200,7 @@ build CMakeFiles/test.dir/src/Engine/World/GameObject.cpp.o.ddi: CXX_SCAN__test_
   PREPROCESSED_OUTPUT_FILE = CMakeFiles/test.dir/src/Engine/World/GameObject.cpp.o.ddi.i
 
 build CMakeFiles/test.dir/src/Engine/World/GameObject.cpp.o: CXX_COMPILER__test_scanned_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/src/Engine/World/GameObject.cpp | CMakeFiles/test.dir/src/Engine/World/GameObject.cpp.o.modmap || cmake_object_order_depends_target_test CMakeFiles/test.dir/CXX.dd
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/src/Engine/World/GameObject.cpp.o.d
   DYNDEP_MODULE_MAP_FILE = CMakeFiles/test.dir/src/Engine/World/GameObject.cpp.o.modmap
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -212,7 +212,7 @@ build CMakeFiles/test.dir/src/Engine/World/GameObject.cpp.o: CXX_COMPILER__test_
   dyndep = CMakeFiles/test.dir/CXX.dd
 
 build CMakeFiles/test.dir/src/Engine/Common/Vector2.cpp.o.ddi: CXX_SCAN__test_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/src/Engine/Common/Vector2.cpp || cmake_object_order_depends_target_test
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/src/Engine/Common/Vector2.cpp.o.ddi.d
   DYNDEP_INTERMEDIATE_FILE = CMakeFiles/test.dir/src/Engine/Common/Vector2.cpp.o.ddi
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -221,7 +221,7 @@ build CMakeFiles/test.dir/src/Engine/Common/Vector2.cpp.o.ddi: CXX_SCAN__test_Re
   PREPROCESSED_OUTPUT_FILE = CMakeFiles/test.dir/src/Engine/Common/Vector2.cpp.o.ddi.i
 
 build CMakeFiles/test.dir/src/Engine/Common/Vector2.cpp.o: CXX_COMPILER__test_scanned_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/src/Engine/Common/Vector2.cpp | CMakeFiles/test.dir/src/Engine/Common/Vector2.cpp.o.modmap || cmake_object_order_depends_target_test CMakeFiles/test.dir/CXX.dd
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/src/Engine/Common/Vector2.cpp.o.d
   DYNDEP_MODULE_MAP_FILE = CMakeFiles/test.dir/src/Engine/Common/Vector2.cpp.o.modmap
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -233,7 +233,7 @@ build CMakeFiles/test.dir/src/Engine/Common/Vector2.cpp.o: CXX_COMPILER__test_sc
   dyndep = CMakeFiles/test.dir/CXX.dd
 
 build CMakeFiles/test.dir/src/Engine/World/Component.cpp.o.ddi: CXX_SCAN__test_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/src/Engine/World/Component.cpp || cmake_object_order_depends_target_test
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/src/Engine/World/Component.cpp.o.ddi.d
   DYNDEP_INTERMEDIATE_FILE = CMakeFiles/test.dir/src/Engine/World/Component.cpp.o.ddi
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -242,7 +242,7 @@ build CMakeFiles/test.dir/src/Engine/World/Component.cpp.o.ddi: CXX_SCAN__test_R
   PREPROCESSED_OUTPUT_FILE = CMakeFiles/test.dir/src/Engine/World/Component.cpp.o.ddi.i
 
 build CMakeFiles/test.dir/src/Engine/World/Component.cpp.o: CXX_COMPILER__test_scanned_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/src/Engine/World/Component.cpp | CMakeFiles/test.dir/src/Engine/World/Component.cpp.o.modmap || cmake_object_order_depends_target_test CMakeFiles/test.dir/CXX.dd
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/src/Engine/World/Component.cpp.o.d
   DYNDEP_MODULE_MAP_FILE = CMakeFiles/test.dir/src/Engine/World/Component.cpp.o.modmap
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -254,7 +254,7 @@ build CMakeFiles/test.dir/src/Engine/World/Component.cpp.o: CXX_COMPILER__test_s
   dyndep = CMakeFiles/test.dir/CXX.dd
 
 build CMakeFiles/test.dir/imgui/imgui.cpp.o.ddi: CXX_SCAN__test_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/imgui/imgui.cpp || cmake_object_order_depends_target_test
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/imgui/imgui.cpp.o.ddi.d
   DYNDEP_INTERMEDIATE_FILE = CMakeFiles/test.dir/imgui/imgui.cpp.o.ddi
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -263,7 +263,7 @@ build CMakeFiles/test.dir/imgui/imgui.cpp.o.ddi: CXX_SCAN__test_Release /mnt/ssd
   PREPROCESSED_OUTPUT_FILE = CMakeFiles/test.dir/imgui/imgui.cpp.o.ddi.i
 
 build CMakeFiles/test.dir/imgui/imgui.cpp.o: CXX_COMPILER__test_scanned_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/imgui/imgui.cpp | CMakeFiles/test.dir/imgui/imgui.cpp.o.modmap || cmake_object_order_depends_target_test CMakeFiles/test.dir/CXX.dd
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/imgui/imgui.cpp.o.d
   DYNDEP_MODULE_MAP_FILE = CMakeFiles/test.dir/imgui/imgui.cpp.o.modmap
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -275,7 +275,7 @@ build CMakeFiles/test.dir/imgui/imgui.cpp.o: CXX_COMPILER__test_scanned_Release 
   dyndep = CMakeFiles/test.dir/CXX.dd
 
 build CMakeFiles/test.dir/imgui/imgui_demo.cpp.o.ddi: CXX_SCAN__test_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/imgui/imgui_demo.cpp || cmake_object_order_depends_target_test
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/imgui/imgui_demo.cpp.o.ddi.d
   DYNDEP_INTERMEDIATE_FILE = CMakeFiles/test.dir/imgui/imgui_demo.cpp.o.ddi
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -284,7 +284,7 @@ build CMakeFiles/test.dir/imgui/imgui_demo.cpp.o.ddi: CXX_SCAN__test_Release /mn
   PREPROCESSED_OUTPUT_FILE = CMakeFiles/test.dir/imgui/imgui_demo.cpp.o.ddi.i
 
 build CMakeFiles/test.dir/imgui/imgui_demo.cpp.o: CXX_COMPILER__test_scanned_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/imgui/imgui_demo.cpp | CMakeFiles/test.dir/imgui/imgui_demo.cpp.o.modmap || cmake_object_order_depends_target_test CMakeFiles/test.dir/CXX.dd
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/imgui/imgui_demo.cpp.o.d
   DYNDEP_MODULE_MAP_FILE = CMakeFiles/test.dir/imgui/imgui_demo.cpp.o.modmap
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -296,7 +296,7 @@ build CMakeFiles/test.dir/imgui/imgui_demo.cpp.o: CXX_COMPILER__test_scanned_Rel
   dyndep = CMakeFiles/test.dir/CXX.dd
 
 build CMakeFiles/test.dir/imgui/imgui_draw.cpp.o.ddi: CXX_SCAN__test_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/imgui/imgui_draw.cpp || cmake_object_order_depends_target_test
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/imgui/imgui_draw.cpp.o.ddi.d
   DYNDEP_INTERMEDIATE_FILE = CMakeFiles/test.dir/imgui/imgui_draw.cpp.o.ddi
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -305,7 +305,7 @@ build CMakeFiles/test.dir/imgui/imgui_draw.cpp.o.ddi: CXX_SCAN__test_Release /mn
   PREPROCESSED_OUTPUT_FILE = CMakeFiles/test.dir/imgui/imgui_draw.cpp.o.ddi.i
 
 build CMakeFiles/test.dir/imgui/imgui_draw.cpp.o: CXX_COMPILER__test_scanned_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/imgui/imgui_draw.cpp | CMakeFiles/test.dir/imgui/imgui_draw.cpp.o.modmap || cmake_object_order_depends_target_test CMakeFiles/test.dir/CXX.dd
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/imgui/imgui_draw.cpp.o.d
   DYNDEP_MODULE_MAP_FILE = CMakeFiles/test.dir/imgui/imgui_draw.cpp.o.modmap
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -317,7 +317,7 @@ build CMakeFiles/test.dir/imgui/imgui_draw.cpp.o: CXX_COMPILER__test_scanned_Rel
   dyndep = CMakeFiles/test.dir/CXX.dd
 
 build CMakeFiles/test.dir/imgui/imgui_impl_opengl3.cpp.o.ddi: CXX_SCAN__test_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/imgui/imgui_impl_opengl3.cpp || cmake_object_order_depends_target_test
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/imgui/imgui_impl_opengl3.cpp.o.ddi.d
   DYNDEP_INTERMEDIATE_FILE = CMakeFiles/test.dir/imgui/imgui_impl_opengl3.cpp.o.ddi
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -326,7 +326,7 @@ build CMakeFiles/test.dir/imgui/imgui_impl_opengl3.cpp.o.ddi: CXX_SCAN__test_Rel
   PREPROCESSED_OUTPUT_FILE = CMakeFiles/test.dir/imgui/imgui_impl_opengl3.cpp.o.ddi.i
 
 build CMakeFiles/test.dir/imgui/imgui_impl_opengl3.cpp.o: CXX_COMPILER__test_scanned_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/imgui/imgui_impl_opengl3.cpp | CMakeFiles/test.dir/imgui/imgui_impl_opengl3.cpp.o.modmap || cmake_object_order_depends_target_test CMakeFiles/test.dir/CXX.dd
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/imgui/imgui_impl_opengl3.cpp.o.d
   DYNDEP_MODULE_MAP_FILE = CMakeFiles/test.dir/imgui/imgui_impl_opengl3.cpp.o.modmap
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -338,7 +338,7 @@ build CMakeFiles/test.dir/imgui/imgui_impl_opengl3.cpp.o: CXX_COMPILER__test_sca
   dyndep = CMakeFiles/test.dir/CXX.dd
 
 build CMakeFiles/test.dir/imgui/imgui_impl_sdl2.cpp.o.ddi: CXX_SCAN__test_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/imgui/imgui_impl_sdl2.cpp || cmake_object_order_depends_target_test
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/imgui/imgui_impl_sdl2.cpp.o.ddi.d
   DYNDEP_INTERMEDIATE_FILE = CMakeFiles/test.dir/imgui/imgui_impl_sdl2.cpp.o.ddi
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -347,7 +347,7 @@ build CMakeFiles/test.dir/imgui/imgui_impl_sdl2.cpp.o.ddi: CXX_SCAN__test_Releas
   PREPROCESSED_OUTPUT_FILE = CMakeFiles/test.dir/imgui/imgui_impl_sdl2.cpp.o.ddi.i
 
 build CMakeFiles/test.dir/imgui/imgui_impl_sdl2.cpp.o: CXX_COMPILER__test_scanned_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/imgui/imgui_impl_sdl2.cpp | CMakeFiles/test.dir/imgui/imgui_impl_sdl2.cpp.o.modmap || cmake_object_order_depends_target_test CMakeFiles/test.dir/CXX.dd
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/imgui/imgui_impl_sdl2.cpp.o.d
   DYNDEP_MODULE_MAP_FILE = CMakeFiles/test.dir/imgui/imgui_impl_sdl2.cpp.o.modmap
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -359,7 +359,7 @@ build CMakeFiles/test.dir/imgui/imgui_impl_sdl2.cpp.o: CXX_COMPILER__test_scanne
   dyndep = CMakeFiles/test.dir/CXX.dd
 
 build CMakeFiles/test.dir/imgui/imgui_tables.cpp.o.ddi: CXX_SCAN__test_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/imgui/imgui_tables.cpp || cmake_object_order_depends_target_test
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/imgui/imgui_tables.cpp.o.ddi.d
   DYNDEP_INTERMEDIATE_FILE = CMakeFiles/test.dir/imgui/imgui_tables.cpp.o.ddi
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -368,7 +368,7 @@ build CMakeFiles/test.dir/imgui/imgui_tables.cpp.o.ddi: CXX_SCAN__test_Release /
   PREPROCESSED_OUTPUT_FILE = CMakeFiles/test.dir/imgui/imgui_tables.cpp.o.ddi.i
 
 build CMakeFiles/test.dir/imgui/imgui_tables.cpp.o: CXX_COMPILER__test_scanned_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/imgui/imgui_tables.cpp | CMakeFiles/test.dir/imgui/imgui_tables.cpp.o.modmap || cmake_object_order_depends_target_test CMakeFiles/test.dir/CXX.dd
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/imgui/imgui_tables.cpp.o.d
   DYNDEP_MODULE_MAP_FILE = CMakeFiles/test.dir/imgui/imgui_tables.cpp.o.modmap
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -380,7 +380,7 @@ build CMakeFiles/test.dir/imgui/imgui_tables.cpp.o: CXX_COMPILER__test_scanned_R
   dyndep = CMakeFiles/test.dir/CXX.dd
 
 build CMakeFiles/test.dir/imgui/imgui_widgets.cpp.o.ddi: CXX_SCAN__test_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/imgui/imgui_widgets.cpp || cmake_object_order_depends_target_test
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/imgui/imgui_widgets.cpp.o.ddi.d
   DYNDEP_INTERMEDIATE_FILE = CMakeFiles/test.dir/imgui/imgui_widgets.cpp.o.ddi
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always
@@ -389,7 +389,7 @@ build CMakeFiles/test.dir/imgui/imgui_widgets.cpp.o.ddi: CXX_SCAN__test_Release 
   PREPROCESSED_OUTPUT_FILE = CMakeFiles/test.dir/imgui/imgui_widgets.cpp.o.ddi.i
 
 build CMakeFiles/test.dir/imgui/imgui_widgets.cpp.o: CXX_COMPILER__test_scanned_Release /mnt/ssd/Game$ Dev/C/ProjectMercury/imgui/imgui_widgets.cpp | CMakeFiles/test.dir/imgui/imgui_widgets.cpp.o.modmap || cmake_object_order_depends_target_test CMakeFiles/test.dir/CXX.dd
-  DEFINES = -DCLIENT=1 -DDEV_MODE=1 -DSERVER=1
+  DEFINES = -DCLIENT=1 -DDEV_MODE=0 -DSERVER=1
   DEP_FILE = CMakeFiles/test.dir/imgui/imgui_widgets.cpp.o.d
   DYNDEP_MODULE_MAP_FILE = CMakeFiles/test.dir/imgui/imgui_widgets.cpp.o.modmap
   FLAGS = -O3 -DNDEBUG -std=gnu++20 -fdiagnostics-color=always

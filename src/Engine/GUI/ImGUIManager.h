@@ -16,9 +16,10 @@ namespace Engine::GUI
     class ImGUIManager : public Core::Subsystem, public Core::ISubsystemSDLEventReceiver
     {
     protected:
-        void onInit() override
+        bool onInit() override
         {
-
+            ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+            return true;
         }
 
         void onEarlyUpdate(float deltaTime) override
