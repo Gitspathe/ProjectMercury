@@ -2,6 +2,7 @@
 #define SURFACE_H
 #include <vector>
 #include "../Common/ColorConversion.h"
+#include "Screen.h"
 
 namespace Engine::Render
 {
@@ -22,6 +23,14 @@ namespace Engine::Render
             clear(Common::ColorConversion::getClear<T>());
         }
 
+        explicit Surface(const Screen& screen)
+        {
+            this->w = screen.getWidth();
+            this->h = screen.getHeight();
+            buffer = std::vector<T>(h * w);
+            clear(Common::ColorConversion::getClear<T>());
+        }
+
         std::vector<T>& getBuffer()
         {
             return buffer;
@@ -35,7 +44,7 @@ namespace Engine::Render
                 return T();
 #endif
 
-            return Common::ColorConversion::convertColor<TCol>(buffer[y * w + x]);
+            return Common::ColorConversion::convert<TCol>(buffer[y * w + x]);
         }
 
         template<typename TCol>
@@ -44,7 +53,7 @@ namespace Engine::Render
             if(x < 0 || x >= w || y < 0 || y >= h)
                 return T();
 
-            return Common::ColorConversion::convertColor<TCol>(buffer[y * w + x]);
+            return Common::ColorConversion::convert<TCol>(buffer[y * w + x]);
         }
 
         int getWidth() const
@@ -65,7 +74,7 @@ namespace Engine::Render
                 return;
 #endif
 
-            buffer[y * w + x] = Common::ColorConversion::convertColor<T>(color);
+            buffer[y * w + x] = Common::ColorConversion::convert<T>(color);
         }
 
         template<typename TCol>
@@ -74,14 +83,14 @@ namespace Engine::Render
             if(x < 0 || x >= w || y < 0 || y >= h)
                 return;
 
-            buffer[y * w + x] = Common::ColorConversion::convertColor<T>(color);
+            buffer[y * w + x] = Common::ColorConversion::convert<T>(color);
         }
 
         template<typename TCol>
         void clear(const TCol color)
         {
             // Reset the entire buffer with a fast memory copy.
-            std::fill(buffer.begin(), buffer.end(), Common::ColorConversion::convertColor<T>(color));
+            std::fill(buffer.begin(), buffer.end(), Common::ColorConversion::convert<T>(color));
         }
 
         void resize(const int w, const int h)

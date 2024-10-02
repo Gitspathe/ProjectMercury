@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.29)
 project(test)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 option(BUILD_SERVER "Build server code" ON)
 option(BUILD_CLIENT "Build client code" ON)
@@ -27,27 +28,29 @@ endif()
 option(JS_ONLY "Compiles to native JS (No WASM)" OFF)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
-    set(USE_FLAGS "-s USE_SDL=2")
+    set(USE_FLAGS "-s USE_SDL_NET=2 -s USE_SDL=2")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${USE_FLAGS}")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${USE_FLAGS}")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${USE_FLAGS}")
     set(CMAKE_EXECUTABLE_SUFFIX ".html")
     set(CMAKE_CXX_SCAN_FOR_MODULES 0)
+else()
+    find_package(SDL2 REQUIRED)
+    find_package(SDL2_net REQUIRED)
 endif()
 
-find_package(SDL2 REQUIRED)
+#find_package(SDL2 REQUIRED)
+#find_package(SDL2_net REQUIRED)
 
 if(BUILD_CLIENT)
     find_package(OpenGL REQUIRED)
-    add_library(glad STATIC src/glad.c
-            src/Engine/Core/Subsystem.h
-            src/Engine/GUI/ImGUIManager.h)
+    add_library(glad STATIC src/glad.c)
 endif()
 
 if(BUILD_CLIENT)
-    include_directories(${OPENGL_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/imgui)
+    include_directories(${OPENGL_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS} ${SDL2_NET_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/imgui)
 else()
-    include_directories(${SDL2_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/include)
+    include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_NET_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/include)
 endif()
 
 add_executable(test lib/json.hpp
@@ -62,7 +65,6 @@ add_executable(test lib/json.hpp
         src/Engine/Render/Screen.h
         src/Engine/Render/OpenGLRenderer.h
         src/Engine/Input/InputManager.h
-        src/Engine/Input/InputManager.cpp
         src/Engine/Common/ColorRGB.h
         src/Engine/Common/RectF.h
         src/Engine/Render/Surface.h
@@ -80,6 +82,7 @@ add_executable(test lib/json.hpp
         src/Engine/Core/Game.h
         src/Game/TestGame.h
         src/Engine/Common/ColorConstants.h
+        src/Engine/Core/SubsystemExecOrder.h
 )
 
 if(BUILD_CLIENT)
@@ -105,9 +108,9 @@ endif()
 
 # Link SDL2 and conditionally OpenGL and GLAD if BUILD_CLIENT is true
 if(BUILD_CLIENT)
-    target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${GLAD_LIBRARY} glad)
+    target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2_NET_LIBRARIES} ${OPENGL_LIBRARIES} ${GLAD_LIBRARY} glad)
 else()
-    target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2_NET_LIBRARIES})
 endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")

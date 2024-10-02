@@ -3,6 +3,7 @@
 #include <memory>
 #include <typeindex>
 #include <vector>
+#include <type_traits>
 #include "Component.h"
 #include "../Common/Vector2.h"
 #include "../Common/Transform.h"
@@ -37,6 +38,7 @@ namespace Engine::World
         friend class Component;
 
         GameObject() {}
+        virtual ~GameObject() {}
 
         template<typename T>
         static std::shared_ptr<T> create()

@@ -16,11 +16,7 @@ namespace Engine::World
 
     public:
         GameWorld() {}
-
-        static std::unique_ptr<GameWorld> create()
-        {
-            return std::make_unique<GameWorld>();
-        }
+        virtual ~GameWorld() {}
 
         bool init();
         void update(float deltaTime);

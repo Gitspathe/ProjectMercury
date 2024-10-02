@@ -2,6 +2,7 @@
 #define COLOROPERATORS_H
 #include "ColorRGB.h"
 #include "ColorRGBA.h"
+#include "ColorConstants.h"
 
 namespace Engine::Common
 {

@@ -41,6 +41,7 @@ void main() {
 )";
 
         SDL_Window* window = nullptr;
+        SDL_GLContext context = nullptr;
         GLuint vertexShader = 0;
         GLuint fragmentShader = 0;
         GLuint shaderProgram = 0;
@@ -123,7 +124,7 @@ void main() {
                 return false;
             }
 
-            const SDL_GLContext context = SDL_GL_CreateContext(window);
+            context = SDL_GL_CreateContext(window);
             if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
                 std::cerr << "FATAL_ERR: Failed to load glad wrapper" << std::endl;
                 SDL_GL_DeleteContext(context);
@@ -213,12 +214,13 @@ void main() {
         void onDestroy() override
         {
             SDL_DestroyWindow(window);
+            SDL_GL_DeleteContext(context);
         }
 
     public:
-        static std::unique_ptr<OpenGLRenderer> create()
+        float getRenderScale() const
         {
-            return std::make_unique<OpenGLRenderer>();
+            return renderScale;
         }
 
         void setRenderScale(const float val)

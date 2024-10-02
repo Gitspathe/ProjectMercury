@@ -2,18 +2,14 @@
 #define IMGUIMANAGER_H
 
 #if DEV_MODE && CLIENT
-#include <iostream>
-#include <SDL_cpuinfo.h>
-#include <SDL_video.h>
 #include "imgui_impl_opengl3.h"
 #include "imgui_impl_sdl2.h"
-#include "../Core/Game.h"
 #include "../Core/Subsystem.h"
-#include "../Render/Screen.h"
+#include "../Core/SubsystemExecOrder.h"
 
 namespace Engine::GUI
 {
-    class ImGUIManager : public Core::Subsystem, public Core::ISubsystemSDLEventReceiver
+    class ImGUIManager final : public Core::Subsystem, public Core::ISubsystemSDLEventReceiver
     {
     protected:
         bool onInit() override
@@ -83,7 +79,7 @@ namespace Engine::GUI
 
         uint32_t getOrder() override
         {
-            return 5;
+            return Core::SubsystemExecOrder::IMGUI;
         }
 
         void handleEvent(SDL_Event &ev) override

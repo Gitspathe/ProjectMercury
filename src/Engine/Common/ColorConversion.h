@@ -16,7 +16,7 @@ namespace Engine::Common::ColorConversion
     }
 
     template<typename TTarget, typename TSource>
-    TTarget convertColor(const TSource& color)
+    TTarget convert(const TSource& color)
     {
         if constexpr (std::is_same_v<TSource, ColorRGB> && std::is_same_v<TTarget, ColorRGBA>) {
             return ColorConversion::toRGBA(color);

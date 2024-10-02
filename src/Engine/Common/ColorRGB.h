@@ -1,7 +1,6 @@
 #ifndef COLORRGB_H
 #define COLORRGB_H
 #include <cstdint>
-#include "ColorConstants.h"
 
 namespace Engine::Common
 {

@@ -3,7 +3,6 @@
 #if CLIENT
 #include <memory>
 #include "Surface.h"
-#include "Screen.h"
 
 namespace Engine::Render
 {
@@ -11,7 +10,7 @@ namespace Engine::Render
     class Renderer
     {
     protected:
-        std::unique_ptr<Surface<T>> backBuffer;
+        std::shared_ptr<Surface<T>> backBuffer;
 
         virtual bool onInit() = 0;
         virtual void onPrepare() = 0;
@@ -21,16 +20,9 @@ namespace Engine::Render
     public:
         virtual ~Renderer() = default;
 
-        template<typename TRenderer>
-        static std::shared_ptr<TRenderer> create()
+        bool init(const std::shared_ptr<Surface<T>> backBuffer)
         {
-            static_assert(std::is_base_of_v<Renderer, TRenderer>, "T must derive from Renderer");
-            return std::make_unique<TRenderer>();
-        }
-
-        bool init(const Screen &screen)
-        {
-            backBuffer = std::make_unique<Surface<T>>(screen.getWidth(), screen.getHeight());
+            this->backBuffer = backBuffer;
             return onInit();
         }
 
