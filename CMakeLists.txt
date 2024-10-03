@@ -39,9 +39,6 @@ else()
     find_package(SDL2_net REQUIRED)
 endif()
 
-#find_package(SDL2 REQUIRED)
-#find_package(SDL2_net REQUIRED)
-
 if(BUILD_CLIENT)
     find_package(OpenGL REQUIRED)
     add_library(glad STATIC src/glad.c)
@@ -83,6 +80,12 @@ add_executable(test lib/json.hpp
         src/Game/TestGame.h
         src/Engine/Common/ColorConstants.h
         src/Engine/Core/SubsystemExecOrder.h
+        src/Engine/Net/NetHandler.h
+        src/Engine/Net/ServerNetHandler.h
+        src/Engine/Net/ClientNetHandler.h
+        src/Engine/Net/HostNetHandler.h
+        src/Engine/Net/NetManager.h
+        src/Engine/Net/Client.h
 )
 
 if(BUILD_CLIENT)
@@ -116,10 +119,10 @@ endif()
 if(${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
     if(JS_ONLY)
         message(STATUS "Setting compilation target to native JavaScript")
-        set_target_properties(test PROPERTIES LINK_FLAGS "-s WASM=0 -s EXPORTED_FUNCTIONS='[_main]'")
+        set_target_properties(test PROPERTIES LINK_FLAGS "-s WEBSOCKET_SUBPROTOCOL='binary,base64,text' -s WEBSOCKET_DEBUG -s WEBSOCKET_URL='ws://localhost' -l websocket.js -s WASM=0 -s EXPORTED_FUNCTIONS='[_main]'")
     else(JS_ONLY)
         message(STATUS "Setting compilation target to WASM")
-        set_target_properties(test PROPERTIES LINK_FLAGS "-s WASM=1 -s EXPORTED_FUNCTIONS='[_main]'")
+        set_target_properties(test PROPERTIES LINK_FLAGS "-s WEBSOCKET_SUBPROTOCOL='binary,base64,text' -s WEBSOCKET_DEBUG -s WEBSOCKET_URL='ws://localhost' -l websocket.js -s WASM=1 -s EXPORTED_FUNCTIONS='[_main]'")
     endif(JS_ONLY)
 endif()
 

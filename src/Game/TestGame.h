@@ -3,6 +3,7 @@
 #include <iostream>
 #include "../Engine/Core/Game.h"
 #include "../Engine/Input/InputManager.h"
+#include "../Engine/Net/NetManager.h"
 
 #if CLIENT
 #include "../Engine/GUI/ImGUIManager.h"
@@ -60,6 +61,7 @@ protected:
     void setupSubsystems()
     {
         addSubsystem(std::make_shared<Input::InputManager>());
+        addSubsystem(std::make_shared<Net::NetManager>());
 
 #if CLIENT && DEV_MODE
         addSubsystem(std::make_shared<GUI::ImGUIManager>());

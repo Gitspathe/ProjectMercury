@@ -9,6 +9,7 @@ namespace Engine::Core
         constexpr uint32_t SERVER_CMD_MANAGER = 1;
         constexpr uint32_t IMGUI              = 10;
         constexpr uint32_t INPUT_MANAGER      = 100;
+        constexpr uint32_t NET_MANAGER        = 200;
     }
 }
 

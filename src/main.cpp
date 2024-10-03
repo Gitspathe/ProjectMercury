@@ -1,5 +1,6 @@
 #include <functional>
 #include <chrono>
+#include <cstring>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_net.h>
 
@@ -25,8 +26,6 @@ void mainLoop()
     loop();
 }
 
-TCPsocket client;
-TCPsocket server;
 bool init()
 {
     // Initialize logging functionality.
@@ -45,44 +44,20 @@ bool init()
     log::write << "Running as a client." << log::endl;
 #endif
 
-    // TEST
-    if (SDLNet_Init() == -1) {
-        std::cerr << "SDLNet_Init: " << SDLNet_GetError() << std::endl;
-        SDL_Quit();
-        return -1;
-    }
-
-    // Create a TCP socket for listening
-    IPaddress ip;
-    if (SDLNet_ResolveHost(&ip, nullptr, 12345) == -1) {  // Listening on port 12345
-        std::cerr << "SDLNet_ResolveHost: " << SDLNet_GetError() << std::endl;
-        SDLNet_Quit();
-        SDL_Quit();
-        return -1;
-    }
-    server = SDLNet_TCP_Open(&ip);
-    if (!server) {
-        std::cerr << "SDLNet_TCP_Open: " << SDLNet_GetError() << std::endl;
-        SDLNet_Quit();
-        SDL_Quit();
-        return -1;
-    }
-    std::cout << "Server listening on port 12345" << std::endl;
-
-    Uint32 sdlInitFlags = SDL_INIT_TIMER | SDL_INIT_EVENTS;
-
     /*      SDL Initialization
      * --> Client = audio, video, timer, events
      * --> Web Client = audio, timer, events
      * --> NOT client (headless server) = timer, events, dummy vid driver
      */
+    Uint32 sdlInitFlags = SDL_INIT_TIMER | SDL_INIT_EVENTS;
 #if CLIENT
     sdlInitFlags |= SDL_INIT_AUDIO;
 #ifndef __EMSCRIPTEN__
     sdlInitFlags |= SDL_INIT_VIDEO;
 #endif
 #else
-    putenv("SDL_VIDEODRIVER=dummy");
+    char env[] = "SDL_VIDEODRIVER=dummy";
+    putenv(env);
 #endif
 
     log::write << "Starting SDL." << log::endl;
@@ -116,31 +91,11 @@ bool run()
     if(game->quitRequested())
         return false;
 
-    client = SDLNet_TCP_Accept(server);  // Wait for a connection
-    if (client) {
-        std::cout << "Client connected!" << std::endl;
-
-        // Receive and echo back data
-        char buffer[512];
-        int len = SDLNet_TCP_Recv(client, buffer, sizeof(buffer) - 1);
-        if (len > 0) {
-            buffer[len] = '\0';  // Null-terminate the string
-            std::cout << "Received: " << buffer << std::endl;
-
-            // Echo the received message back to the client
-            SDLNet_TCP_Send(client, buffer, len);
-        }
-
-        // Close the client connection
-        SDLNet_TCP_Close(client);
-        std::cout << "Client disconnected!" << std::endl;
-    }
-
     return true;
 }
 
 // Target FPS
-const int TARGET_FPS = 9999;
+const int TARGET_FPS = 30;
 const double FRAME_DURATION = 1000.0 / TARGET_FPS;
 
 std::string input;
@@ -167,9 +122,9 @@ int main()
 
 #ifdef __EMSCRIPTEN__
         // For Emscripten compatibility, use SDL_Delay.
-        if (timeToWait > 0.0) {
-            SDL_Delay(static_cast<Uint32>(timeToWait));
-        }
+        // if (timeToWait > 0.0) {
+        //     SDL_Delay(static_cast<Uint32>(timeToWait));
+        // }
 #else
         if(timeToWait > 0.0) {
             // If the remaining time is large enough, use a thread sleep.
@@ -193,9 +148,6 @@ int main()
 #else
     while(running) mainLoop();
 #endif
-
-    SDLNet_TCP_Close(server);
-    SDLNet_Quit();
 
     game->destroy();
     SDL_Quit();
