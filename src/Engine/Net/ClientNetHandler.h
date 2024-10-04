@@ -8,6 +8,7 @@
 #include "NetHandler.h"
 #include "emscripten/websocket.h"
 #include "TestPacketHandler.h"
+#include "Peer.h"
 #include "../../Engine.h"
 
 namespace Engine::Net
@@ -18,21 +19,16 @@ namespace Engine::Net
         EMSCRIPTEN_WEBSOCKET_T ws = 0;
         bool isConnected = false;
         std::string serverEndpoint;
-        uint32_t clientUUID; // Store the generated UUID
-
-        // Generate a unique identifier (UUID) for the client
-        uint32_t generateUUID()
-        {
-            return rand() % 10000;
-        }
+        std::shared_ptr<Peer> serverPeer;
 
         static EM_BOOL onOpen(int eventType, const EmscriptenWebSocketOpenEvent* ev, void *userData)
         {
             auto* handler = static_cast<ClientNetHandler*>(userData);
             log::write << "Connected to server at " << handler->serverEndpoint << log::endl;
 
+            handler->serverPeer = std::make_shared<Peer>(1);
+            handler->netManager->tryRegisterPeer(handler->serverPeer);
             handler->isConnected = true;
-            handler->clientUUID = handler->generateUUID();
 
             std::string msg = "Hello from my new packet handler thing!";
             PacketHandler* p = handler->netManager->getPacketManager().getHandler<TestPacketHandler>(PacketTypes::TEST_MSG);
@@ -40,14 +36,19 @@ namespace Engine::Net
             uint8_t* data = packet.getData();
             emscripten_websocket_send_binary(handler->ws, data, packet.getFullSize());
             delete[] data;
-
-            return EM_FALSE;
+            return EM_TRUE;
         }
 
         static EM_BOOL onMessage(int eventType, const EmscriptenWebSocketMessageEvent* ev, void *userData)
         {
-            auto* handler = static_cast<ClientNetHandler*>(userData);
-            return EM_FALSE;
+            const auto* handler = static_cast<ClientNetHandler*>(userData);
+            if(handler->serverPeer == nullptr) {
+                log::write << "Somehow received message from server, but the client is disconnected." << log::endl;
+                return EM_FALSE;
+            }
+
+            handler->netManager->getPacketManager().onMessage(*handler->serverPeer, ev->data, ev->numBytes);
+            return EM_TRUE;
         }
 
         static EM_BOOL onClose(int eventType, const EmscriptenWebSocketCloseEvent* ev, void *userData)
@@ -129,16 +130,6 @@ namespace Engine::Net
         {
             serverEndpoint = "ws://localhost:8082";
         }
-
-        // void sendMessage(const std::string &message) const
-        // {
-        //     if(isConnected && ws) {
-        //         emscripten_websocket_send_binary(ws, new char[5] {'h','e','l','l','o'}, 5);
-        //         log::write << "Sent message: " << message << log::endl; // Log sent message
-        //         return;
-        //     }
-        //     log::write << "Unable to send message, not connected to server." << log::endl;
-        // }
     };
 }
 

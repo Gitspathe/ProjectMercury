@@ -1,5 +1,6 @@
 #ifndef SERVERNETHANDLER_H
 #define SERVERNETHANDLER_H
+#include "TestPacketHandler.h"
 #if SERVER && !CLIENT
 #include "NetHandler.h"
 #include "SDL2/SDL_net.h"
@@ -100,6 +101,13 @@ namespace Engine::Net
             int received = SDLNet_TCP_Recv(peer->getSocket(), buffer, 1024);
             if(received > 0) {
                 netManager->getPacketManager().onMessage(*peer, buffer, received);
+
+                std::string msg = "Hello from my new packet handler thing!";
+                PacketHandler* p = netManager->getPacketManager().getHandler<TestPacketHandler>(PacketTypes::TEST_MSG);
+                Packet packet = p->construct(&msg);
+                uint8_t* data = packet.getData();
+                SDLNet_TCP_Send(peer->getSocket(), data, packet.getFullSize());
+                delete[] data;
                 return true;
             }
             if(received < 0) {

@@ -10,6 +10,10 @@ namespace Engine::Net
         return (netshort << 8) | (netshort >> 8);
     }
 
+    inline uint16_t htons(uint16_t hostshort) {
+        return (hostshort << 8) | (hostshort >> 8);
+    }
+
     class Packet
     {
     private:
@@ -23,14 +27,14 @@ namespace Engine::Net
         uint8_t* buffer = nullptr;
 
     public:
-        Packet() {}
+        Packet() = default;
 
         Packet(const uint32_t source, const uint8_t type, const uint16_t size, uint8_t* buffer)
             : source(source), type(type), size(size)
         {
             if(size > 0 && buffer != nullptr) {
                 this->buffer = new uint8_t[size];
-                std::copy(buffer, buffer + size, this->buffer);
+                std::memcpy(this->buffer, buffer, size);
             }
         }
 
@@ -39,7 +43,7 @@ namespace Engine::Net
         {
             if(copy.size > 0 && copy.buffer != nullptr) {
                 this->buffer = new uint8_t[size];
-                std::copy(buffer, buffer + size, this->buffer);
+                std::memcpy(this->buffer, copy.buffer, size);
             }
         }
 
@@ -55,7 +59,7 @@ namespace Engine::Net
             buffer = nullptr;
             if(copy.size > 0 && copy.buffer != nullptr){
                 buffer = new uint8_t[copy.size];
-                std::copy(copy.buffer, copy.buffer + copy.size, buffer);
+                std::memcpy(buffer, copy.buffer, copy.size);
             }
             return *this;
         }
@@ -103,14 +107,15 @@ namespace Engine::Net
             auto data = new uint8_t[getFullSize()];
 
             // Set the payload size in the first two bytes of the header (convert to network byte order)
-            uint16_t payloadSizeNetworkOrder = ntohs(getPayloadSize()); // htons for converting to network byte order (big-endian)
+            uint16_t payloadSizeNetworkOrder = ntohs(getPayloadSize()); // Convert to network byte order (big-endian)
             std::memcpy(data, &payloadSizeNetworkOrder, sizeof(payloadSizeNetworkOrder)); // Copy the size into the first 2 bytes
 
             // Set the packet type (assuming it's a single byte)
             data[2] = type;
 
             // Copy the payload data from the buffer into the packet (after the header)
-            std::copy(this->buffer, this->buffer + getPayloadSize(), data + getHeaderSize());
+            // Use the correct offset for the payload
+            std::memcpy(data + getHeaderSize(), this->buffer, getPayloadSize());
 
             return data;
         }

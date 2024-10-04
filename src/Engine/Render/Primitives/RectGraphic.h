@@ -1,5 +1,6 @@
 #ifndef RECTGRAPHIC_H
 #define RECTGRAPHIC_H
+#include <cstring>
 #include "../../Common/RectF.h"
 #include "../Surface.h"
 #include "../../Common/ColorConversion.h"
