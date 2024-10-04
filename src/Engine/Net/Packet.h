@@ -103,18 +103,15 @@ namespace Engine::Net
 
         uint8_t* getData() const
         {
-            // Allocate memory for the entire packet (header + payload)
+            // Allocate memory for the entire packet (header + payload).
             auto data = new uint8_t[getFullSize()];
 
-            // Set the payload size in the first two bytes of the header (convert to network byte order)
-            uint16_t payloadSizeNetworkOrder = ntohs(getPayloadSize()); // Convert to network byte order (big-endian)
-            std::memcpy(data, &payloadSizeNetworkOrder, sizeof(payloadSizeNetworkOrder)); // Copy the size into the first 2 bytes
-
-            // Set the packet type (assuming it's a single byte)
+            // Copy header.
+            uint16_t payloadSizeNetworkOrder = ntohs(getPayloadSize());
+            std::memcpy(data, &payloadSizeNetworkOrder, sizeof(payloadSizeNetworkOrder));
             data[2] = type;
 
-            // Copy the payload data from the buffer into the packet (after the header)
-            // Use the correct offset for the payload
+            // Copy payload.
             std::memcpy(data + getHeaderSize(), this->buffer, getPayloadSize());
 
             return data;

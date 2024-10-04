@@ -34,10 +34,11 @@ namespace Engine::Net
         auto* packet = new Packet(0, nextType, nextSize, copy);
         packets.push_back(packet);
         reset();
+        delete[] copy;
         return true;
     }
 
-    void ByteStream::addBytes(uint8_t *data, const uint16_t size)
+    void ByteStream::addBytes(uint8_t* data, const uint16_t size)
     {
         uint16_t remaining = size;
         uint16_t offset = 0;

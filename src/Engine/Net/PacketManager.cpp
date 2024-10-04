@@ -33,6 +33,7 @@ namespace Engine::Net
             for(Packet* packet : packets) {
                 try {
                     executePacket(*packet);
+                    delete packet;
                 } catch(std::exception& e) {
                     log::write << "Packet execution failed: " << e.what() << log::endl;
                 }
@@ -50,7 +51,7 @@ namespace Engine::Net
         handler->process(packet);
     }
 
-    void PacketManager::onMessage(const Peer& peer, uint8_t *data, const uint16_t size)
+    void PacketManager::onMessage(const Peer& peer, uint8_t* data, const uint16_t size)
     {
         if(peerStreams.find(peer.getUID()) == peerStreams.end()) {
             log::write << "No peer found for ID '" << peer.getUID() << "'" << log::endl;

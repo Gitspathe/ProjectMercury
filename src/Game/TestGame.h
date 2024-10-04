@@ -96,9 +96,9 @@ protected:
 #if CLIENT
         renderer->getBackBuffer().clear(ColorRGB::Black);
 
-        for(const auto g : graphics) {
-            g->draw(*backBuffer);
-        }
+        // for(const auto g : graphics) {
+        //     g->draw(*backBuffer);
+        // }
 
         renderer->prepare();
 #endif

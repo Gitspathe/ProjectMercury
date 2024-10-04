@@ -36,6 +36,7 @@ namespace Engine::Net
             const auto buffer = new uint8_t[size];
             std::copy(str->begin(), str->end(), buffer);
             auto packet = Packet(0, PacketTypes::TEST_MSG, size, buffer);
+            delete[] buffer;
             return packet;
         }
 
