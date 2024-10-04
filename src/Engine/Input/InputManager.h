@@ -6,7 +6,7 @@
 #include <SDL_events.h>
 #include <SDL_scancode.h>
 #include "../Core/Subsystem.h"
-#include "../Core/SubsystemExecOrder.h"
+#include "../../Engine.h"
 
 namespace Engine::Input
 {

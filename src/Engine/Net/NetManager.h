@@ -2,20 +2,22 @@
 #define NETMANAGER_H
 #include <memory>
 #include <string>
-#include "HostNetHandler.h"
-#include "ClientNetHandler.h"
-#include "ServerNetHandler.h"
 #include "../../Engine.h"
 #include "../Core/Subsystem.h"
-#include "../Core/SubsystemExecOrder.h"
+#include "Net.h"
 
 namespace Engine::Net
 {
+    class NetHandler;
+    class PacketManager;
+    class Peer;
+
     class NetManager final : public Core::Subsystem
     {
     public:
 
-        static uint32_t generateUID();
+        NetManager();
+        ~NetManager() override;
 
         std::string getName() override
         {
@@ -27,67 +29,24 @@ namespace Engine::Net
             return Core::SubsystemExecOrder::NET_MANAGER;
         }
 
-        bool connect(const std::string& endpoint) const
-        {
-            if(handler == nullptr) {
-                log::write << "Connection failed - NetHandler is NULL." << log::endl;
-                return false;
-            }
-            if(!handler->connect(endpoint)) {
-                log::write << "Connection failed." << log::endl;
-                return false;
-            }
-            return true;
-        }
+        PacketManager& getPacketManager() const;
+        NetHandler& getNetHandler() const;
+        std::unordered_map<PeerUID, std::shared_ptr<Peer>>& getPeers();
+        bool tryRegisterPeer(const std::shared_ptr<Peer>& peer);
+        bool tryUnregisterPeer(const std::shared_ptr<Peer>& peer);
+        bool tryGetPeer(PeerUID uid, Peer& outPeer);
+        bool connect(const std::string& endpoint) const;
+        void disconnect() const;
 
-        void disconnect() const
-        {
-            if(handler == nullptr)
-                return;
-
-            handler->shutdown();
-        }
-
-    protected:
+    private:
+        std::unique_ptr<PacketManager> packetManager;
         std::unique_ptr<NetHandler> handler;
+        std::unordered_map<PeerUID, std::shared_ptr<Peer>> peers;
 
-        bool onInit() override
-        {
-#if CLIENT && !SERVER
-            log::write << "Initializing NetHandler as a client." << log::endl;
-            handler = std::make_unique<ClientNetHandler>();
-#elif SERVER && !CLIENT
-            log::write << "Initializing NetHandler as the server." << log::endl;
-            handler = std::make_unique<ServerNetHandler>();
-#else
-            log::write << "Initializing NetHandler as the host." << log::endl;
-            handler = std::make_unique<HostNetHandler>();
-#endif
-
-            if(handler == nullptr || !handler->init()) {
-                log::write << "Failed to initialize NetManager" << log::endl;
-                return false;
-            }
-            return true;
-        }
-
-        void onDestroy() override
-        {
-            disconnect();
-        }
-
-        void onUpdate(float deltaTime) override
-        {
-            if(handler != nullptr) {
-                handler->update(deltaTime);
-            }
-        }
+        bool onInit() override;
+        void onDestroy() override;
+        void onUpdate(float deltaTime) override;
     };
-
-    static uint32_t generateUID()
-    {
-        return rand() % 10000;
-    }
 }
 
 #endif //NETMANAGER_H

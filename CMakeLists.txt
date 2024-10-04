@@ -79,13 +79,21 @@ add_executable(test lib/json.hpp
         src/Engine/Core/Game.h
         src/Game/TestGame.h
         src/Engine/Common/ColorConstants.h
-        src/Engine/Core/SubsystemExecOrder.h
         src/Engine/Net/NetHandler.h
         src/Engine/Net/ServerNetHandler.h
         src/Engine/Net/ClientNetHandler.h
         src/Engine/Net/HostNetHandler.h
         src/Engine/Net/NetManager.h
-        src/Engine/Net/Client.h
+        src/Engine/Net/Peer.h
+        src/Engine/Net/Packet.h
+        src/Engine/Net/PacketHandler.h
+        src/Engine/Net/NetManager.cpp
+        src/Engine/Net/TestPacketHandler.h
+        src/Engine/Net/PacketManager.cpp
+        src/Engine/Net/Net.h
+        src/Engine/Net/ByteStream.h
+        src/Engine/Net/ByteStream.cpp
+        src/Engine/Net/Peer.cpp
 )
 
 if(BUILD_CLIENT)

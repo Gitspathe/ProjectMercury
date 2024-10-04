@@ -122,9 +122,9 @@ namespace GameLogging
     };
 
     // Static definitions.
-    log log::write;
-    log_targets::serverCmd log::serverCmd;
-    log_targets::serverCmd log::general;
-    endl_struct log::endl;
+    inline log log::write;
+    inline log_targets::serverCmd log::serverCmd;
+    inline log_targets::serverCmd log::general;
+    inline endl_struct log::endl;
 }
 #endif //LOG_H

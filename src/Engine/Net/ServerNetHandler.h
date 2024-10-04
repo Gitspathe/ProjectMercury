@@ -3,7 +3,7 @@
 #if SERVER && !CLIENT
 #include "NetHandler.h"
 #include "SDL2/SDL_net.h"
-#include "Client.h"
+#include "Peer.h"
 #include "../../Engine.h"
 
 namespace Engine::Net
@@ -13,8 +13,9 @@ namespace Engine::Net
     protected:
         IPaddress ipAddr{};
         TCPsocket serverSocket = nullptr;
-        std::vector<Client> clients = std::vector<Client>();
-        char* buffer;
+        std::vector<std::shared_ptr<Peer>> clients = std::vector<std::shared_ptr<Peer>>();
+        std::unordered_map<TCPsocket, std::shared_ptr<Peer>> clientSockets;
+        uint8_t* buffer = nullptr;
         SDLNet_SocketSet socketSet = nullptr;
 
         const float timeoutPeriod = 10.0f;
@@ -52,59 +53,80 @@ namespace Engine::Net
             return true;
         }
 
-        void onUpdate(const float deltaTime) override
+        void handleServerSocket()
         {
-            if(SDLNet_CheckSockets(socketSet, 0) <= 0) {
+            TCPsocket newClientSocket = SDLNet_TCP_Accept(serverSocket);
+            if(newClientSocket == nullptr)
+                return;
+
+            PeerUID id;
+            if(!Peer::generateUID(id, netManager->getPeers(), 256)) {
+                log::write << "Failed to generate a random ID for the client." << log::endl;
+                SDLNet_TCP_Close(newClientSocket);
                 return;
             }
 
-            if(SDLNet_SocketReady(serverSocket)) {
-                if(TCPsocket newClientSocket = SDLNet_TCP_Accept(serverSocket)) {
-                    IPaddress* addr = SDLNet_TCP_GetPeerAddress(newClientSocket);
-
-                    Uint32 ipaddr;
-                    ipaddr = SDL_SwapBE32(addr->host);
-                    printf("Accepted a connection from %d.%d.%d.%d port %hu\n", ipaddr >> 24,
-                           (ipaddr >> 16) & 0xff, (ipaddr >> 8) & 0xff, ipaddr & 0xff,
-                           addr->port);
-
-                    log::write << "New client connected! host: " << addr->host << " port:" << addr->port << log::endl;
-                    if(SDLNet_TCP_AddSocket(socketSet, newClientSocket) == -1) {
-                        log::write << "Failed to add client socket to set: " << SDLNet_GetError() << log::endl;
-                        SDLNet_TCP_Close(newClientSocket);
-                    } else {
-                        SDLNet_TCP_Send(newClientSocket, "aaa\n", 4);
-                        clients.push_back(Client(&newClientSocket, rand() % 1000));  // Add the new client to the client list
-                    }
-                }
+            auto newPeer = std::make_shared<Peer>(newClientSocket, id);
+            if(!netManager->tryRegisterPeer(newPeer)) {
+                log::write << "Failed to register peer for the client." << log::endl;
+                SDLNet_TCP_Close(newClientSocket);
+                return;
             }
 
+            const IPaddress* addr = SDLNet_TCP_GetPeerAddress(newClientSocket);
+            log::write << "New client connected! host: " << addr->host << " port:" << addr->port << log::endl;
+
+            int addSocketOp = SDLNet_TCP_AddSocket(socketSet, newClientSocket);
+            if(addSocketOp == -1) {
+                log::write << "Failed to add client socket to set: " << SDLNet_GetError() << log::endl;
+                SDLNet_TCP_Close(newClientSocket);
+                return;
+            }
+
+            if(SDLNet_TCP_AddSocket(socketSet, newClientSocket) == -1) {
+                log::write << "Failed to add client socket to set: " << SDLNet_GetError() << log::endl;
+                SDLNet_TCP_Close(newClientSocket);
+            } else {
+                clientSockets[newClientSocket] = newPeer;
+                clients.push_back(newPeer);
+            }
+        }
+
+        bool handlePeerSocket(const std::shared_ptr<Peer>& peer) const
+        {
+            if(!SDLNet_SocketReady(peer->getSocket()))
+                return true;
+
+            int received = SDLNet_TCP_Recv(peer->getSocket(), buffer, 1024);
+            if(received > 0) {
+                netManager->getPacketManager().onMessage(*peer, buffer, received);
+                return true;
+            }
+            if(received < 0) {
+                log::write << "Error receiving from client: " << SDLNet_GetError() << log::endl;
+                return true;
+            }
+
+            // 0 = disconnection.
+            netManager->tryUnregisterPeer(peer);
+            log::write << "Client disconnected" << log::endl;
+            SDLNet_TCP_DelSocket(socketSet, peer->getSocket());
+            SDLNet_TCP_Close(peer->getSocket());
+            return false;
+        }
+
+        void onUpdate(const float deltaTime) override
+        {
+            if(SDLNet_CheckSockets(socketSet, 0) <= 0)
+                return;
+
+            if(SDLNet_SocketReady(serverSocket)) {
+                handleServerSocket();
+            }
             for(size_t i = 0; i < clients.size(); ++i) {
-
-                SDLNet_TCP_Send(*clients[i].getSocket(), "bbb\n", 4);
-
-                if(Client& client = clients[i]; SDLNet_SocketReady(client.getSocket())) {
-                    int received = SDLNet_TCP_Recv(*client.getSocket(), buffer, 1024);
-                    if(received > 0) {
-                        std::string message(buffer, received);
-                        log::write << "Received message from client: " << message << log::endl;
-
-                        // Respond with a confirmation or handle the message appropriately
-                        //std::string responseMessage = "Received your message: " + message;
-                        //SDLNet_TCP_Send(*client.getSocket(), responseMessage.c_str(), responseMessage.size());
-
-                    } else if (received == 0) {
-                        // Client disconnected
-                        log::write << "Client disconnected" << log::endl;
-                        SDLNet_TCP_DelSocket(socketSet, *client.getSocket());
-                        SDLNet_TCP_Close(*client.getSocket());
-                        clients.erase(clients.begin() + i);
-                        log::write << "Error receiving from client: " << SDLNet_GetError() << log::endl;
-                        --i;  // Adjust index due to client removal
-                    } else if (received == -1) {
-                        // Error case
-                        log::write << "Error receiving from client: " << SDLNet_GetError() << log::endl;
-                    }
+                if(!handlePeerSocket(clients[i])) {
+                    clients.erase(clients.begin() + i);
+                    i--;
                 }
             }
         }
@@ -116,10 +138,11 @@ namespace Engine::Net
 
         void onDisconnect() override
         {
-            for(Client client : clients) {
-                SDLNet_TCP_Close(*client.getSocket());
+            for(const std::shared_ptr<Peer>& peer : clients) {
+                SDLNet_TCP_Close(peer->getSocket());
             }
             clients.clear();
+            clientSockets.clear();
             if(serverSocket) {
                 SDLNet_TCP_Close(serverSocket);
             }
@@ -136,7 +159,7 @@ namespace Engine::Net
     public:
         ServerNetHandler()
         {
-            buffer = new char[1024];
+            buffer = new uint8_t[1024];
         }
     };
 }

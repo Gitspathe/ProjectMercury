@@ -1,13 +1,13 @@
 #ifndef CLIENTNETHANDLER_H
 #define CLIENTNETHANDLER_H
 #if CLIENT && !SERVER && __EMSCRIPTEN__
-
 #include <string>
 #include <iomanip>
 #include <random>
 #include <sstream>
 #include "NetHandler.h"
 #include "emscripten/websocket.h"
+#include "TestPacketHandler.h"
 #include "../../Engine.h"
 
 namespace Engine::Net
@@ -31,10 +31,15 @@ namespace Engine::Net
             auto* handler = static_cast<ClientNetHandler*>(userData);
             log::write << "Connected to server at " << handler->serverEndpoint << log::endl;
 
-            // Generate and send UUID
             handler->isConnected = true;
             handler->clientUUID = handler->generateUUID();
-            handler->sendMessage("Hello, server!\n"); // Send UUID to server
+
+            std::string msg = "Hello from my new packet handler thing!";
+            PacketHandler* p = handler->netManager->getPacketManager().getHandler<TestPacketHandler>(PacketTypes::TEST_MSG);
+            Packet packet = p->construct(&msg);
+            uint8_t* data = packet.getData();
+            emscripten_websocket_send_binary(handler->ws, data, packet.getFullSize());
+            delete[] data;
 
             return EM_FALSE;
         }
@@ -42,12 +47,6 @@ namespace Engine::Net
         static EM_BOOL onMessage(int eventType, const EmscriptenWebSocketMessageEvent* ev, void *userData)
         {
             auto* handler = static_cast<ClientNetHandler*>(userData);
-            //if (ev->isText) {
-                std::string message(reinterpret_cast<const char*>(ev->data), ev->numBytes);
-                log::write << "Received message from server: " << message << log::endl;
-
-                // Handle responses from server if needed
-            //}
             return EM_FALSE;
         }
 
@@ -95,13 +94,19 @@ namespace Engine::Net
 
         void onUpdate(float deltaTime) override
         {
-            // Handle any periodic client tasks. WebSocket communication will be event-driven.
-            // You can implement sending a test message periodically if needed
+            if(isConnected) {
+                std::string msg = "Hello from my new packet handler thing!";
+                PacketHandler* p = netManager->getPacketManager().getHandler<TestPacketHandler>(PacketTypes::TEST_MSG);
+                Packet packet = p->construct(&msg);
+                uint8_t* data = packet.getData();
+                emscripten_websocket_send_binary(ws, data, packet.getFullSize());
+                delete[] data;
+            }
         }
 
         bool onConnect(std::string &endpoint) override
         {
-            serverEndpoint = "ws://" + endpoint; // WebSocket endpoint (e.g., ws://localhost:8080)
+            serverEndpoint = "ws://" + endpoint;
             return onInit();
         }
 
@@ -122,18 +127,18 @@ namespace Engine::Net
     public:
         ClientNetHandler()
         {
-            serverEndpoint = "ws://localhost:8082"; // Replace with your server address
+            serverEndpoint = "ws://localhost:8082";
         }
 
-        void sendMessage(const std::string &message) const
-        {
-            if(isConnected && ws) {
-                emscripten_websocket_send_binary(ws, new char[5] {'h','e','l','l','o'}, 5);
-                log::write << "Sent message: " << message << log::endl; // Log sent message
-                return;
-            }
-            log::write << "Unable to send message, not connected to server." << log::endl;
-        }
+        // void sendMessage(const std::string &message) const
+        // {
+        //     if(isConnected && ws) {
+        //         emscripten_websocket_send_binary(ws, new char[5] {'h','e','l','l','o'}, 5);
+        //         log::write << "Sent message: " << message << log::endl; // Log sent message
+        //         return;
+        //     }
+        //     log::write << "Unable to send message, not connected to server." << log::endl;
+        // }
     };
 }
 

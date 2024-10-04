@@ -1,12 +1,14 @@
 #ifndef NETHANDLER_H
 #define NETHANDLER_H
 #include <string>
+#include "PacketManager.h"
 
 namespace Engine::Net
 {
     class NetHandler
     {
     protected:
+        NetManager* netManager = nullptr;
         virtual bool onInit() = 0;
         virtual void onUpdate(float deltaTime) = 0;
         virtual bool onConnect(std::string& endpoint) = 0;
@@ -17,8 +19,9 @@ namespace Engine::Net
         NetHandler() = default;
         virtual ~NetHandler() = default;
 
-        bool init()
+        bool init(NetManager* netManager)
         {
+            this->netManager = netManager;
             return onInit();
         }
 

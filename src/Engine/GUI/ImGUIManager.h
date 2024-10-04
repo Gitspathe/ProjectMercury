@@ -5,7 +5,7 @@
 #include "imgui_impl_opengl3.h"
 #include "imgui_impl_sdl2.h"
 #include "../Core/Subsystem.h"
-#include "../Core/SubsystemExecOrder.h"
+#include "../../Engine.h"
 
 namespace Engine::GUI
 {

@@ -1,6 +1,7 @@
 #ifndef SUBSYSTEM_H
 #define SUBSYSTEM_H
 #include <memory>
+#include <SDL_events.h>
 
 namespace Engine::Core
 {
