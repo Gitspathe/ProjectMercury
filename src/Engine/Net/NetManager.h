@@ -32,9 +32,12 @@ namespace Engine::Net
         PacketManager& getPacketManager() const;
         NetHandler& getNetHandler() const;
         std::unordered_map<PeerUID, std::shared_ptr<Peer>>& getPeers();
+        std::unordered_map<PeerUID, uint16_t>& getPeerSeqs();
         bool tryRegisterPeer(const std::shared_ptr<Peer>& peer);
         bool tryUnregisterPeer(const std::shared_ptr<Peer>& peer);
         bool tryGetPeer(PeerUID uid, Peer& outPeer);
+        bool tryGetPeerSeq(PeerUID uid, uint16_t& outSeq);
+        bool tryIncrementSeq(PeerUID uid, uint16_t& outSeq);
         bool connect(const std::string& endpoint) const;
         void disconnect() const;
 
@@ -42,6 +45,7 @@ namespace Engine::Net
         std::unique_ptr<PacketManager> packetManager;
         std::unique_ptr<NetHandler> handler;
         std::unordered_map<PeerUID, std::shared_ptr<Peer>> peers;
+        std::unordered_map<PeerUID, uint16_t> peerSeqs;
 
         bool onInit() override;
         void onDestroy() override;

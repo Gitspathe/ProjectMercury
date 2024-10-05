@@ -5,6 +5,9 @@
 
 namespace Engine::Net
 {
+    class Peer;
+    class Packet;
+
     class NetHandler
     {
     protected:
@@ -18,6 +21,8 @@ namespace Engine::Net
     public:
         NetHandler() = default;
         virtual ~NetHandler() = default;
+
+        virtual void send(Peer& peer, Packet& packet) = 0;
 
         bool init(NetManager* netManager)
         {

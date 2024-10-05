@@ -23,13 +23,17 @@ namespace Engine::Net
 
         // Serialized.
         uint8_t type = PacketTypes::INVALID;
+        uint16_t seq = 0;
         uint16_t size = 0;
         uint8_t* buffer = nullptr;
 
     public:
+
+        static constexpr uint8_t HEADER_SIZE = sizeof(uint8_t) + sizeof(uint16_t) + sizeof(uint16_t);
+
         Packet() = default;
 
-        Packet(const uint32_t source, const uint8_t type, const uint16_t size, uint8_t* buffer)
+        Packet(const uint32_t source, const uint8_t type, const uint16_t size, const uint8_t* buffer)
             : source(source), type(type), size(size)
         {
             if(size > 0 && buffer != nullptr) {
@@ -39,7 +43,7 @@ namespace Engine::Net
         }
 
         Packet(const Packet& copy)
-            : source(copy.source), type(copy.type), size(copy.size)
+            : source(copy.source), type(copy.type), seq(copy.seq), size(copy.size)
         {
             if(copy.size > 0 && copy.buffer != nullptr) {
                 this->buffer = new uint8_t[size];
@@ -55,6 +59,7 @@ namespace Engine::Net
             delete[] buffer;
             source = copy.source;
             type = copy.type;
+            seq = copy.seq;
             size = copy.size;
             buffer = nullptr;
             if(copy.size > 0 && copy.buffer != nullptr){
@@ -81,19 +86,24 @@ namespace Engine::Net
             return type;
         }
 
+        uint16_t getSeq() const
+        {
+            return seq;
+        }
+
+        void setSeq(const uint16_t seq)
+        {
+            this->seq = seq;
+        }
+
         uint16_t getPayloadSize() const
         {
             return size;
         }
 
-        uint8_t getHeaderSize() const
-        {
-            return sizeof(uint8_t) + sizeof(uint16_t);
-        }
-
         uint16_t getFullSize() const
         {
-            return getPayloadSize() + getHeaderSize();
+            return getPayloadSize() + HEADER_SIZE;
         }
 
         uint8_t* getPayload() const
@@ -101,20 +111,20 @@ namespace Engine::Net
             return buffer;
         }
 
-        uint8_t* getData() const
+        void writeInto(uint8_t* buffer) const
         {
-            // Allocate memory for the entire packet (header + payload).
-            auto data = new uint8_t[getFullSize()];
+            if(getFullSize() > MAX_PACKET_SIZE)
+                throw std::runtime_error("Packet is larger than " + std::to_string(MAX_PACKET_SIZE) + " bytes.");
 
             // Copy header.
+            buffer[0] = type;
+            uint16_t seqNetworkOrder = ntohs(getSeq());
             uint16_t payloadSizeNetworkOrder = ntohs(getPayloadSize());
-            std::memcpy(data, &payloadSizeNetworkOrder, sizeof(payloadSizeNetworkOrder));
-            data[2] = type;
+            std::memcpy(buffer + 1, &seqNetworkOrder, sizeof(seqNetworkOrder));
+            std::memcpy(buffer + 3, &payloadSizeNetworkOrder, sizeof(payloadSizeNetworkOrder));
 
             // Copy payload.
-            std::memcpy(data + getHeaderSize(), this->buffer, getPayloadSize());
-
-            return data;
+            std::memcpy(buffer + HEADER_SIZE, this->buffer, getPayloadSize());
         }
     };
 

@@ -57,7 +57,7 @@ namespace Engine::Net
             return uid;
         }
 
-        static bool generateUID(uint64_t& outUID, std::unordered_map<PeerUID, std::shared_ptr<Peer>>& curPeers, const size_t attempts);
+        static bool generateUID(uint64_t& outUID, std::unordered_map<PeerUID, std::shared_ptr<Peer>>& curPeers, size_t attempts);
     };
 }
 

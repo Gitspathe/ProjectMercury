@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <random>
 #include <sstream>
+#include <algorithm>
 #include "NetHandler.h"
 #include "emscripten/websocket.h"
 #include "TestPacketHandler.h"
@@ -20,6 +21,7 @@ namespace Engine::Net
         bool isConnected = false;
         std::string serverEndpoint;
         std::shared_ptr<Peer> serverPeer;
+        uint8_t* packetBuffer;
 
         static EM_BOOL onOpen(int eventType, const EmscriptenWebSocketOpenEvent* ev, void *userData)
         {
@@ -33,9 +35,7 @@ namespace Engine::Net
             std::string msg = "Hello from my new packet handler thing!";
             PacketHandler* p = handler->netManager->getPacketManager().getHandler<TestPacketHandler>(PacketTypes::TEST_MSG);
             Packet packet = p->construct(&msg);
-            uint8_t* data = packet.getData();
-            emscripten_websocket_send_binary(handler->ws, data, packet.getFullSize());
-            delete[] data;
+            handler->send(*handler->serverPeer, packet);
             return EM_TRUE;
         }
 
@@ -47,7 +47,20 @@ namespace Engine::Net
                 return EM_FALSE;
             }
 
-            handler->netManager->getPacketManager().onMessage(*handler->serverPeer, ev->data, ev->numBytes);
+            auto* data = static_cast<uint8_t*>(ev->data);
+            uint32_t totalBytes = ev->numBytes;
+            if(totalBytes <= MAX_PACKET_SIZE) {
+                // Packet can be process in one chunk.
+                handler->netManager->getPacketManager().onMessage(*handler->serverPeer, data, totalBytes);
+            } else {
+                // Packet must be split into multiple chunks.
+                uint32_t bytesProcessed = 0;
+                while(bytesProcessed < totalBytes) {
+                    uint32_t chunkSize = std::min(static_cast<uint32_t>(MAX_PACKET_SIZE), totalBytes - bytesProcessed);
+                    handler->netManager->getPacketManager().onMessage(*handler->serverPeer, data + bytesProcessed, chunkSize);
+                    bytesProcessed += chunkSize;
+                }
+            }
             return EM_TRUE;
         }
 
@@ -96,12 +109,12 @@ namespace Engine::Net
         void onUpdate(float deltaTime) override
         {
             if(isConnected) {
-                std::string msg = "Hello from my new packet handler thing!";
-                PacketHandler* p = netManager->getPacketManager().getHandler<TestPacketHandler>(PacketTypes::TEST_MSG);
-                Packet packet = p->construct(&msg);
-                uint8_t* data = packet.getData();
-                emscripten_websocket_send_binary(ws, data, packet.getFullSize());
-                delete[] data;
+                for(int i = 0; i < 1024; i++) {
+                    std::string msg = "Hello from my new packet handler thing!";
+                    PacketHandler* p = netManager->getPacketManager().getHandler<TestPacketHandler>(PacketTypes::TEST_MSG);
+                    Packet packet = p->construct(&msg);
+                    send(*serverPeer, packet);
+                }
             }
         }
 
@@ -126,9 +139,22 @@ namespace Engine::Net
         }
 
     public:
+        void send(Peer& peer, Packet& packet) override
+        {
+            uint16_t seq = 0;
+            if(!netManager->tryIncrementSeq(serverPeer->getUID(), seq)) {
+                log::write << "Failed to get peer seq from server." << log::endl;
+                return;
+            }
+            packet.setSeq(seq);
+            packet.writeInto(packetBuffer);
+            emscripten_websocket_send_binary(ws, packetBuffer, packet.getFullSize());
+        }
+
         ClientNetHandler()
         {
-            serverEndpoint = "ws://localhost:8082";
+            packetBuffer = new uint8_t[MAX_PACKET_SIZE];
+            serverEndpoint = "ws://192.168.20.18:8082";
         }
     };
 }

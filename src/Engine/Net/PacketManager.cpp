@@ -57,6 +57,10 @@ namespace Engine::Net
             log::write << "No peer found for ID '" << peer.getUID() << "'" << log::endl;
             return;
         }
+        if(size > MAX_PACKET_SIZE) {
+            log::write << "Received a packet exceeding " << std::to_string(MAX_PACKET_SIZE) << " bytes - discarding." << log::endl;
+            return;
+        }
         peerStreams[peer.getUID()]->addBytes(data, size);
     }
 

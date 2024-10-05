@@ -1,7 +1,7 @@
 #ifndef SERVERNETHANDLER_H
 #define SERVERNETHANDLER_H
-#include "TestPacketHandler.h"
 #if SERVER && !CLIENT
+#include "TestPacketHandler.h"
 #include "NetHandler.h"
 #include "SDL2/SDL_net.h"
 #include "Peer.h"
@@ -17,6 +17,7 @@ namespace Engine::Net
         std::vector<std::shared_ptr<Peer>> clients = std::vector<std::shared_ptr<Peer>>();
         std::unordered_map<TCPsocket, std::shared_ptr<Peer>> clientSockets;
         uint8_t* buffer = nullptr;
+        uint8_t* packetBuffer = nullptr;
         SDLNet_SocketSet socketSet = nullptr;
 
         const float timeoutPeriod = 10.0f;
@@ -93,21 +94,21 @@ namespace Engine::Net
             }
         }
 
-        bool handlePeerSocket(const std::shared_ptr<Peer>& peer) const
+        bool handlePeerSocket(const std::shared_ptr<Peer>& peer)
         {
             if(!SDLNet_SocketReady(peer->getSocket()))
                 return true;
 
-            int received = SDLNet_TCP_Recv(peer->getSocket(), buffer, 1024);
+            int received = SDLNet_TCP_Recv(peer->getSocket(), buffer, MAX_PACKET_SIZE);
             if(received > 0) {
                 netManager->getPacketManager().onMessage(*peer, buffer, received);
 
-                std::string msg = "Hello from my new packet handler thing!";
-                PacketHandler* p = netManager->getPacketManager().getHandler<TestPacketHandler>(PacketTypes::TEST_MSG);
-                Packet packet = p->construct(&msg);
-                uint8_t* data = packet.getData();
-                SDLNet_TCP_Send(peer->getSocket(), data, packet.getFullSize());
-                delete[] data;
+                for(int i = 0; i < 256; i++) {
+                    std::string msg = "Hello from my new packet handler thing!";
+                    PacketHandler* p = netManager->getPacketManager().getHandler<TestPacketHandler>(PacketTypes::TEST_MSG);
+                    Packet packet = p->construct(&msg);
+                    send(*peer, packet);
+                }
                 return true;
             }
             if(received < 0) {
@@ -165,9 +166,22 @@ namespace Engine::Net
         }
 
     public:
+        void send(Peer& peer, Packet& packet) override
+        {
+            uint16_t seq = 0;
+            if(!netManager->tryIncrementSeq(peer.getUID(), seq)) {
+                log::write << "Failed to get peer seq from client " << peer.getUID() << log::endl;
+                return;
+            }
+            packet.setSeq(seq);
+            packet.writeInto(packetBuffer);
+            SDLNet_TCP_Send(peer.getSocket(), packetBuffer, packet.getFullSize());
+        }
+
         ServerNetHandler()
         {
-            buffer = new uint8_t[1024];
+            packetBuffer = new uint8_t[MAX_PACKET_SIZE];
+            buffer = new uint8_t[MAX_PACKET_SIZE];
         }
     };
 }

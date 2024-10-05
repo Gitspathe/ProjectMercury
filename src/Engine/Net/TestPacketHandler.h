@@ -9,6 +9,7 @@ namespace Engine::Net
     class TestPacketHandler : public PacketHandler
     {
     public:
+
         static size_t maxMsgSize()
         {
             return 255;
