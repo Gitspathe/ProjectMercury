@@ -42,6 +42,11 @@ namespace Engine::Net
             connected = false;
         }
 
+        bool isConnected() const
+        {
+            return connected;
+        }
+
         bool isServer() const
         {
             return uid == 1;

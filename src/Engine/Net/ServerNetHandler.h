@@ -153,12 +153,15 @@ namespace Engine::Net
         void onDisconnect() override
         {
             for(const std::shared_ptr<Peer>& peer : clients) {
+                if(!peer->isConnected())
+                    continue;
+
                 SDLNet_TCP_Close(peer->getSocket());
                 peer->disconnected();
             }
-            //clients.clear();
             if(serverSocket != nullptr) {
                 SDLNet_TCP_Close(serverSocket);
+                serverSocket = nullptr;
             }
             SDLNet_Quit();
             log::write << "Server shut down" << log::endl;
@@ -198,6 +201,7 @@ namespace Engine::Net
             onDisconnect();
             delete[] buffer;
             delete[] packetBuffer;
+            netManager = nullptr;
             buffer = nullptr;
             packetBuffer = nullptr;
         }

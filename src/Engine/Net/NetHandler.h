@@ -20,7 +20,7 @@ namespace Engine::Net
 
     public:
         NetHandler() = default;
-        virtual ~NetHandler() = default;
+        virtual ~NetHandler() {}
 
         virtual void send(Peer& peer, Packet& packet) = 0;
 
