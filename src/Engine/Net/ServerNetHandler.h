@@ -15,6 +15,7 @@ namespace Engine::Net
         IPaddress ipAddr{};
         TCPsocket serverSocket = nullptr;
         std::vector<std::shared_ptr<Peer>> clients = std::vector<std::shared_ptr<Peer>>();
+        std::vector<std::shared_ptr<Peer>> toErase = std::vector<std::shared_ptr<Peer>>();
         uint8_t* buffer = nullptr;
         uint8_t* packetBuffer = nullptr;
         SDLNet_SocketSet socketSet = nullptr;
@@ -132,13 +133,17 @@ namespace Engine::Net
             if(SDLNet_SocketReady(serverSocket)) {
                 handleServerSocket();
             }
+
             for(size_t i = 0; i < clients.size(); ++i) {
                 log::write << "HANDLE CLIENT" << std::to_string(i) << log::endl;
                 if(!handlePeerSocket(clients[i])) {
-                    clients.erase(clients.begin() + i);
-                    i--;
+                    toErase.push_back(clients[i]);
                 }
             }
+            for(const auto& c : toErase) {
+                clients.erase(std::remove(clients.begin(), clients.end(), c), clients.end());
+            }
+            toErase.clear();
         }
 
         bool onConnect(std::string &endpoint) override
