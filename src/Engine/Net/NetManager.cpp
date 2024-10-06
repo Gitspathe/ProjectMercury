@@ -93,7 +93,6 @@ namespace Engine::Net
     void NetManager::onDestroy()
     {
         disconnect();
-        delete handler;
         handler = nullptr;
     }
 
