@@ -159,8 +159,6 @@ namespace Engine::Net
             if(serverSocket) {
                 SDLNet_TCP_Close(serverSocket);
             }
-            delete[] buffer;
-            delete[] packetBuffer;
             log::write << "Server shut down" << log::endl;
         }
 
@@ -197,6 +195,8 @@ namespace Engine::Net
         ~ServerNetHandler() override
         {
             onDisconnect();
+            delete[] buffer;
+            delete[] packetBuffer;
             SDLNet_Quit();
         }
     };
