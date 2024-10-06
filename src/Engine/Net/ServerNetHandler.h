@@ -198,6 +198,8 @@ namespace Engine::Net
             onDisconnect();
             delete[] buffer;
             delete[] packetBuffer;
+            buffer = nullptr;
+            packetBuffer = nullptr;
         }
     };
 }
