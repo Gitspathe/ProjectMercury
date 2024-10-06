@@ -133,8 +133,8 @@ namespace Engine::Net
                 handleServerSocket();
             }
             for(size_t i = 0; i < clients.size(); ++i) {
+                log::write << "HANDLE CLIENT" << std::to_string(i) << log::endl;
                 if(!handlePeerSocket(clients[i])) {
-                    log::write << "HANDLE CLIENT" << std::to_string(i) << log::endl;
                     clients.erase(clients.begin() + i);
                     i--;
                 }
