@@ -161,7 +161,9 @@ namespace Engine::Net
             }
             if(serverSocket != nullptr) {
                 SDLNet_TCP_Close(serverSocket);
+                SDLNet_FreeSocketSet(socketSet);
                 serverSocket = nullptr;
+                socketSet = nullptr;
             }
             SDLNet_Quit();
             log::write << "Server shut down" << log::endl;

@@ -93,6 +93,8 @@ namespace Engine::Net
     void NetManager::onDestroy()
     {
         disconnect();
+        delete handler;
+        handler = nullptr;
     }
 
     void NetManager::onUpdate(const float deltaTime)
