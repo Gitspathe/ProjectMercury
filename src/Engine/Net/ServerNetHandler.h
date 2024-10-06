@@ -160,6 +160,7 @@ namespace Engine::Net
                 SDLNet_TCP_Close(serverSocket);
             }
             delete[] buffer;
+            delete[] packetBuffer;
             log::write << "Server shut down" << log::endl;
         }
 
@@ -191,6 +192,12 @@ namespace Engine::Net
         {
             packetBuffer = new uint8_t[MAX_PACKET_SIZE];
             buffer = new uint8_t[MAX_PACKET_SIZE];
+        }
+
+        ~ServerNetHandler() override
+        {
+            onDisconnect();
+            SDLNet_Quit();
         }
     };
 }
