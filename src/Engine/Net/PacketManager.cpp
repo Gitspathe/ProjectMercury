@@ -1,7 +1,6 @@
 #include "PacketManager.h"
 #include "ByteStream.h"
 #include "PacketHandler.h"
-#include "Peer.h"
 
 namespace Engine::Net
 {
@@ -51,31 +50,31 @@ namespace Engine::Net
         handler->process(packet);
     }
 
-    void PacketManager::onMessage(const Peer& peer, uint8_t* data, const uint16_t size)
+    void PacketManager::onMessage(const PeerUID peer, uint8_t* data, const uint16_t size)
     {
-        if(peerStreams.find(peer.getUID()) == peerStreams.end()) {
-            log::write << "No peer found for ID '" << peer.getUID() << "'" << log::endl;
+        if(peerStreams.find(peer) == peerStreams.end()) {
+            log::write << "No peer found for ID '" << peer << "'" << log::endl;
             return;
         }
         if(size > MAX_PACKET_SIZE) {
             log::write << "Received a packet exceeding " << std::to_string(MAX_PACKET_SIZE) << " bytes - discarding." << log::endl;
             return;
         }
-        peerStreams[peer.getUID()]->addBytes(data, size);
+        peerStreams[peer]->addBytes(data, size);
     }
 
-    void PacketManager::addPeer(const Peer& peer)
+    void PacketManager::addPeer(const PeerUID peer)
     {
-        if(peerStreams.find(peer.getUID()) != peerStreams.end()) {
-            log::write << "Peer " << peer.getUID() << " already registered" << log::endl;
+        if(peerStreams.find(peer) != peerStreams.end()) {
+            log::write << "Peer " << peer << " already registered" << log::endl;
             return;
         }
-        peerStreams[peer.getUID()] = std::make_unique<ByteStream>();
+        peerStreams[peer] = std::make_unique<ByteStream>();
     }
 
-    void PacketManager::removePeer(const Peer& peer)
+    void PacketManager::removePeer(const PeerUID peer)
     {
-        peerStreams.erase(peer.getUID());
+        peerStreams.erase(peer);
     }
 
 }

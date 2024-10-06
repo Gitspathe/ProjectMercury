@@ -53,7 +53,7 @@ namespace Engine::Net
         bool tryUnregisterPeer(const std::shared_ptr<Peer>& peer);
         bool tryGetPeer(PeerUID uid, Peer& outPeer);
 
-        bool tryGetPeerSeq(PeerUID uid, uint16_t& outSeq)
+        bool tryGetPeerSeq(const PeerUID uid, uint16_t& outSeq)
         {
             if(peerSeqs.find(uid) != peerSeqs.end()) {
                 outSeq = peerSeqs[uid];
@@ -62,7 +62,7 @@ namespace Engine::Net
             return false;
         }
 
-        bool tryIncrementSeq(PeerUID uid, uint16_t& outSeq)
+        bool tryIncrementSeq(const PeerUID uid, uint16_t& outSeq)
         {
             if(tryGetPeerSeq(uid, outSeq)) {
                 peerSeqs[uid] += 1;

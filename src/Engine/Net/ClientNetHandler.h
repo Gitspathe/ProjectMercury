@@ -51,13 +51,13 @@ namespace Engine::Net
             uint32_t totalBytes = ev->numBytes;
             if(totalBytes <= MAX_PACKET_SIZE) {
                 // Packet can be process in one chunk.
-                handler->netManager->getPacketManager().onMessage(*handler->serverPeer, data, totalBytes);
+                handler->netManager->getPacketManager().onMessage(handler->serverPeer->getUID(), data, totalBytes);
             } else {
                 // Packet must be split into multiple chunks.
                 uint32_t bytesProcessed = 0;
                 while(bytesProcessed < totalBytes) {
                     uint32_t chunkSize = std::min(static_cast<uint32_t>(MAX_PACKET_SIZE), totalBytes - bytesProcessed);
-                    handler->netManager->getPacketManager().onMessage(*handler->serverPeer, data + bytesProcessed, chunkSize);
+                    handler->netManager->getPacketManager().onMessage(handler->serverPeer->getUID(), data + bytesProcessed, chunkSize);
                     bytesProcessed += chunkSize;
                 }
             }
@@ -142,6 +142,11 @@ namespace Engine::Net
     public:
         void send(Peer& peer, Packet& packet) override
         {
+            if(packet.getFullSize() > MAX_PACKET_SIZE) {
+                log::write << "Attempted to send a packet larger than " << std::to_string(MAX_PACKET_SIZE) << " bytes" << log::endl;
+                return;
+            }
+
             uint16_t seq = 0;
             if(!netManager->tryIncrementSeq(serverPeer->getUID(), seq)) {
                 log::write << "Failed to get peer seq from server." << log::endl;

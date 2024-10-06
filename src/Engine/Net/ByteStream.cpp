@@ -42,7 +42,11 @@ namespace Engine::Net
     bool ByteStream::queuePacket()
     {
         if(nextSize == 0) {
-            log::write << "Cannot generate packet - data is empty" << log::endl;
+            log::write << "Cannot generate packet - data is empty." << log::endl;
+            return false;
+        }
+        if(nextSize > MAX_PACKET_SIZE - PACKET_HEADER_SIZE) {
+            log::write << "Next packet size exceeds " << std::to_string(MAX_PACKET_SIZE) << " bytes." << log::endl;
             return false;
         }
 
@@ -57,7 +61,7 @@ namespace Engine::Net
         return true;
     }
 
-    void ByteStream::addBytes(uint8_t* data, const uint16_t size)
+    void ByteStream::addBytes(const uint8_t* data, const uint16_t size)
     {
         if(size > MAX_PACKET_SIZE) {
             log::write << "Attempted to write more than " << std::to_string(MAX_PACKET_SIZE) << " bytes to a ByteStream at once - discarding" << log::endl;
@@ -98,7 +102,7 @@ namespace Engine::Net
                         log::write << "Detected duplicate packet, sequence is out-of-order - Discarding." << log::endl;
                     }
                     if(!withinLimit) {
-                        log::write << "Packet size exceeds maximum allowed size - Discarding" << log::endl;
+                        log::write << "Packet size exceeds maximum allowed size - Discarding." << log::endl;
                     }
 
                     // Discard the packet and reset. Seq always needs to increment.

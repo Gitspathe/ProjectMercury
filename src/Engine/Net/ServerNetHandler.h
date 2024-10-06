@@ -98,7 +98,7 @@ namespace Engine::Net
 
             int received = SDLNet_TCP_Recv(peer->getSocket(), buffer, MAX_PACKET_SIZE);
             if(received > 0) {
-                netManager->getPacketManager().onMessage(*peer, buffer, received);
+                netManager->getPacketManager().onMessage(peer->getUID(), buffer, received);
 
                 //for(int i = 0; i < 4096; i++) {
                     std::string msg = "Hello from my new packet handler thing!";
@@ -116,8 +116,8 @@ namespace Engine::Net
             // 0 = disconnection.
             netManager->tryUnregisterPeer(peer);
             log::write << "Client with UID '" << std::to_string(peer->getUID()) << "' disconnected" << log::endl;
-            SDLNet_TCP_Close(peer->getSocket());
             SDLNet_TCP_DelSocket(socketSet, peer->getSocket());
+            SDLNet_TCP_Close(peer->getSocket());
             peer->disconnected();
             return false;
         }
@@ -165,6 +165,11 @@ namespace Engine::Net
     public:
         void send(Peer& peer, Packet& packet) override
         {
+            if(packet.getFullSize() > MAX_PACKET_SIZE) {
+                log::write << "Attempted to send a packet larger than " << std::to_string(MAX_PACKET_SIZE) << " bytes" << log::endl;
+                return;
+            }
+
             uint16_t seq = 0;
             if(!netManager->tryIncrementSeq(peer.getUID(), seq)) {
                 log::write << "Failed to get peer seq from client " << peer.getUID() << log::endl;

@@ -12,7 +12,6 @@
 namespace Engine::Net
 {
     class Packet;
-    class Peer;
     class ByteStream;
     class PacketHandler;
 
@@ -54,9 +53,9 @@ namespace Engine::Net
         Packet constructPacket(uint8_t type, void* data);
         void executePendingPackets();
         void executePacket(Packet& packet);
-        void onMessage(const Peer& peer, uint8_t* data, uint16_t size);
-        void addPeer(const Peer& peer);
-        void removePeer(const Peer& peer);
+        void onMessage(PeerUID peer, uint8_t* data, uint16_t size);
+        void addPeer(PeerUID peer);
+        void removePeer(PeerUID peer);
     };
 }
 

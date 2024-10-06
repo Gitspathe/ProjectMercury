@@ -45,7 +45,7 @@ namespace Engine::Net
             return curSeq;
         }
 
-        void addBytes(uint8_t* data, uint16_t size);
+        void addBytes(const uint8_t* data, uint16_t size);
     };
 }
 

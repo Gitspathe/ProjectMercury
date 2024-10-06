@@ -22,7 +22,7 @@ namespace Engine::Net
         if(peers.find(peer->getUID()) == peers.end()) {
             peers[peer->getUID()] = peer;
             peerSeqs[peer->getUID()] = 1;
-            packetManager->addPeer(*peer);
+            packetManager->addPeer(peer->getUID());
             return true;
         }
         return false;
@@ -33,7 +33,7 @@ namespace Engine::Net
         const bool ret = peers.erase(peer->getUID()) >= 1;
         if(ret) {
             peerSeqs.erase(peer->getUID());
-            packetManager->removePeer(*peer);
+            packetManager->removePeer(peer->getUID());
         }
         return ret;
     }
