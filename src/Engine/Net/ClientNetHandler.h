@@ -160,7 +160,11 @@ namespace Engine::Net
         ClientNetHandler()
         {
             packetBuffer = new uint8_t[MAX_PACKET_SIZE];
+#if LOCAL_MODE
+            serverEndpoint = "ws://localhost:8082";
+#else
             serverEndpoint = "wss://mercurialorder.com:8082";
+#endif
         }
     };
 }
