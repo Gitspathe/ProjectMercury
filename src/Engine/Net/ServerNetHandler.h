@@ -15,7 +15,6 @@ namespace Engine::Net
         IPaddress ipAddr{};
         TCPsocket serverSocket = nullptr;
         std::vector<std::shared_ptr<Peer>> clients = std::vector<std::shared_ptr<Peer>>();
-        std::vector<std::shared_ptr<Peer>> toErase = std::vector<std::shared_ptr<Peer>>();
         uint8_t* buffer = nullptr;
         uint8_t* packetBuffer = nullptr;
         SDLNet_SocketSet socketSet = nullptr;
@@ -97,8 +96,11 @@ namespace Engine::Net
             if(!SDLNet_SocketReady(peer->getSocket()))
                 return true;
 
+            log::write << "Handling peer '" << std::to_string(peer->getUID()) << "'" << log::endl;
             int received = SDLNet_TCP_Recv(peer->getSocket(), buffer, MAX_PACKET_SIZE);
             if(received > 0) {
+                log::write << "RECV from '" << std::to_string(peer->getUID()) << "'" << log::endl;
+
                 netManager->getPacketManager().onMessage(peer->getUID(), buffer, received);
 
                 //for(int i = 0; i < 4096; i++) {
@@ -137,13 +139,10 @@ namespace Engine::Net
             for(size_t i = 0; i < clients.size(); ++i) {
                 log::write << "HANDLE CLIENT" << std::to_string(i) << log::endl;
                 if(!handlePeerSocket(clients[i])) {
-                    toErase.push_back(clients[i]);
+                    clients.erase(clients.begin() + i);
+                    i--;
                 }
             }
-            for(const auto& c : toErase) {
-                clients.erase(std::remove(clients.begin(), clients.end(), c), clients.end());
-            }
-            toErase.clear();
         }
 
         bool onConnect(std::string &endpoint) override
