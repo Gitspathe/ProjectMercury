@@ -92,7 +92,7 @@ namespace Engine::Net
 
                 // Check if the packet is a duplicate (same sequence), or too large.
                 bool seqValid    = validateSeq(nextSeq);
-                bool withinLimit = nextSize <= MAX_PACKET_SIZE;
+                bool withinLimit = nextSize <= MAX_PACKET_SIZE - PACKET_HEADER_SIZE;
                 if(!seqValid || !withinLimit) {
                     if(!seqValid) {
                         log::write << "Detected duplicate packet, sequence is out-of-order - Discarding." << log::endl;

@@ -109,18 +109,18 @@ namespace Engine::Net
         void onUpdate(float deltaTime) override
         {
             if(isConnected) {
-                for(int i = 0; i < 1024; i++) {
+                //for(int i = 0; i < 1024; i++) {
                     std::string msg = "Hello from my new packet handler thing!";
                     PacketHandler* p = netManager->getPacketManager().getHandler<TestPacketHandler>(PacketTypes::TEST_MSG);
                     Packet packet = p->construct(&msg);
                     send(*serverPeer, packet);
-                }
+                //}
             }
         }
 
         bool onConnect(std::string &endpoint) override
         {
-            serverEndpoint = "ws://" + endpoint;
+            serverEndpoint = "wss://" + endpoint;
             return onInit();
         }
 
@@ -154,7 +154,7 @@ namespace Engine::Net
         ClientNetHandler()
         {
             packetBuffer = new uint8_t[MAX_PACKET_SIZE];
-            serverEndpoint = "ws://192.168.20.18:8082";
+            serverEndpoint = "wss://mercurialorder.com/";
         }
     };
 }

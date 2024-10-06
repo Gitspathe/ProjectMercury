@@ -15,7 +15,6 @@ namespace Engine::Net
         IPaddress ipAddr{};
         TCPsocket serverSocket = nullptr;
         std::vector<std::shared_ptr<Peer>> clients = std::vector<std::shared_ptr<Peer>>();
-        std::unordered_map<TCPsocket, std::shared_ptr<Peer>> clientSockets;
         uint8_t* buffer = nullptr;
         uint8_t* packetBuffer = nullptr;
         SDLNet_SocketSet socketSet = nullptr;
@@ -78,8 +77,7 @@ namespace Engine::Net
             const IPaddress* addr = SDLNet_TCP_GetPeerAddress(newClientSocket);
             log::write << "New client connected! host: " << addr->host << " port:" << addr->port << log::endl;
 
-            int addSocketOp = SDLNet_TCP_AddSocket(socketSet, newClientSocket);
-            if(addSocketOp == -1) {
+            if(const int addSocketOp = SDLNet_TCP_AddSocket(socketSet, newClientSocket); addSocketOp == -1) {
                 log::write << "Failed to add client socket to set: " << SDLNet_GetError() << log::endl;
                 SDLNet_TCP_Close(newClientSocket);
                 return;
@@ -89,7 +87,6 @@ namespace Engine::Net
                 log::write << "Failed to add client socket to set: " << SDLNet_GetError() << log::endl;
                 SDLNet_TCP_Close(newClientSocket);
             } else {
-                clientSockets[newClientSocket] = newPeer;
                 clients.push_back(newPeer);
             }
         }
@@ -103,12 +100,12 @@ namespace Engine::Net
             if(received > 0) {
                 netManager->getPacketManager().onMessage(*peer, buffer, received);
 
-                for(int i = 0; i < 4096; i++) {
+                //for(int i = 0; i < 4096; i++) {
                     std::string msg = "Hello from my new packet handler thing!";
                     PacketHandler* p = netManager->getPacketManager().getHandler<TestPacketHandler>(PacketTypes::TEST_MSG);
                     Packet packet = p->construct(&msg);
                     send(*peer, packet);
-                }
+                //}
                 return true;
             }
             if(received < 0) {
@@ -118,9 +115,10 @@ namespace Engine::Net
 
             // 0 = disconnection.
             netManager->tryUnregisterPeer(peer);
-            log::write << "Client disconnected" << log::endl;
-            SDLNet_TCP_DelSocket(socketSet, peer->getSocket());
+            log::write << "Client with UID '" << std::to_string(peer->getUID()) << "' disconnected" << log::endl;
+            peer->disconnected();
             SDLNet_TCP_Close(peer->getSocket());
+            SDLNet_TCP_DelSocket(socketSet, peer->getSocket());
             return false;
         }
 
@@ -151,7 +149,6 @@ namespace Engine::Net
                 SDLNet_TCP_Close(peer->getSocket());
             }
             clients.clear();
-            clientSockets.clear();
             if(serverSocket) {
                 SDLNet_TCP_Close(serverSocket);
             }

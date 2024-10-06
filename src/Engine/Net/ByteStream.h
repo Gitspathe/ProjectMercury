@@ -19,7 +19,7 @@ namespace Engine::Net
 
         uint16_t curSeq = 0;
 
-        uint8_t tempHeader[PACKET_HEADER_SIZE] = {0};
+        uint8_t tempHeader[PACKET_HEADER_SIZE] = {};
         uint16_t remainingBytes = 0;
         uint16_t offset = 0;
 

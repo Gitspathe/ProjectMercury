@@ -2,6 +2,7 @@
 #define CLIENT_H
 #include <chrono>
 #include <SDL_net.h>
+#include "../../Engine.h"
 #include "Net.h"
 
 namespace Engine::Net
@@ -14,23 +15,32 @@ namespace Engine::Net
 #endif
         PeerUID uid = 0;
         float lastMsgTime = 0.0f;
+        bool connected = false;
 
     public:
 
 #if SERVER
-        explicit Peer(const TCPsocket socket, const PeerUID uid)
-            : socket(socket), uid(uid) {}
+        explicit Peer(TCPsocket socket, const PeerUID uid)
+            : socket(socket), uid(uid), connected(true) {}
 #else
         explicit Peer(const uint32_t uid)
-            : uid(uid) {}
+            : uid(uid), connected(true) {}
 #endif
 
 #if SERVER
         TCPsocket getSocket() const
         {
+            if(!connected)
+                throw std::runtime_error("Peer with UID " + std::to_string(uid) + " is not connected.");
+
             return socket;
         }
 #endif
+
+        void disconnected()
+        {
+            connected = false;
+        }
 
         bool isServer() const
         {

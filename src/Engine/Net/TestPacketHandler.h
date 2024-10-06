@@ -45,7 +45,7 @@ namespace Engine::Net
         void process(Packet& packet) override
         {
             const std::string utf8String(reinterpret_cast<char*>(packet.getPayload()), packet.getPayloadSize());
-            //log::write << "Received string: " << utf8String << log::endl;
+            log::write << "Received string: " << utf8String << log::endl;
         }
     };
 }
