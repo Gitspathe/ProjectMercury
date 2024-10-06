@@ -103,7 +103,7 @@ namespace Engine::Net
             if(received > 0) {
                 netManager->getPacketManager().onMessage(*peer, buffer, received);
 
-                for(int i = 0; i < 256; i++) {
+                for(int i = 0; i < 4096; i++) {
                     std::string msg = "Hello from my new packet handler thing!";
                     PacketHandler* p = netManager->getPacketManager().getHandler<TestPacketHandler>(PacketTypes::TEST_MSG);
                     Packet packet = p->construct(&msg);

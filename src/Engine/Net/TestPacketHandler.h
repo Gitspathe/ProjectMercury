@@ -35,7 +35,8 @@ namespace Engine::Net
 
             const auto size = static_cast<uint16_t>(str->size());
             const auto buffer = new uint8_t[size];
-            std::copy(str->begin(), str->end(), buffer);
+            std::memcpy(buffer, str->data(), size);
+            //std::copy(str->begin(), str->end(), buffer);
             auto packet = Packet(0, PacketTypes::TEST_MSG, size, buffer);
             delete[] buffer;
             return packet;
@@ -44,7 +45,7 @@ namespace Engine::Net
         void process(Packet& packet) override
         {
             const std::string utf8String(reinterpret_cast<char*>(packet.getPayload()), packet.getPayloadSize());
-            log::write << "Received string: " << utf8String << log::endl;
+            //log::write << "Received string: " << utf8String << log::endl;
         }
     };
 }

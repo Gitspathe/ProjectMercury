@@ -17,16 +17,6 @@ namespace Engine::Net
 
     NetManager::~NetManager() = default;
 
-    std::unordered_map<PeerUID, std::shared_ptr<Peer>>& NetManager::getPeers()
-    {
-        return peers;
-    }
-
-    std::unordered_map<PeerUID, uint16_t>& NetManager::getPeerSeqs()
-    {
-        return peerSeqs;
-    }
-
     bool NetManager::tryRegisterPeer(const std::shared_ptr<Peer>& peer)
     {
         if(peers.find(peer->getUID()) == peers.end()) {
@@ -57,24 +47,6 @@ namespace Engine::Net
         return false;
     }
 
-    bool NetManager::tryGetPeerSeq(const PeerUID uid, uint16_t& outSeq)
-    {
-        if(peerSeqs.find(uid) != peerSeqs.end()) {
-            outSeq = peerSeqs[uid];
-            return true;
-        }
-        return false;
-    }
-
-    bool NetManager::tryIncrementSeq(const PeerUID uid, uint16_t& outSeq)
-    {
-        if(tryGetPeerSeq(uid, outSeq)) {
-            peerSeqs[uid] += 1;
-            return true;
-        }
-        return false;
-    }
-
     bool NetManager::connect(const std::string &endpoint) const
     {
         if(handler == nullptr) {
@@ -94,16 +66,6 @@ namespace Engine::Net
             return;
 
         handler->shutdown();
-    }
-
-    PacketManager& NetManager::getPacketManager() const
-    {
-        return *packetManager;
-    }
-
-    NetHandler & NetManager::getNetHandler() const
-    {
-        return *handler;
     }
 
     bool NetManager::onInit()

@@ -42,11 +42,12 @@ namespace Engine::Net
         template<typename T>
         PacketHandler* getHandler(const uint8_t type)
         {
-            if(handlers.find(type) == handlers.end()) {
+            const auto it = handlers.find(type);
+            if(it == handlers.end()) {
                 log::write << "No packet handler for ID '" << type << "' found" << log::endl;
                 return nullptr;
             }
-            return static_cast<T*>(handlers[type].get());
+            return static_cast<T*>(it->second.get());
         }
 
         PacketHandler* getHandler(uint8_t type);

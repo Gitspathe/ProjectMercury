@@ -29,15 +29,48 @@ namespace Engine::Net
             return Core::SubsystemExecOrder::NET_MANAGER;
         }
 
-        PacketManager& getPacketManager() const;
-        NetHandler& getNetHandler() const;
-        std::unordered_map<PeerUID, std::shared_ptr<Peer>>& getPeers();
-        std::unordered_map<PeerUID, uint16_t>& getPeerSeqs();
+        PacketManager& getPacketManager() const
+        {
+            return *packetManager;
+        }
+
+        NetHandler& getNetHandler() const
+        {
+            return *handler;
+        }
+
+        std::unordered_map<PeerUID, std::shared_ptr<Peer>>& getPeers()
+        {
+            return peers;
+        }
+
+        std::unordered_map<PeerUID, uint16_t>& getPeerSeqs()
+        {
+            return peerSeqs;
+        }
+
         bool tryRegisterPeer(const std::shared_ptr<Peer>& peer);
         bool tryUnregisterPeer(const std::shared_ptr<Peer>& peer);
         bool tryGetPeer(PeerUID uid, Peer& outPeer);
-        bool tryGetPeerSeq(PeerUID uid, uint16_t& outSeq);
-        bool tryIncrementSeq(PeerUID uid, uint16_t& outSeq);
+
+        bool tryGetPeerSeq(PeerUID uid, uint16_t& outSeq)
+        {
+            if(peerSeqs.find(uid) != peerSeqs.end()) {
+                outSeq = peerSeqs[uid];
+                return true;
+            }
+            return false;
+        }
+
+        bool tryIncrementSeq(PeerUID uid, uint16_t& outSeq)
+        {
+            if(tryGetPeerSeq(uid, outSeq)) {
+                peerSeqs[uid] += 1;
+                return true;
+            }
+            return false;
+        }
+
         bool connect(const std::string& endpoint) const;
         void disconnect() const;
 

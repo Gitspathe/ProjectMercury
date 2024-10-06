@@ -117,7 +117,6 @@ if(BUILD_CLIENT)
     )
 endif()
 
-# Link SDL2 and conditionally OpenGL and GLAD if BUILD_CLIENT is true
 if(BUILD_CLIENT)
     target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2_NET_LIBRARIES} ${OPENGL_LIBRARIES} ${GLAD_LIBRARY} glad)
 else()
