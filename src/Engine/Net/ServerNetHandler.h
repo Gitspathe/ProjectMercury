@@ -154,18 +154,19 @@ namespace Engine::Net
         {
             for(const std::shared_ptr<Peer>& peer : clients) {
                 SDLNet_TCP_Close(peer->getSocket());
+                peer->disconnected();
             }
-            clients.clear();
-            if(serverSocket) {
+            //clients.clear();
+            if(serverSocket != nullptr) {
                 SDLNet_TCP_Close(serverSocket);
             }
+            SDLNet_Quit();
             log::write << "Server shut down" << log::endl;
         }
 
         void onShutdown() override
         {
             onDisconnect();
-            SDLNet_Quit();
         }
 
     public:
@@ -197,7 +198,6 @@ namespace Engine::Net
             onDisconnect();
             delete[] buffer;
             delete[] packetBuffer;
-            SDLNet_Quit();
         }
     };
 }
