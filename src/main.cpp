@@ -118,14 +118,9 @@ int main()
         // Framerate cap & timer logic.
         const auto frameEnd = std::chrono::high_resolution_clock::now();
         const std::chrono::duration<double, std::milli> frameTime = frameEnd - frameStart;
-        double timeToWait = FRAME_DURATION - frameTime.count();
+        const double timeToWait = FRAME_DURATION - frameTime.count();
 
-#ifdef __EMSCRIPTEN__
-        // For Emscripten compatibility, use SDL_Delay.
-        // if (timeToWait > 0.0) {
-        //     SDL_Delay(static_cast<Uint32>(timeToWait));
-        // }
-#else
+#ifndef __EMSCRIPTEN__
         if(timeToWait > 0.0) {
             // If the remaining time is large enough, use a thread sleep.
             if(timeToWait >= 1.0) {
@@ -144,7 +139,7 @@ int main()
     };
 
 #ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop(mainLoop, 0, true);
+    emscripten_set_main_loop(mainLoop, TARGET_FPS, true);
 #else
     while(running) mainLoop();
 #endif

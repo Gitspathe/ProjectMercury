@@ -2,9 +2,14 @@ WIP thing
 
 ## Requirements
 
+### For client + server
 CMake
 
-SDL2
+SDL2, SDL2_net
+
+### For web client
+
+Emscripten toolchain
 
 ## Building
 
