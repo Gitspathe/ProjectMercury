@@ -117,7 +117,9 @@ namespace Engine::Net
             netManager->tryUnregisterPeer(peer);
             log::write << "Client with UID '" << std::to_string(peer->getUID()) << "' disconnected" << log::endl;
             SDLNet_TCP_DelSocket(socketSet, peer->getSocket());
+            log::write << "DEL SOCKET" << log::endl;
             SDLNet_TCP_Close(peer->getSocket());
+            log::write << "CLOSE SOCKET" << log::endl;
             peer->disconnected();
             return false;
         }
@@ -132,6 +134,7 @@ namespace Engine::Net
             }
             for(size_t i = 0; i < clients.size(); ++i) {
                 if(!handlePeerSocket(clients[i])) {
+                    log::write << "HANDLE CLIENT" << std::to_string(i) << log::endl;
                     clients.erase(clients.begin() + i);
                     i--;
                 }
