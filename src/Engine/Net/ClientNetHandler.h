@@ -120,8 +120,9 @@ namespace Engine::Net
 
         bool onConnect(std::string &endpoint) override
         {
-            serverEndpoint = "wss://" + endpoint;
-            return onInit();
+            // serverEndpoint = "wss://" + endpoint;
+            // return onInit();
+            return true;
         }
 
         void onDisconnect() override
@@ -154,7 +155,7 @@ namespace Engine::Net
         ClientNetHandler()
         {
             packetBuffer = new uint8_t[MAX_PACKET_SIZE];
-            serverEndpoint = "wss://mercurialorder.com/";
+            serverEndpoint = "wss://mercurialorder.com:8082";
         }
     };
 }

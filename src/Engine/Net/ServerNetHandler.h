@@ -116,9 +116,9 @@ namespace Engine::Net
             // 0 = disconnection.
             netManager->tryUnregisterPeer(peer);
             log::write << "Client with UID '" << std::to_string(peer->getUID()) << "' disconnected" << log::endl;
-            peer->disconnected();
             SDLNet_TCP_Close(peer->getSocket());
             SDLNet_TCP_DelSocket(socketSet, peer->getSocket());
+            peer->disconnected();
             return false;
         }
 
