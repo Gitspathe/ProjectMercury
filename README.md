@@ -1,4 +1,7 @@
-WIP thing
+This was a failed experiment to create a CPU-rendered mini game engine with networking. It was good for learning tho.
+Might revisit something similar in the future.
+
+Probably riddled with bugs and security holes!
 
 ## Requirements
 
